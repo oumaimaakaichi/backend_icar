@@ -41,7 +41,7 @@
         }
         
         .status-Non_assigné { background-color: var(--primary); color: white; }
-        .status-Assigné { background-color: var(--success); color: white; }
+        .status-Assignée_now { background-color:#a0a4ad; color: #383d41; }
         .status-en_attente { background-color: #e2e3e5; color: #383d41; }
         .status-en_cours { background-color: #fff3cd; color: #856404; }
         .status-termine { background-color: #d4edda; color: #155724; }
@@ -169,13 +169,31 @@
                                     <div class="text-danger mt-2">{{ $message }}</div>
                                 @enderror
                             </div>
+                             @if($demande->status === 'Nouvelle_demande')
                             <button type="submit" class="btn btn-submit w-100">
                                 <i class="fas fa-paper-plane mr-2"></i>Envoyer l'offre
                             </button>
+                            @endif
                         </form>
                     </div>
                 </div>
-                
+                @if($demande->techniciens && count($demande->techniciens) > 0)
+    <div class="card mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Techniciens assignés</h6>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                @foreach($demande->techniciens as $tech)
+                    <li class="list-group-item">
+                        <i class="fas fa-user-tie mr-2"></i>
+                        {{ $tech['nom'] }} (ID: {{ $tech['id'] }})
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+@endif
                 <div class="card">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Forfait</h6>
@@ -270,48 +288,43 @@
     });
 
     // Gestion du submit
-    document.getElementById('assignTechniciensForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+document.getElementById('assignTechniciensForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-        const form = this;
-        const formData = new FormData(form);
-
-        fetch("{{ route('demandes.updateTechniciens', $demande->id) }}", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json',
-            },
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Techniciens assignés',
-                    text: data.message || "Les techniciens ont bien été assignés.",
-                    confirmButtonColor: '#4e73df',
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erreur',
-                    text: data.message || "Une erreur est survenue lors de l'assignation.",
-                    confirmButtonColor: '#e74a3b',
-                });
-            }
-        })
-        .catch(() => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erreur',
-                text: "Une erreur réseau est survenue.",
-                confirmButtonColor: '#e74a3b',
-            });
-        });
+    const selects = this.querySelectorAll('select[name="techniciens[]"]');
+    const techniciensData = Array.from(selects).map(select => {
+        return {
+            id_technicien: parseInt(select.value),
+            nom: select.options[select.selectedIndex].text
+        };
     });
+
+    fetch("{{ route('demandes.updateTechniciens', $demande->id) }}", {
+        method: 'put',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ techniciens: techniciensData }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Succès',
+                text: data.message,
+                confirmButtonColor: '#4e73df',
+            }).then(() => window.location.reload());
+        } else {
+            // Gestion des erreurs
+        }
+    })
+    .catch(error => {
+        // Gestion des erreurs réseau
+    });
+});
 </script>
 
     <script>

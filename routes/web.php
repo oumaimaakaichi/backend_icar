@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\DemandeMaintenanceController;
 use App\Http\Controllers\DemandeController;
-
+use App\Http\Controllers\FluxDirectController;
 
 
 use App\Http\Controllers\PieceRecommandeeController;
@@ -48,8 +48,16 @@ Route::get('/piece-recommandee/voir/{demandeId}', [PieceRecommandeeController::c
 Route::middleware(['auth:atelier'])->get('/atelierss/view', [DemandeController::class, 'showDemandesParAtelierPage'])
     ->name('atelierss.demandes-par-atelier');
 Route::get('/demandes/{id}', [DemandeController::class, 'show'])->name('ateliers.show');
-Route::post('/demandes/{id}/update-techniciens', [DemandeController::class, 'updateTechniciens'])
-    ->name('demandes.updateTechniciens');
+Route::get('/flux-direct/{flux}', [FluxDirectController::class, 'show'])
+
+     ->name('flux-direct.show');
+Route::get('/demandesPourExpert/{id}', [DemandeController::class, 'show2'])->name('expert.show');
+Route::put('/demandes/{demande}/update-techniciens', [DemandeController::class, 'updateTechniciens'])
+     ->name('demandes.updateTechniciens');
+
+Route::get('/demande_maintenance', [DemandeController::class, 'getAllDemandeToExpert'])->name('expert.demande_maintenance');
+// Ou si vous utilisez un contrôleur
+Route::get('/demandes-expert', [DemandeController::class, 'getAllDemandeToExpert'])->name('expert.demandes');
 Route::post('/demandes/{id}/prix-main-oeuvre', [DemandeController::class, 'ajouterPrixMainOeuvre'])->name('demandes.ajouterPrixMainOeuvre');
 Route::get('/piece-recommandee/ajouter/{demandeId}', [PieceRecommandeeController::class, 'formAjouter'])->name('piece_recommandee.ajouter');
 Route::post('/piece-recommandee/store', [PieceRecommandeeController::class, 'store'])->name('piece_recommandee.store');
@@ -497,23 +505,4 @@ Route::middleware(['auth:entreprise'])->group(function () {
 Route::post('/techniciens', [UserController::class, 'storee'])->name('techniciens.storee');
 
 
-Route::get('/demande_maintenance', function() {
-    // Récupère l'utilisateur expert connecté
-    $userr = User::where('role', 'expert')
-    ->where('id', Auth::guard('web')->id())
-    ->first(); // first() retourne un seul objet User ou null
 
-// Vérification que l'utilisateur existe et a un atelier
-if (!$userr || !$userr->atelier_id) {
-return redirect()->back()
-    ->with('error', "Accès non autorisé ou aucun atelier associé");
-}
-    // Récupère les demandes de maintenance
-    $demandes = DemandeMaintenance::where('atelier_id', $userr->atelier_id)
-                                ->with('user')
-                                ->get();
-
-    return view('expert.demande_maintenance', [
-        'demandes' => $demandes
-    ]);
-})->name('expert.demande_maintenance');

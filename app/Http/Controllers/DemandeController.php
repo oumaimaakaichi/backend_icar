@@ -117,7 +117,38 @@ public function getAllDemande(): JsonResponse
 
     return response()->json($formattedDemandes);
 }
+public function getAllDemandeToExpert()
+{
+    $demandes = Demande::with([
+        'client:id,nom,prenom,phone',
+        'voiture:id,model,serie',
+        'forfait:id,nomForfait',
+        'servicePanne.categoryPane:id,titre',
+        'servicePanne:id,titre,category_pane_id',
+        'pieceRecommandee'
+    ])->where('type_emplacement', '!=', 'fixe')->get();
 
+    $formattedDemandes = $demandes->map(function ($demande) {
+        return [
+            'id' => $demande->id,
+            'service_titre' => $demande->servicePanne->titre ?? null,
+            'categorie_titre' => $demande->servicePanne->categoryPane->titre ?? null,
+            'client_nom' => $demande->client->nom ?? null,
+            'client_prenom' => $demande->client->prenom ?? null,
+            'client_phone' => $demande->client->phone ?? null,
+            'voiture_model' => $demande->voiture->model ?? null,
+            'voiture_serie' => $demande->voiture->serie ?? null,
+            'forfait_titre' => $demande->forfait->nomForfait ?? null,
+            'type_emplacement' => $demande->type_emplacement,
+            'date_maintenance' => $demande->date_maintenance ? $demande->date_maintenance->format('Y-m-d H:i') : null,
+            'created_at' => $demande->created_at->format('Y-m-d H:i:s'),
+            'has_piece_recommandee' => $demande->pieceRecommandee ? true : false,
+            'status' => $demande->status ?? 'pending'
+        ];
+    });
+
+    return view('expert.demande_maintenance', ['demandes' => $formattedDemandes]);
+}
 public function updateInfo(Request $request, $id)
 {
     // Validation des champs
@@ -188,11 +219,184 @@ public function getDetailsForConfirmation($id)
         'atelier' => $demande->atelier,
     ]);
 }
+public function updateLocation(Request $request, $id)
+{
+    $request->validate([
+        'date_maintenance' => 'required|date',
+        'type_emplacement' => 'required|string',
+        'latitude' => 'required|numeric', // Ajouté pour tous les types
+        'longitude' => 'required|numeric', // Ajouté pour tous les types
+    ]);
+
+    $demande = Demande::find($id);
+
+    if (!$demande) {
+        return response()->json(['message' => 'Demande non trouvée'], 404);
+    }
+
+    $demande->date_maintenance = $request->input('date_maintenance');
+    $demande->type_emplacement = $request->input('type_emplacement');
+    $demande->latitude = $request->input('latitude');
+    $demande->longitude = $request->input('longitude');
+
+    // Handle different location types
+    switch ($request->input('type_emplacement')) {
+        case 'maison':
+            $request->validate([
+                'surface_maison' => 'required|numeric',
+                'hauteur_plafond_maison' => 'required|numeric',
+                'porte_garage_maison' => 'required|array',
+            ]);
+            $demande->surface_maison = $request->input('surface_maison');
+            $demande->hauteur_plafond_maison = $request->input('hauteur_plafond_maison');
+            $demande->porte_garage_maison = $request->input('porte_garage_maison');
+            break;
+
+        case 'quartier_general_prive':
+            $request->validate([
+                'surface_bureau' => 'required|numeric',
+                'hauteur_plafond_bureau' => 'required|numeric',
+                'porte_garage_bureau' => 'required|array',
+            ]);
+            $demande->surface_bureau = $request->input('surface_bureau');
+            $demande->hauteur_plafond_bureau = $request->input('hauteur_plafond_bureau');
+            $demande->porte_garage_bureau = $request->input('porte_garage_bureau');
+            break;
+
+        case 'en_travail':
+            $request->validate([
+                'surface_parking_travail' => 'required|numeric',
+                'porte_travail' => 'required|array',
+                'autorisation_entree_travail' => 'required|boolean',
+            ]);
+            $demande->surface_parking_travail = $request->input('surface_parking_travail');
+            $demande->porte_travail = $request->input('porte_travail');
+            $demande->autorisation_entree_travail = $request->input('autorisation_entree_travail');
+            break;
+
+        case 'parking':
+            $request->validate([
+                'proximite_parking_public' => 'required|boolean',
+            ]);
+            $demande->proximite_parking_public = $request->input('proximite_parking_public');
+            break;
+    }
+
+    $demande->save();
+
+    return response()->json([
+        'message' => 'Demande mise à jour avec succès',
+        'demande' => $demande,
+    ], 200);
+}
+public function getByDemandeWithTechnicien($client_id)
+{
+    $demandes = Demande::with(['voiture', 'servicePanne'])
+        ->where('client_id', $client_id)
+        ->whereNotNull('techniciens')  // techniciens est un champ JSON
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    if ($demandes->isEmpty()) {
+        return response()->json(['message' => 'Aucune demande trouvée'], 404);
+    }
+
+    $formatted = $demandes->map(function ($demande) {
+        return [
+            'id' => $demande->id,
+            'created_at' => $demande->created_at->format('Y-m-d H:i:s'),
+            'voiture' => [
+                'model' => $demande->voiture->model ?? 'Modèle non spécifié',
+                'serie' => $demande->voiture->serie ?? 'Série non spécifiée',
+            ],
+            'service_panne' => [
+                'titre' => $demande->servicePanne->titre ?? 'Service non spécifié',
+            ],
+            'techniciens' => $demande->techniciens ?? [], // Array JSON des techniciens
+        ];
+    });
+
+    return response()->json($formatted, 200);
+}
+
+// Dans DemandeController.php
+
+public function getDemandesParTechnicien($technicien_id)
+{
+    $demandes = Demande::with([
+        'client:id,nom,prenom,phone',
+        'voiture:id,model,serie,company,date_fabrication',
+        'servicePanne:id,titre',
+
+        'forfait:id,nomForfait',
+        'atelier:id,nom_commercial'
+    ])
+    ->whereJsonContains('techniciens', ['id' => (int)$technicien_id])
+    ->orderBy('date_maintenance', 'desc')
+    ->get();
+
+    if ($demandes->isEmpty()) {
+        return response()->json(['message' => 'Aucune demande trouvée pour ce technicien'], 404);
+    }
+
+    $formattedDemandes = $demandes->map(function ($demande) {
+        return [
+            'id' => $demande->id,
+            'date_maintenance' => $demande->date_maintenance,
+            'heure_maintenance' => $demande->heure_maintenance,
+            'type_emplacement' => $demande->type_emplacement,
+            'status' => $demande->status,
+            'client' => [
+                'nom' => $demande->client->nom,
+                'prenom' => $demande->client->prenom,
+                'phone' => $demande->client->phone,
+            ],
+            'voiture' => [
+                'model' => $demande->voiture->model,
+                'serie' => $demande->voiture->serie,
+                'company' => $demande->voiture->company,
+                'date_fabrication' => $demande->voiture->date_fabrication,
+            ],
+            'service' => [
+                'titre' => $demande->servicePanne->titre,
+
+            ],
+            'forfait' => $demande->forfait->nomForfait,
+            'atelier' => $demande->atelier->nom_commercial ?? null,
+            'pieces_choisies' => $demande->pieces_choisies,
+            'latitude' => $demande->latitude,
+            'longitude' => $demande->longitude,
+            'prix_total' => $demande->prix_total,
+            'prix_main_oeuvre' => $demande->prix_main_oeuvre,
+        ];
+    });
+
+    return response()->json($formattedDemandes);
+}
+
+
+public function updateFluxLink(Request $request, $id)
+{
+    $request->validate([
+        'lien_flux' => 'required|url',
+    ]);
+
+    $demande = Demande::findOrFail($id);
+    $demande->lien_flux = $request->lien_flux;
+    $demande->save();
+
+    return response()->json([
+        'message' => 'Lien flux mis à jour avec succès',
+        'lien_flux' => $demande->lien_flux,
+    ]);
+}
+
 public function getDemandesParClient($client_id)
 {
     $demandes = Demande::with(['voiture', 'servicePanne', 'pieceRecommandee'])
                        ->where('client_id', $client_id)
-                       ->get();
+                       ->whereNull('date_maintenance')
+                       ->paginate(4);
 
     if ($demandes->isEmpty()) {
         return response()->json(['message' => 'Aucune demande trouvée'], 404);
@@ -215,6 +419,7 @@ public function getDemandesParClient($client_id)
 
     return response()->json($formatted, 200);
 }
+
 
 public function getTotalPrixPieces($id)
 {
@@ -261,7 +466,28 @@ public function show($id)
     return view('ateliers.show', compact('demande', 'techniciens'));
 }
 
+public function show2($id)
+{
+    $demande = Demande::with([
+        'client:id,nom,prenom,phone',
+        'voiture:id,model,serie',
+        'forfait:id,nomForfait',
+        'servicePanne.categoryPane:id,titre',
+        'servicePanne:id,titre,category_pane_id',
+        'pieceRecommandee',
 
+    ])->findOrFail($id);
+
+    $techniciens = User::where('role', 'technicien')
+                      ->whereNull('atelier_id')
+                      ->where('isActive', true)
+                      ->get();
+
+    return view('expert.show', [
+        'demande' => $demande,
+        'techniciens' => $techniciens
+    ]);
+}
 public function ajouterPrixMainOeuvre(Request $request, $id)
 {
     $request->validate([
@@ -356,20 +582,46 @@ public function refuserOffre($id)
 }
 public function updateTechniciens(Request $request, Demande $demande)
 {
-    $request->validate([
+    \Log::info('Données reçues:', $request->all());
+
+    $validated = $request->validate([
         'techniciens' => 'required|array',
-        'techniciens.*.id_technicien' => 'required|integer',
-        'techniciens.*.nom' => 'required|string|max:255',
+        'techniciens.*.id_technicien' => 'required|integer|exists:users,id',
+        'techniciens.*.nom' => 'required|string',
     ]);
 
-    $demande->techniciens = $request->techniciens;
-    $demande->save();
+    \Log::info('Données validées:', $validated);
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Techniciens mis à jour avec succès',
-        'data' => $demande->fresh(),
-    ]);
+    $techniciensData = collect($validated['techniciens'])->map(function ($tech) {
+        return [
+            'id' => $tech['id_technicien'],
+            'nom' => $tech['nom']
+        ];
+    })->toArray();
+
+    \Log::info('Données à enregistrer:', $techniciensData);
+
+    try {
+        $demande->techniciens = $techniciensData;
+        $demande->status = 'Assignée';
+        $demande->save();
+
+        \Log::info('Demande après mise à jour:', $demande->fresh()->toArray());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Techniciens assignés avec succès',
+            'data' => $demande->fresh(),
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Erreur lors de la mise à jour:', ['error' => $e->getMessage()]);
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de l\'assignation',
+            'error' => $e->getMessage()
+        ], 500);
+    }
 }
+
 
 }

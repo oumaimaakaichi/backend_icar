@@ -124,7 +124,18 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Utilisateur créé avec succès', 'user' => $user]);
     }
+public function getTechniciensSansAtelier()
+{
+    $techniciens = User::role('technicien')
+        ->whereNull('atelier_id')
+        ->where('isActive', true)
+        ->get();
 
+    return response()->json([
+        'success' => true,
+        'data' => $techniciens,
+    ]);
+}
     public function updateEmail(Request $request, $id)
     {
         $request->validate([

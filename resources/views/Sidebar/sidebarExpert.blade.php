@@ -196,7 +196,7 @@
     <div class="sidebar" id="sidebar-menu">
         <img src="{{ asset('images/1.png') }}" alt="Logo"  style="margin-bottom: 50px ; margin-top:20px">
         <h3>Maintenance System</h3>
-        <a href="demande_maintenance" class="menu-link"><i class="fas fa-chart-bar"></i> Home</a>
+        <a href="{{ route('expert.demande_maintenance') }}" class="menu-link"><i class="fas fa-chart-bar"></i> Home</a>
 
          <a href="logoutA" id="logout-button" ><i class="fas fa-sign-out-alt"></i> Logout</a>
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -228,23 +228,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Sélectionne tous les liens du menu
-            let menuLinks = document.querySelectorAll(".menu-link");
 
-            // Vérifie l'URL actuelle pour ajouter la classe active
+            let menuLinks = document.querySelectorAll(".menu-link");
             let currentURL = window.location.pathname;
 
             menuLinks.forEach(link => {
-                // Vérifie si l'URL du lien correspond à l'URL actuelle
+
                 if (link.getAttribute("href") === currentURL) {
                     link.classList.add("active");
                 }
-
-                // Ajoute un événement au clic pour changer la classe active
                 link.addEventListener("click", function () {
-                    // Supprime la classe active des autres liens
+
                     menuLinks.forEach(l => l.classList.remove("active"));
-                    // Ajoute la classe active au lien cliqué
+
                     this.classList.add("active");
                 });
             });
@@ -252,8 +248,8 @@
     </script>
     <script>
         document.getElementById("logout-button").addEventListener("click", function(event) {
-            event.preventDefault(); // Empêcher la navigation normale
-            document.getElementById("logout-form").submit(); // Soumettre le formulaire
+            event.preventDefault();
+            document.getElementById("logout-form").submit();
         });
     </script>
 </body>

@@ -46,9 +46,9 @@
             background-color: #d4edda;
             color: #155724;
         }
-        .status-annule {
-            background-color: #f8d7da;
-            color: #721c24;
+        .status-Assignée {
+            background-color: rgb(142, 169, 142);
+            color: #141414;
         }
         .piece-indicator {
             color: #fd7e14;

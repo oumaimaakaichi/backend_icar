@@ -22,9 +22,31 @@ class Demande extends Model
         'latitude',
         'longitude',
         'heure_maintenance',
+        'flux_en_direct',
+
         'prix_main_oeuvre',
     'status',
-    'techniciens' 
+    'techniciens' ,
+
+    //nouveau attributs
+    // Maison
+    'surface_maison',
+    'hauteur_plafond_maison',
+    'porte_garage_maison',
+
+    // Bureau privé
+    'surface_bureau',
+    'hauteur_plafond_bureau',
+    'porte_garage_bureau',
+
+    // Travail
+    'surface_parking_travail',
+    'autorisation_entree_travail',
+    'porte_travail',
+'lien_flux',
+
+    // Parkings publics
+    'proximite_parking_public',
     ];
 
     protected $casts = [
@@ -34,8 +56,22 @@ class Demande extends Model
         'heure_maintenance'=> 'string',
         'prix_total'        => 'decimal:2',
         'latitude'          => 'decimal:7',
+        'flux_en_direct' => 'boolean',
+
         'longitude'         => 'decimal:7',
          'prix_main_oeuvre' => 'decimal:2',
+          'porte_garage_maison' => 'array',
+    'porte_garage_bureau' => 'array',
+    'porte_travail'       => 'array',
+    'autorisation_entree_travail' => 'boolean',
+    'surface_maison'      => 'decimal:2',
+    'hauteur_plafond_maison' => 'decimal:2',
+    'surface_bureau'      => 'decimal:2',
+    'hauteur_plafond_bureau' => 'decimal:2',
+    'surface_parking_travail' => 'decimal:2',
+    'lien_flux' => 'string',
+
+
     ];
 
     // Relations

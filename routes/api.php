@@ -18,7 +18,18 @@ use App\Http\Controllers\DemandeAchatPieceController;
 use App\Http\Controllers\ForfaitController;
 use App\Http\Controllers\EntrepriseAutomobileController;
 use App\Http\Controllers\PieceRecommandeeController;
+use App\Http\Controllers\FluxDirectController;
+use Illuminate\Support\Facades\Auth;
+// routes/api.php
 
+
+Route::get('/flux-direct/{demandeId}/{technicienId}', [FluxDirectController::class, 'getOrCreate']);
+
+Route::put('/demandes/{id}/update-location', [DemandeController::class, 'updateLocation']);
+Route::get('/demandes/user/{id}', [DemandeController::class, 'getByDemandeWithTechnicien']);
+Route::get('/demandes/technicien/{technicien_id}', [DemandeController::class, 'getDemandesParTechnicien']);
+
+Route::put('/demandes/{id}/update-link', [DemandeController::class, 'updateFluxLink']);
 Route::get('/{id}/confirmation-details', [DemandeController::class, 'getDetailsForConfirmation']);
     Route::get('/{id}/total-pieces', [DemandeController::class, 'getTotalPrixPieces']);
 Route::get('/demandes/client/{client_id}/offres', [DemandeController::class, 'getDemandesAvecOffrePourClient']);
@@ -63,3 +74,4 @@ Route::get('/voiture/{client_id}', [VoitureController::class, 'index2']);       
 
 
 Route::get('/demandes', [DemandeController::class, 'getAllDemande']);
+Route::post('/flux-direct', [FluxDirectController::class, 'store']);
