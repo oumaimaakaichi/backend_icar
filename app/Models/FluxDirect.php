@@ -24,4 +24,12 @@ class FluxDirect extends Model
     {
         return $this->belongsTo(User::class, 'technicien_id');
     }
+    public function demandeFlux()
+    {
+        return $this->hasOne(DemandeFlux::class, 'id_flux');
+    }
+    public function hasPermission()
+{
+    return $this->demandeFlux && $this->demandeFlux->permission;
+}
 }

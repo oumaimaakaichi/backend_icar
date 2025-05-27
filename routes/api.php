@@ -21,10 +21,40 @@ use App\Http\Controllers\PieceRecommandeeController;
 use App\Http\Controllers\FluxDirectController;
 use Illuminate\Support\Facades\Auth;
 // routes/api.php
+use App\Http\Controllers\DemandeFluxController;
 
+
+// routes/api.php
+
+Route::get('/demandes/{demande_id}/meet-link', function ($demande_id) {
+    $fluxDirect = \App\Models\FluxDirect::where('demande_id', $demande_id)
+        ->with('demandeFlux')
+        ->first();
+
+    if (!$fluxDirect) {
+        return response()->json(['message' => 'Flux direct non trouvé'], 404);
+    }
+
+    if (!$fluxDirect->demandeFlux || !$fluxDirect->demandeFlux->partage_with_client) {
+        return response()->json(['message' => 'Visioconférence non disponible'], 403);
+    }
+
+    return response()->json([
+        'lien_meet' => $fluxDirect->lien_meet,
+        'partage_with_client' => $fluxDirect->demandeFlux->partage_with_client
+    ]);
+});
+Route::get('demande-flux/by-flux/{idFlux}', [DemandeFluxController::class, 'getDemandeByIdFlux']);
+Route::put('/autoriser-partage/{id}', [DemandeFluxController::class, 'autoriserPartage']);
+Route::prefix('demande-flux')->group(function () {
+    Route::post('/', [DemandeFluxController::class, 'store']);
+    Route::get('/by-demande/{demandeId}', [DemandeFluxController::class, 'getFluxByDemandeId']);
+    Route::put('/permission/{id}', [DemandeFluxController::class, 'updatePermission']);
+});
+Route::get('/flux-par-demande/{demandeId}', [FluxDirectController::class, 'getFluxParDemande']);
 
 Route::get('/flux-direct/{demandeId}/{technicienId}', [FluxDirectController::class, 'getOrCreate']);
-
+Route::get('/demande/{demandeId}/flux', [FluxDirectController::class, 'getFluxForDemande']);
 Route::put('/demandes/{id}/update-location', [DemandeController::class, 'updateLocation']);
 Route::get('/demandes/user/{id}', [DemandeController::class, 'getByDemandeWithTechnicien']);
 Route::get('/demandes/technicien/{technicien_id}', [DemandeController::class, 'getDemandesParTechnicien']);

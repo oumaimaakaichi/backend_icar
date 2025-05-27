@@ -340,14 +340,15 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Spécialité</label>
-                                    <select name="specialite" class="form-select  border-2 rounded-3">
-                                        <option value="">Sélectionner...</option>
-                                        <option value="Mécanique générale">Mécanique générale</option>
-                                        <option value="Électricité automobile">Électricité automobile</option>
-                                        <option value="Carrosserie">Carrosserie</option>
-                                        <option value="Diagnostic électronique">Diagnostic électronique</option>
-                                        <option value="Climatisation">Climatisation</option>
+                                    <select name="specialite" class="form-select border-2 rounded-3" required>
+                                        <option value="" disabled selected>Sélectionner...</option>
+                                        @foreach($specialisations as $specialite)
+                                            <option value="{{ $specialite->nom_specialite }}">
+                                                {{ $specialite->nom_specialite }}
+                                            </option>
+                                        @endforeach
                                     </select>
+                                    <div class="invalid-feedback">Veuillez sélectionner une spécialité</div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Années d'expérience</label>
@@ -451,14 +452,15 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Spécialité</label>
-                                    <select id="edit_specialite" name="specialite" class="form-select  border-2 rounded-3">
-                                        <option value="">Sélectionner...</option>
-                                        <option value="Mécanique générale">Mécanique générale</option>
-                                        <option value="Électricité automobile">Électricité automobile</option>
-                                        <option value="Carrosserie">Carrosserie</option>
-                                        <option value="Diagnostic électronique">Diagnostic électronique</option>
-                                        <option value="Climatisation">Climatisation</option>
+                                    <select id="edit_specialite" name="specialite" class="form-select border-2 rounded-3" required>
+                                        <option value="" disabled>Sélectionner...</option>
+                                        @foreach($specialisations as $specialite)
+                                            <option value="{{ $specialite->nom_specialite }}">
+                                                {{ $specialite->nom_specialite }}
+                                            </option>
+                                        @endforeach
                                     </select>
+                                    <div class="invalid-feedback">Veuillez sélectionner une spécialité</div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Années d'expérience</label>
@@ -515,8 +517,13 @@
                     document.getElementById('edit_email').value = email;
                     document.getElementById('edit_phone').value = phone;
                     document.getElementById('edit_adresse').value = adresse;
-                    document.getElementById('edit_specialite').value = specialite;
                     document.getElementById('edit_annee_experience').value = annee_experience;
+
+                    // Sélectionner la bonne spécialité
+                    const select = document.getElementById('edit_specialite');
+                    Array.from(select.options).forEach(option => {
+                        option.selected = option.value === specialite;
+                    });
 
                     // Mettre à jour l'action du formulaire
                     document.getElementById('editTechnicienForm').action = `/users/${id}`;

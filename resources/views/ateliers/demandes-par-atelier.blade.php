@@ -61,14 +61,10 @@
 </head>
 <body>
         @include('Sidebar.sidebarAtelier')
-    <div class="container py-4"  style="margin-top: 50px">
+    <div class="container py-4"  style="margin-top:40px">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3">Demandes pour l'atelier</h1>
-            <div>
-                <span class="badge bg-primary">
-                    Atelier : {{ $atelier->nom_commercial }}
-                </span>
-            </div>
+
+
         </div>
 
         @if($demandes->isEmpty())
@@ -76,7 +72,7 @@
                 Aucune demande trouvée pour cet atelier
             </div>
         @else
-            <div class="row">
+            <div class="row" style="margin-left: 90px">
 
 
                 <div class="col-md-9">
@@ -118,7 +114,7 @@
                                             <strong>Forfait:</strong> {{ $demande->forfait->nomForfait }}
                                         </p>
                                     </div>
-                                   
+
 
                                 </div>
 
@@ -140,7 +136,7 @@
                                     <a href="{{ route('ateliers.show', $demande->id) }}" class="btn btn-sm btn-outline-primary me-2">
     <i class="fas fa-eye me-1"></i> Détails
 </a>
-                                    
+
                                 </div>
                             </div>
                         </div>

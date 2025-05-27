@@ -119,16 +119,36 @@ public function getAllDemande(): JsonResponse
 }
 public function getAllDemandeToExpert()
 {
-    $demandes = Demande::with([
+    $status = request()->query('status');
+    $search = request()->query('search');
+
+    $demandesQuery = Demande::with([
         'client:id,nom,prenom,phone',
         'voiture:id,model,serie',
         'forfait:id,nomForfait',
         'servicePanne.categoryPane:id,titre',
         'servicePanne:id,titre,category_pane_id',
         'pieceRecommandee'
-    ])->where('type_emplacement', '!=', 'fixe')->get();
+    ])->where('type_emplacement', '!=', 'fixe');
 
-    $formattedDemandes = $demandes->map(function ($demande) {
+    // Filtrage par statut
+    $demandesQuery->when($status, function ($query, $status) {
+        return $query->where('status', $status);
+    });
+
+    // Filtrage par nom ou prénom du client
+    $demandesQuery->when($search, function ($query, $search) {
+        return $query->whereHas('client', function ($q) use ($search) {
+            $q->where('nom', 'like', "%{$search}%")
+              ->orWhere('prenom', 'like', "%{$search}%");
+        });
+    });
+
+    // Paginer les résultats
+    $demandes = $demandesQuery->paginate(6);
+
+    // Formater les données pour la vue
+    $formattedDemandes = $demandes->through(function ($demande) {
         return [
             'id' => $demande->id,
             'service_titre' => $demande->servicePanne->titre ?? null,
@@ -149,13 +169,14 @@ public function getAllDemandeToExpert()
 
     return view('expert.demande_maintenance', ['demandes' => $formattedDemandes]);
 }
+
 public function updateInfo(Request $request, $id)
 {
     // Validation des champs
     $validated = $request->validate([
         'type_emplacement' => 'nullable|string|max:255',
         'date_maintenance' => 'nullable|date',
-        'heure_maintenance' => 'nullable|date_format:H:i', // Ajout pour l'heure
+        'heure_maintenance' => 'nullable|date_format:H:i',
         'atelier_id' => 'nullable|exists:ateliers,id',
     ]);
 
@@ -169,13 +190,17 @@ public function updateInfo(Request $request, $id)
     // Mise à jour des champs autorisés
     $demande->type_emplacement = $validated['type_emplacement'] ?? $demande->type_emplacement;
 
-    // Combiner date et heure si elles sont fournies
+    // Gestion de la date et heure
     if (isset($validated['date_maintenance'])) {
-        $dateMaintenance = $validated['date_maintenance'];
+        $demande->date_maintenance = $validated['date_maintenance'];
+
+        // Si une heure est fournie, on l'enregistre séparément
         if (isset($validated['heure_maintenance'])) {
-            $dateMaintenance .= ' ' . $validated['heure_maintenance'];
+            $demande->heure_maintenance = $validated['heure_maintenance'];
+        } else {
+            // Si pas d'heure fournie, on réinitialise le champ
+            $demande->heure_maintenance = null;
         }
-        $demande->date_maintenance = $dateMaintenance;
     }
 
     $demande->atelier_id = $validated['atelier_id'] ?? $demande->atelier_id;
@@ -221,11 +246,13 @@ public function getDetailsForConfirmation($id)
 }
 public function updateLocation(Request $request, $id)
 {
-    $request->validate([
-        'date_maintenance' => 'required|date',
+    // Validation commune
+    $validated = $request->validate([
         'type_emplacement' => 'required|string',
-        'latitude' => 'required|numeric', // Ajouté pour tous les types
-        'longitude' => 'required|numeric', // Ajouté pour tous les types
+        'latitude' => 'required|numeric',
+        'longitude' => 'required|numeric',
+        'date_maintenance' => 'nullable|date',
+        'heure_maintenance' => 'nullable|date_format:H:i',
     ]);
 
     $demande = Demande::find($id);
@@ -234,13 +261,23 @@ public function updateLocation(Request $request, $id)
         return response()->json(['message' => 'Demande non trouvée'], 404);
     }
 
-    $demande->date_maintenance = $request->input('date_maintenance');
-    $demande->type_emplacement = $request->input('type_emplacement');
-    $demande->latitude = $request->input('latitude');
-    $demande->longitude = $request->input('longitude');
+    $demande->type_emplacement = $validated['type_emplacement'];
+    $demande->latitude = $validated['latitude'];
+    $demande->longitude = $validated['longitude'];
 
-    // Handle different location types
-    switch ($request->input('type_emplacement')) {
+    // Gestion conditionnelle de la date et heure de maintenance
+    if (isset($validated['date_maintenance'])) {
+        $demande->date_maintenance = $validated['date_maintenance'];
+
+        if (isset($validated['heure_maintenance'])) {
+            $demande->heure_maintenance = $validated['heure_maintenance'];
+        } else {
+            $demande->heure_maintenance = null;
+        }
+    }
+
+    // Gestion des types d'emplacement spécifiques
+    switch ($validated['type_emplacement']) {
         case 'maison':
             $request->validate([
                 'surface_maison' => 'required|numeric',
@@ -289,6 +326,7 @@ public function updateLocation(Request $request, $id)
         'demande' => $demande,
     ], 200);
 }
+
 public function getByDemandeWithTechnicien($client_id)
 {
     $demandes = Demande::with(['voiture', 'servicePanne'])
@@ -305,6 +343,8 @@ public function getByDemandeWithTechnicien($client_id)
         return [
             'id' => $demande->id,
             'created_at' => $demande->created_at->format('Y-m-d H:i:s'),
+             'date_maintenance' =>$demande->date_maintenance,
+              'heure_maintenance' =>$demande->heure_maintenance,
             'voiture' => [
                 'model' => $demande->voiture->model ?? 'Modèle non spécifié',
                 'serie' => $demande->voiture->serie ?? 'Série non spécifiée',
@@ -373,30 +413,12 @@ public function getDemandesParTechnicien($technicien_id)
 
     return response()->json($formattedDemandes);
 }
-
-
-public function updateFluxLink(Request $request, $id)
-{
-    $request->validate([
-        'lien_flux' => 'required|url',
-    ]);
-
-    $demande = Demande::findOrFail($id);
-    $demande->lien_flux = $request->lien_flux;
-    $demande->save();
-
-    return response()->json([
-        'message' => 'Lien flux mis à jour avec succès',
-        'lien_flux' => $demande->lien_flux,
-    ]);
-}
-
 public function getDemandesParClient($client_id)
 {
     $demandes = Demande::with(['voiture', 'servicePanne', 'pieceRecommandee'])
                        ->where('client_id', $client_id)
                        ->whereNull('date_maintenance')
-                       ->paginate(4);
+                       ->get();
 
     if ($demandes->isEmpty()) {
         return response()->json(['message' => 'Aucune demande trouvée'], 404);

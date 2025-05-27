@@ -350,27 +350,33 @@
     <div class="card-body p-0">
         <ul class="list-group list-group-flush">
             @foreach($demande->techniciens as $tech)
-                @php
-                    $flux = App\Models\FluxDirect::where('demande_id', $demande->id)
-                                                ->where('technicien_id', $tech['id'])
-                                                ->first();
-                @endphp
+            @php
+    $flux = App\Models\FluxDirect::where('demande_id', $demande->id)
+                                ->where('technicien_id', $tech['id'])
+                                ->first();
+    $demandeFlux = $flux ? $flux->demandeFlux : null;
+@endphp
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
                         <div class="fw-bold">
                             <i class="fas fa-user-tie text-secondary me-2"></i>{{ $tech['nom'] }}
-
                         </div>
-  @if($flux && $flux->lien_meet)
-                        <button class="btn btn-sm btn-outline-success mt-2">
-                            <i class="fas fa-share-square me-1"></i> Autoriser le partage avec le client
-                        </button> &nbsp;&nbsp;
-                         @endif
-                    </div>
+                       @if($demandeFlux && $flux && $flux->lien_meet)
+    @if($demandeFlux->permission)
+        <button class="btn btn-sm btn-success mt-2" disabled>
+            <i class="fas fa-check-circle me-1"></i> Partage autorisé
+        </button>
+    @else
+        <button class="btn btn-sm btn-outline-success mt-2 share-btn"
+                data-flux-id="{{ $demandeFlux->id }}">
+            <i class="fas fa-share-square me-1"></i> Autoriser le partage
+        </button>
+    @endif
+@endif    </div>
 
                     <div>
                         @if($flux && $flux->lien_meet)
-                            <a href="{{ $flux->lien_meet }}" target="_blank" class="btn btn-sm btn-primary"   style="margin-top: 30px">
+                            <a href="{{ $flux->lien_meet }}" target="_blank" class="btn btn-sm btn-primary" style="margin-top: 30px">
                                 <i class="fas fa-video me-1" style="color: wheat"></i> Meet
                             </a>
                         @else
@@ -387,7 +393,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h6 class="m-0 font-weight-bold">Forfait</h6>
+                        <h6 class="m-0 font-weight-bold">Pack</h6>
                     </div>
                     <div class="card-body">
                         <div class="info-box-value">
@@ -431,6 +437,50 @@
             </div>
         </div>
     </div>
+    <script>
+    // Gestion du partage avec le client
+document.querySelectorAll('.share-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const fluxId = this.getAttribute('data-flux-id');
+
+        Swal.fire({
+            title: 'Confirmer le partage',
+            text: "Voulez-vous vraiment autoriser le partage de ce lien avec le client?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#4361ee',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Oui, partager',
+            cancelButtonText: 'Annuler'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/demande-flux/permission/${fluxId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ permission: true })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        Swal.fire('Succès', 'Le partage a été autorisé', 'success');
+                        // Mise à jour du bouton
+                        this.classList.replace('btn-outline-success', 'btn-success');
+                        this.innerHTML = '<i class="fas fa-check-circle me-1"></i> Partage autorisé';
+                        this.disabled = true;
+                    } else {
+                        Swal.fire('Erreur', data.message || "Erreur", 'error');
+                    }
+                })
+                .catch(() => Swal.fire('Erreur', 'Erreur réseau', 'error'));
+            }
+        });
+    });
+});
+</script>
 <script>
     // Gestion de l'ouverture du flux direct
     document.querySelectorAll('.open-flux').forEach(button => {

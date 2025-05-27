@@ -10,6 +10,7 @@ use App\Models\DemandeMaintenance;
 use App\Models\MaintenanceTicket;
 use App\Models\LoyaltyPoint;
 use App\Models\TypeTickets;
+use App\Models\Specialisation;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CamionController;
 use App\Http\Controllers\AtelierController;
@@ -41,9 +42,14 @@ use App\Http\Controllers\FactureController;
 use App\Http\Controllers\DemandeMaintenanceController;
 use App\Http\Controllers\DemandeController;
 use App\Http\Controllers\FluxDirectController;
-
-
 use App\Http\Controllers\PieceRecommandeeController;
+use App\Http\Controllers\DemandeFluxController;
+
+Route::prefix('demande-flux')->group(function () {
+    Route::post('/', [DemandeFluxController::class, 'store']);
+    Route::get('/by-demande/{demandeId}', [DemandeFluxController::class, 'getFluxByDemandeId']);
+    Route::put('/permission/{id}', [DemandeFluxController::class, 'updatePermission']);
+});
 Route::get('/piece-recommandee/voir/{demandeId}', [PieceRecommandeeController::class, 'voir'])->name('piece_recommandee.voir');
 Route::middleware(['auth:atelier'])->get('/atelierss/view', [DemandeController::class, 'showDemandesParAtelierPage'])
     ->name('atelierss.demandes-par-atelier');
@@ -446,7 +452,8 @@ Route::get('atelierss/technicienAtelier', function() {
     return view('ateliers.techniciens', [
         'techniciens' => User::where('role', 'technicien')
                           ->where('atelier_id', Auth::id())
-                          ->paginate(6)
+                          ->paginate(6),
+        'specialisations' => Specialisation::where('is_visible', true)->get()
     ]);
 })->name('atelierss.techniciensAtelier');
 });

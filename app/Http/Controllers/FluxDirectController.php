@@ -29,7 +29,35 @@ class FluxDirectController extends Controller
     }
 
 
+public function getFluxParDemande($demandeId)
+{
+    $flux = FluxDirect::where('demande_id', $demandeId)->first();
 
+    if ($flux) {
+        return response()->json([
+            'lien_meet' => $flux->lien_meet,
+            'id_flux' => $flux->id,
+            'has_demande_flux' => $flux->demandeFlux ? true : false,
+        ]);
+    }
+
+    return response()->json([
+        'lien_meet' => null,
+        'has_demande_flux' => false
+    ], 200);
+}
+ public function getFluxForDemande($demandeId)
+    {
+        $flux = FluxDirect::with(['demandeFlux', 'technicien'])
+            ->where('demande_id', $demandeId)
+            ->first();
+
+        if (!$flux) {
+            return response()->json(['message' => 'Flux non trouvé'], 404);
+        }
+
+        return response()->json($flux);
+    }
      public function getOrCreate($demandeId, $technicienId)
     {
         $demande = Demande::findOrFail($demandeId);
