@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #5e8899;
-            --secondary-color: #6d9db3;
+            --primary-color: #acc1ca;
+            --secondary-color: #bed7e2;
             --accent-color: #4a6d7a;
             --light-color: #f8f9fa;
             --dark-color: #2b2d42;
@@ -27,6 +27,7 @@
             line-height: 1.6;
             display: flex;
             min-height: 100vh;
+
         }
 
         .sidebar-container {
@@ -39,10 +40,9 @@
         }
 
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            margin-top: 70px;
+
+            margin-top: 20px,
+
         }
 
         h1 {
@@ -88,7 +88,7 @@
             left: 0;
             right: 0;
             height: 5px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            background: rgb(140, 194, 199);
             opacity: 0.8;
             transition: opacity 0.3s ease;
         }
@@ -235,10 +235,10 @@
     </div>
 
     <!-- Main Content -->
-    <div class="main-content">
+        <div class="container mt-5">
         <div class="min-h-screen">
             <div class="container">
-                <div class="category-grid">
+                <div class="category-grid"  style="margin-top: 50px">
                     <!-- Cities Card -->
                     <div class="category-card" onclick="window.location.href='{{ route('ville.index') }}'">
                         <div class="card-header">

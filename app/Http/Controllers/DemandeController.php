@@ -169,15 +169,69 @@ public function getAllDemandeToExpert()
 
     return view('expert.demande_maintenance', ['demandes' => $formattedDemandes]);
 }
+public function getAllDemandeAtelierToExpert()
+{
+    $status = request()->query('status');
+    $search = request()->query('search');
+
+    $demandesQuery = Demande::with([
+        'client:id,nom,prenom,phone',
+        'voiture:id,model,serie',
+        'forfait:id,nomForfait',
+        'servicePanne.categoryPane:id,titre',
+        'servicePanne:id,titre,category_pane_id',
+        'pieceRecommandee'
+    ])
+    ->where('type_emplacement', 'fixe')
+    ->whereNotNull('techniciens');
+
+    // Filtrage par statut
+    if ($status) {
+        $demandesQuery->where('status', $status);
+    }
+
+    // Filtrage par nom ou prénom du client
+    if ($search) {
+        $demandesQuery->whereHas('client', function ($q) use ($search) {
+            $q->where('nom', 'like', "%{$search}%")
+              ->orWhere('prenom', 'like', "%{$search}%");
+        });
+    }
+
+    // Paginer les résultats
+    $demandes = $demandesQuery->paginate(6);
+
+    // Formater les données pour la vue
+    $formattedDemandes = $demandes->through(function ($demande) {
+        return [
+            'id' => $demande->id,
+            'service_titre' => $demande->servicePanne->titre ?? null,
+            'categorie_titre' => $demande->servicePanne->categoryPane->titre ?? null,
+            'client_nom' => $demande->client->nom ?? null,
+            'client_prenom' => $demande->client->prenom ?? null,
+            'client_phone' => $demande->client->phone ?? null,
+            'voiture_model' => $demande->voiture->model ?? null,
+            'voiture_serie' => $demande->voiture->serie ?? null,
+            'forfait_titre' => $demande->forfait->nomForfait ?? null,
+            'type_emplacement' => $demande->type_emplacement,
+            'date_maintenance' => $demande->date_maintenance ? $demande->date_maintenance->format('Y-m-d H:i') : null,
+            'created_at' => $demande->created_at ? $demande->created_at->format('Y-m-d H:i:s') : null,
+            'has_piece_recommandee' => $demande->pieceRecommandee ? true : false,
+            'status' => $demande->status ?? 'pending'
+        ];
+    });
+
+    return view('expert.demandeAutorisation', ['demandes' => $formattedDemandes]);
+}
 
 public function updateInfo(Request $request, $id)
 {
     // Validation des champs
     $validated = $request->validate([
-        'type_emplacement' => 'nullable|string|max:255',
-        'date_maintenance' => 'nullable|date',
-        'heure_maintenance' => 'nullable|date_format:H:i',
-        'atelier_id' => 'nullable|exists:ateliers,id',
+          'type_emplacement' => 'nullable|string|max:255',
+    'date_maintenance' => 'nullable|date',
+    'heure_maintenance' => 'nullable|date_format:H:i',
+    'atelier_id' => 'nullable|exists:ateliers,id',
     ]);
 
     // Récupération de la demande

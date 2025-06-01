@@ -70,7 +70,7 @@
     </style>
 </head>
 <body>
-    <div class="d-flex">
+    <div style="margin-left: 20px ; margin-top:20px">
         <div>
             @include('Sidebar.responsablePiece')
         </div>

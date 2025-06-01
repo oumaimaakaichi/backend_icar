@@ -84,12 +84,31 @@ class Demande extends Model
     {
         return $this->hasOne(PieceRecommandee::class);
     }
-
+    // Dans app/Models/Demande.php
+public function getPiecesChoisiesAttribute($value)
+{
+    if (is_array($value)) {
+        return $value;
+    }
+    return json_decode($value, true) ?: [];
+}
+// Dans app/Models/Demande.php
+public function rapports()
+{
+    return $this->hasMany(RapportMaintenance::class, 'id_demande');
+}
     public function servicePanne()
     {
         return $this->belongsTo(ServicePanne::class);
     }
-
+// Dans app/Models/Demande.php
+public function piecesCatalogue()
+{
+    // Supposons que pieces_choisies contient des IDs de catalogue
+    return $this->belongsToMany(Catalogue::class, null, 'demande_id', 'piece_id')
+                ->withPivot(['type', 'prix'])
+                ->using(DemandePiecePivot::class); // Créez cette classe si nécessaire
+}
     public function forfait()
     {
         return $this->belongsTo(Forfait::class);

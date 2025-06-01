@@ -2,179 +2,336 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sidebar Gauche</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <style>
+        :root {
+            --sidebar-width: 280px;
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --text-color: #2b2d42;
+            --text-light: #8d99ae;
+            --bg-color: #f8f9fa;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             min-height: 100vh;
-            background-color: #f8f9fa;
-            margin: 0;
-            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
         }
 
-        /* Header Styles */
-        .main-header {
-            position: fixed;
-            top: 0;
-            left: 250px;
-            right: 0;
-            height: 70px;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 0 30px;
-            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #e9ebee;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #333;
-            font-size: 18px;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: #485670;
-        }
-
-        .menu-link {
-            font-size: 14px;
-            padding: 10px 15px;
-            margin-bottom: 5px;
-        }
-
+        /* Sidebar Styles */
         .sidebar {
-            width: 250px;
-            background: linear-gradient(135deg, #e8ebf0, #e9ebee);
-            color: rgb(7, 7, 7);
-            padding: 20px;
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, white, white);
             height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
             display: flex;
             flex-direction: column;
-            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
-            z-index: 101;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: var(--transition);
         }
 
-        .sidebar h3 {
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .sidebar a#logout-button {
-            color: rgb(6, 6, 6);
-            margin-top: auto;
-            background: rgba(120, 124, 140, 0.3);
-            border-radius: 8px;
-            transition: background 0.3s;
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            font-size: 14px;
-        }
-
-        .sidebar a#logout-button:hover {
-            background: rgba(107, 118, 164, 0.3);
-        }
-
-        .sidebar a {
-            color: rgb(0, 0, 0);
-            text-decoration: none;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            margin-bottom: 5px;
         }
 
         .sidebar-logo {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             object-fit: cover;
             border-radius: 50%;
-            margin-bottom: 30px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 5px auto 15px;
             display: block;
-            border: 3px solid white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .sidebar a i {
+        .sidebar-title {
+            color: black;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .sidebar-menu {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px 10px;
+        }
+
+        .menu-section {
+            margin-bottom: 25px;
+        }
+
+        .menu-section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(63, 100, 232, 0.5);
+            margin-bottom: 15px;
+            padding-left: 15px;
+            font-weight: 600;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            color: rgba(0, 0, 0, 0.8);
+            text-decoration: none;
+            margin-bottom: 5px;
+            transition: var(--transition);
+            position: relative;
+            font-weight: 500;
+        }
+
+        .menu-link i {
             width: 25px;
             text-align: center;
-            margin-right: 10px;
+            margin-right: 12px;
             font-size: 16px;
+            transition: var(--transition);
         }
 
-        .sidebar a:hover {
-            background: rgba(60, 58, 71, 0.2);
+        .menu-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: black;
             transform: translateX(5px);
         }
 
-        .sidebar a.active {
-            background: rgba(255, 255, 255, 0.3);
-            font-weight: bold;
-            border-left: 4px solid #4a6baf;
+        .menu-link:hover i {
+            color: var(--primary-color);
         }
 
-        .content {
-            flex-grow: 1;
-            padding: 30px;
-            margin-left: 200px;
+        .menu-link.active {
+            background: linear-gradient(90deg, rgba(67, 97, 238, 0.2), transparent);
+            color: black;
+            font-weight: 600;
+        }
+
+        .menu-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--primary-color);
+        }
+
+        .menu-link.active i {
+            color: var(--primary-color);
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #logout-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            background: rgba(140, 138, 138, 0.1);
+            color: #090909;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        #logout-button:hover {
+            background: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+
+        #logout-button i {
+            margin-right: 10px;
+        }
+
+        /* Header Styles */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+            color: var(--text-light);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .notification-icon:hover {
+            color: var(--primary-color);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            font-size: 18px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* User Popup Styles */
+        .user-popup {
+            position: absolute;
+            top: 60px;
+            right: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 20px;
+            width: 250px;
+            left:1250px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .user-popup.show {
+            display: block;
+        }
+
+        .user-popup::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid white;
+        }
+
+        .user-popup-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+
+        .popup-user-name {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-top: 8px;
+        }
+
+        .popup-user-email {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .user-popup-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .user-popup-menu li {
+            padding: 8px 0;
+        }
+
+        .user-popup-menu li a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .user-popup-menu li a:hover {
+            color: var(--primary-color);
+        }
+
+        .user-popup-menu li a i {
+            width: 18px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
             margin-top: 70px;
-            background-color: #f5f7fa;
-            min-height: calc(100vh - 70px);
+            padding: 0px;
+            flex: 1;
+            transition: var(--transition);
         }
-/* Modal Styles */
-.modal-content {
-    border-radius: 10px;
-    border: none;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
 
-.modal-header {
-    border-bottom: 1px solid #eee;
-    background-color: #f8f9fa;
-    border-radius: 10px 10px 0 0;
-}
-
-.user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #e9ebee;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #333;
-    font-size: 20px;
-}
         /* Animation for menu items */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateX(-20px); }
@@ -189,105 +346,162 @@
         .menu-link:nth-child(2) { animation-delay: 0.2s; }
         .menu-link:nth-child(3) { animation-delay: 0.3s; }
         .menu-link:nth-child(4) { animation-delay: 0.4s; }
+        .menu-link:nth-child(5) { animation-delay: 0.5s; }
+        .menu-link:nth-child(6) { animation-delay: 0.6s; }
     </style>
 </head>
 <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="{{ asset('images/5.jpg') }}" alt="Logo" class="sidebar-logo">
+            <h3 class="sidebar-title">Maintenance System</h3>
+        </div>
 
-    <div class="sidebar" id="sidebar-menu">
-        <img src="{{ asset('images/1.png') }}" alt="Logo"  style="margin-bottom: 50px ; margin-top:20px">
-        <h3>Maintenance System</h3>
-        <a href="{{ route('atelierss.statistiques') }}" class="menu-link"><i class="fas fa-chart-bar"></i> Home</a>
+        <div class="sidebar-menu">
+            <div class="menu-section">
+                <div class="menu-section-title">Main</div>
+                <a href="{{ route('atelierss.statistiques') }}" class="menu-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ route('atelierss.demandes-par-atelier') }}" class="menu-link">
+                    <i class="fas fa-tools"></i>
+                    <span>Current Requests</span>
+                </a>
+                <a href="ticket_maintenance" class="menu-link">
+                    <i class="fas fa-ticket-alt"></i>
+                    <span>Maintenance Tickets</span>
+                </a>
+            </div>
 
-        <a href="{{ route('atelierss.demandes-par-atelier') }}" class="menu-link">
-    <i class="fas fa-tools"></i>Current requests
-</a>
-  <a href="ticket_maintenance" class="menu-link"><i class="fas fa-ticket-alt"></i> Maintenance Tickets</a>
-        <a href="{{ route('atelierss.factures') }}"  class="menu-link"><i class="fas fa-money-bill-wave"></i> Financial Management</a>
-        <a href="technicienAtelier" class="menu-link"><i class="fa-solid fa-screwdriver-wrench"></i>Technician </a>
-        <a href="employeeAtelier" class="menu-link"><i class="fa-solid fa-user"></i>Users Management </a>
-        <a href="logoutA" id="logout-button" ><i class="fas fa-sign-out-alt"></i> Logout</a>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            @csrf
-        </form>
+            <div class="menu-section">
+                <div class="menu-section-title">Management</div>
+                <a href="{{ route('atelierss.factures') }}" class="menu-link">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Financial Management</span>
+                </a>
+                <a href="technicienAtelier" class="menu-link">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <span>Technicians</span>
+                </a>
+                <a href="employeeAtelier" class="menu-link">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Users Management</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <a href="logoutA" id="logout-button">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+        </div>
     </div>
 
     <!-- Header Section -->
     <header class="main-header">
-        <div class="user-info" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#userInfoModal">
+        <div></div> <!-- Empty div for spacing -->
 
-            <div class="user-avatar">
-                <i class="fas fa-user"></i>
+        <div class="header-right">
+            <div class="notification-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
             </div>
-            @auth
-                <span class="user-name">{{ Auth::user()->nom_commercial }}</span>
-            @else
-                <span class="user-name">Invité</span>
-            @endauth
-        </div>
-    </header>
-<!-- User Info Modal -->
-<div class="modal fade" id="userInfoModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Workshop Information</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="user-avatar me-3">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div>
-                        @auth
-                            <h6 style="color: #4a6baf"><b>{{ Auth::user()->nom_commercial }}</b></h6>
-                            <p class="text-muted mb-0">Email : {{ Auth::user()->email }}</p>
-                            <p class="text-muted mb-0">Adress : {{ Auth::user()->ville }}</p>
-                        @else
-                            <p>Guest User</p>
-                        @endauth
-                    </div>
+
+            <div class="user-info" id="user-info-trigger">
+                <div class="user-avatar">
+                    <i class="fas fa-user" style="font-size: 20px; color: rgb(150, 148, 148); margin-top:0px;"></i>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
         </div>
+    </header>
+
+    <!-- User Popup -->
+    <div class="user-popup" id="user-popup">
+        <div class="user-popup-info">
+            @auth('atelier')
+            <div class="popup-user-name">
+                {{ Auth::guard('atelier')->user()->nom_commercial }}
+            </div>
+            <div class="popup-user-email">
+                {{ Auth::guard('atelier')->user()->email }}
+            </div>
+            <div class="popup-user-email">
+                {{ Auth::guard('atelier')->user()->ville }}
+            </div>
+            @else
+            <div class="popup-user-name">Invité</div>
+            @endauth
+        </div>
+        <ul class="user-popup-menu">
+            <li><a href="#"><i class="fas fa-user-cog"></i> Profile</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="#" id="popup-logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
     </div>
-</div>
-    <div class="content" >
+
+    <!-- Main Content -->
+    <main class="main-content">
         <!-- Your main content goes here -->
-    </div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Sélectionne tous les liens du menu
-            let menuLinks = document.querySelectorAll(".menu-link");
-
-            // Vérifie l'URL actuelle pour ajouter la classe active
-            let currentURL = window.location.pathname;
+            // Active menu item
+            const menuLinks = document.querySelectorAll(".menu-link");
+            const currentURL = window.location.pathname;
 
             menuLinks.forEach(link => {
-                // Vérifie si l'URL du lien correspond à l'URL actuelle
                 if (link.getAttribute("href") === currentURL) {
                     link.classList.add("active");
                 }
 
-                // Ajoute un événement au clic pour changer la classe active
-                link.addEventListener("click", function () {
-                    // Supprime la classe active des autres liens
-                    menuLinks.forEach(l => l.classList.remove("active"));
-                    // Ajoute la classe active au lien cliqué
-                    this.classList.add("active");
+                link.addEventListener('click', function() {
+                    menuLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
                 });
             });
+
+            // User popup toggle
+            const userInfoTrigger = document.getElementById('user-info-trigger');
+            const userPopup = document.getElementById('user-popup');
+
+            if (userInfoTrigger && userPopup) {
+                userInfoTrigger.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userPopup.classList.toggle('show');
+                });
+
+                // Close popup when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userPopup.contains(e.target) && e.target !== userInfoTrigger) {
+                        userPopup.classList.remove('show');
+                    }
+                });
+
+                // Logout button in popup
+                const popupLogoutButton = document.getElementById('popup-logout-button');
+                const logoutForm = document.getElementById('logout-form');
+
+                if (popupLogoutButton && logoutForm) {
+                    popupLogoutButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        logoutForm.submit();
+                    });
+                }
+            }
         });
     </script>
-    <script>
+     <script>
         document.getElementById("logout-button").addEventListener("click", function(event) {
-            event.preventDefault(); // Empêcher la navigation normale
-            document.getElementById("logout-form").submit(); // Soumettre le formulaire
+            event.preventDefault();
+            document.getElementById("logout-form").submit();
         });
     </script>
 </body>

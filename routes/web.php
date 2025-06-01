@@ -62,6 +62,12 @@ Route::put('/demandes/{demande}/update-techniciens', [DemandeController::class, 
      ->name('demandes.updateTechniciens');
 
 Route::get('/demande_maintenance', [DemandeController::class, 'getAllDemandeToExpert'])->name('expert.demande_maintenance');
+
+
+
+
+Route::get('/demande_autorisation', [DemandeController::class, 'getAllDemandeAtelierToExpert'])->name('expert.demande_autorisation');
+
 // Ou si vous utilisez un contrôleur
 Route::get('/demandes-expert', [DemandeController::class, 'getAllDemandeToExpert'])->name('expert.demandes');
 Route::post('/demandes/{id}/prix-main-oeuvre', [DemandeController::class, 'ajouterPrixMainOeuvre'])->name('demandes.ajouterPrixMainOeuvre');
@@ -396,7 +402,7 @@ Route::get('/show', function () {
 // Version corrigée
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
+Route::post('/logoutt', [AuthController::class, 'logout'])->name('atelierss.logout');
 // Routes pour les camions
 Route::get('/camions', [CamionController::class, 'index'])->name('camions.index'); // Afficher la liste des catalogues
 Route::post('/camions', [CamionController::class, 'store'])->name('camions.store'); // Enregistrer un nouveau catalogue

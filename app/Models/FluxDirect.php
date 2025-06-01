@@ -13,6 +13,7 @@ class FluxDirect extends Model
         'demande_id',
         'technicien_id',
         'lien_meet',
+          'ouvert'
     ];
 
     public function demande()

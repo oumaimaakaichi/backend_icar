@@ -27,7 +27,21 @@ class FluxDirectController extends Controller
             'flux' => $flux,
         ], 201);
     }
+public function fermerFlux($fluxId)
+{
+    $flux = FluxDirect::findOrFail($fluxId);
 
+    // Vérification des permissions (exemple)
+
+
+    $flux->update(['ouvert' => false]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Flux fermé avec succès',
+        'flux' => $flux
+    ]);
+}
 
 public function getFluxParDemande($demandeId)
 {

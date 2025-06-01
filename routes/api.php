@@ -25,7 +25,14 @@ use App\Http\Controllers\DemandeFluxController;
 
 
 // routes/api.php
+use App\Http\Controllers\RapportMaintenanceController;
 
+Route::apiResource('rapport-maintenance', RapportMaintenanceController::class);
+
+
+Route::get('/rapport-maintenance/demande/{demandeId}', [RapportMaintenanceController::class, 'showByDemande']);
+
+Route::get('/rapport-maintenance/{id}/download', [RapportMaintenanceController::class, 'download']);
 Route::get('/demandes/{demande_id}/meet-link', function ($demande_id) {
     $fluxDirect = \App\Models\FluxDirect::where('demande_id', $demande_id)
         ->with('demandeFlux')
@@ -58,7 +65,7 @@ Route::get('/demande/{demandeId}/flux', [FluxDirectController::class, 'getFluxFo
 Route::put('/demandes/{id}/update-location', [DemandeController::class, 'updateLocation']);
 Route::get('/demandes/user/{id}', [DemandeController::class, 'getByDemandeWithTechnicien']);
 Route::get('/demandes/technicien/{technicien_id}', [DemandeController::class, 'getDemandesParTechnicien']);
-
+Route::put('/flux-direct/{fluxId}/fermer', [FluxDirectController::class, 'fermerFlux']);
 Route::put('/demandes/{id}/update-link', [DemandeController::class, 'updateFluxLink']);
 Route::get('/{id}/confirmation-details', [DemandeController::class, 'getDetailsForConfirmation']);
     Route::get('/{id}/total-pieces', [DemandeController::class, 'getTotalPrixPieces']);
