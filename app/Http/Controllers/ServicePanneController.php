@@ -21,11 +21,11 @@ class ServicePanneController extends Controller
     }
 
 
-    public function index()
+     public function index()
     {
-        return ServicePanne::with('categoryPane')->get();
+        $services = ServicePanne::paginate(6);
+        return view('Categories.service', compact('services'));
     }
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -51,7 +51,7 @@ class ServicePanneController extends Controller
         $validated = $request->validate([
             'titre' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
-            'category_pane_id' => 'sometimes|required|exists:category_panes,id',
+
         ]);
 
         $service->update($validated);
@@ -62,5 +62,19 @@ class ServicePanneController extends Controller
     {
         ServicePanne::destroy($id);
         return response()->json(['message' => 'Service supprimé']);
+    }
+
+
+  public function edit(Service $service)
+    {
+        return view('service.edit', compact('service'));
+    }
+
+
+      public function toggleVisibility(ServicePanne $service)
+    {
+        $service->update(['isVisible' => !$service->isVisible]);
+
+        return back()->with('success', 'Visibilité du service mise à jour');
     }
 }

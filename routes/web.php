@@ -44,7 +44,7 @@ use App\Http\Controllers\DemandeController;
 use App\Http\Controllers\FluxDirectController;
 use App\Http\Controllers\PieceRecommandeeController;
 use App\Http\Controllers\DemandeFluxController;
-
+use App\Http\Controllers\ServicePanneController;
 Route::prefix('demande-flux')->group(function () {
     Route::post('/', [DemandeFluxController::class, 'store']);
     Route::get('/by-demande/{demandeId}', [DemandeFluxController::class, 'getFluxByDemandeId']);
@@ -63,7 +63,14 @@ Route::put('/demandes/{demande}/update-techniciens', [DemandeController::class, 
 
 Route::get('/demande_maintenance', [DemandeController::class, 'getAllDemandeToExpert'])->name('expert.demande_maintenance');
 
+// Pour l'API (api.php)
+Route::get('/demandes/statistics', [DemandeController::class, 'getDemandeStatistics']);
 
+
+// Pour la vue (web.php)
+Route::get('/statistiques/demandes', [DemandeController::class, 'showStatistics'])
+
+    ->name('demandes.statistics');
 
 
 Route::get('/demande_autorisation', [DemandeController::class, 'getAllDemandeAtelierToExpert'])->name('expert.demande_autorisation');
@@ -160,14 +167,24 @@ Route::post('/entrepriseAutomobile/{entreprise}/add-voiture', [EntrepriseAutomob
 Route::delete('/entrepriseAutomobile/{entreprise}/remove-voiture/{index}', [EntrepriseAutomobileController::class, 'removeVoiture'])
      ->name('entrepriseAutomobile.removeVoiture');
 //services category
-Route::patch('/service/{service}/toggle-visibility', [ServiceController::class, 'toggleVisibility'])
-    ->name('service.toggle-visibility');
+
+
+    Route::patch('/servicee/{service}/toggle-visibility', [ServicePanneController::class, 'toggleVisibility'])
+    ->name('servicee.toggle-visibility');
 Route::get('/service', [ServiceController::class, 'index'])->name('service.index');
+
+Route::get('/servicee', [ServicePanneController::class, 'index'])->name('servicee.index');
+
 Route::get('/service/create', [ServiceController::class, 'create'])->name('service.create');
 Route::post('/service', [ServiceController::class, 'store'])->name('service.store');
-Route::get('/service/{service}/edit', [ServiceController::class, 'edit'])->name('service.edit');
+
+Route::post('/servicee', [ServicePanneController::class, 'store'])->name('servicee.store');
+Route::get('/service/{service}/edit', [ServicePanneController::class, 'edit'])->name('servicee.edit');
+
+Route::get('/servicee/{service}/edit', [ServicePanneController::class, 'edit'])->name('servicee.edit');
 Route::put('/service/{service}', [ServiceController::class, 'update'])->name('service.update');
-Route::delete('/service/{service}', [ServiceController::class, 'destroy'])->name('service.destroy');
+Route::put('/servicee/{service}', [ServicePanneController::class, 'update'])->name('servicee.update');
+Route::delete('/servicee/{service}', [ServicePanneController::class, 'destroy'])->name('servicee.destroy');
 Route::get('/service/{service}', [ServiceController::class, 'show'])->name('service.show');
 
 // specialisation

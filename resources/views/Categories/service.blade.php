@@ -149,17 +149,17 @@
                         <span class="close-btn">&times;</span>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('service.store') }}" method="POST" class="grid grid-cols-1 gap-4">
+                        <form action="{{ route('servicee.store') }}" method="POST" class="grid grid-cols-1 gap-4">
                             @csrf
                             <div class="md:col-span-1">
-                                <label for="nomService" class="block text-sm font-medium text-gray-700 mb-1">Nom du service</label>
-                                <input type="text" id="nomService" name="nomService" required
+                                <label for="titre" class="block text-sm font-medium text-gray-700 mb-1">Nom du service</label>
+                                <input type="text" id="titre" name="titre" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div class="md:col-span-1">
-                                <label for="payeFabrication" class="block text-sm font-medium text-gray-700 mb-1">Pays de fabrication</label>
-                                <input type="text" id="payeFabrication" name="payeFabrication" required
+                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Pays de fabrication</label>
+                                <input type="text" id="description" name="description" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
@@ -204,28 +204,20 @@
                 @csrf
                 @method('PUT')
                 <div class="md:col-span-1">
-                    <label for="edit_nomService" class="block text-sm font-medium text-gray-700 mb-1">Nom du service</label>
-                    <input type="text" id="edit_nomService" name="nomService" required
+                    <label for="edit_titre" class="block text-sm font-medium text-gray-700 mb-1">Nom du service</label>
+                    <input type="text" id="edit_titre" name="titre" required
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
                 <div class="md:col-span-1">
-                    <label for="edit_payeFabrication" class="block text-sm font-medium text-gray-700 mb-1">Pays de fabrication</label>
-                    <input type="text" id="edit_payeFabrication" name="payeFabrication" required
+                    <label for="edit_description" class="block text-sm font-medium text-gray-700 mb-1">Pays de fabrication</label>
+                    <input type="text" id="edit_description" name="description" required
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
-                <div class="md:col-span-1">
-                    <label for="edit_prix" class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
-                    <input type="number" step="0.01" id="edit_prix" name="prix" required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
 
-                <div class="md:col-span-1">
-                    <label for="edit_rival" class="block text-sm font-medium text-gray-700 mb-1">Rival (%)</label>
-                    <input type="number" id="edit_rival" name="rival" min="0" max="100" required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
+
+
 
                 <div class="modal-footer">
                     <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-edit-modal">
@@ -267,11 +259,9 @@
                                     Nom
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Pays
+                                    Description
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Prix
-                                </th>
+
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Actions
                                 </th>
@@ -283,29 +273,27 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <i class="fas fa-concierge-bell text-indigo-500 mr-3" style="color: #5e8899"></i>
-                                        <span class="font-medium text-gray-900">{{ $service->nomService }}</span>
+                                        <span class="font-medium text-gray-900">{{ $service->titre }}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="text-gray-600">{{ $service->payeFabrication }}</span>
+                                    <span class="text-gray-600">{{ $service->description }}</span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="font-medium">{{ $service->prix ? number_format($service->prix, 2) . ' €' : '-' }}</span>
-                                </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <!-- View Button -->
 
 
                                         <!-- Edit Button -->
-                                        <button onclick="openEditModal({{ $service->id }}, '{{ $service->nomService }}', '{{ $service->payeFabrication }}', '{{ $service->prix }}', '{{ $service->rival }}')"
+                                        <button onclick="openEditModal({{ $service->id }}, '{{ $service->titre }}', '{{ $service->description }}')"
                                             class="text-yellow-600 hover:text-yellow-900 ml-3"
                                             title="Modifier">
                                             <i class="fas fa-edit"></i>
                                         </button>
 
                                         <!-- Delete Button -->
-                                        <form action="{{ route('service.destroy', $service->id) }}" method="POST" class="inline ml-3">
+                                        <form action="{{ route('servicee.destroy', $service->id) }}" method="POST" class="inline ml-3">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
@@ -316,7 +304,7 @@
                                             </button>
                                         </form>
 
-                                        <form action="{{ route('service.toggle-visibility', $service->id) }}" method="POST" class="inline ml-3">
+                                        <form action="{{ route('servicee.toggle-visibility', $service->id) }}" method="POST" class="inline ml-3">
                                             @csrf
                                             @method('PATCH')
                                             <button type="submit">
@@ -355,17 +343,16 @@
         </main>
     </div>
 <script>
-    function openEditModal(id, nomService, payeFabrication, prix, rival) {
+    function openEditModal(id, titre, description) {
     const modal = document.getElementById('editServiceModal');
 
     // Pré-remplir le formulaire
-    document.getElementById('edit_nomService').value = nomService;
-    document.getElementById('edit_payeFabrication').value = payeFabrication;
-    document.getElementById('edit_prix').value = prix;
-    document.getElementById('edit_rival').value = rival;
+    document.getElementById('edit_titre').value = titre;
+    document.getElementById('edit_description').value = description;
+
 
     // Mettre à jour l'action du formulaire
-    document.getElementById('editServiceForm').action = `/service/${id}`;
+    document.getElementById('editServiceForm').action = `/servicee/${id}`;
 
     // Afficher le modal
     modal.style.display = 'flex';

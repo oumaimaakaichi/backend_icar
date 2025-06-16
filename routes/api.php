@@ -27,7 +27,13 @@ use App\Http\Controllers\DemandeFluxController;
 // routes/api.php
 use App\Http\Controllers\RapportMaintenanceController;
 
+use App\Http\Controllers\DemandePanneInconnuController;
+ Route::prefix('demandes-panne-inconnue')->group(function () {
+        Route::post('/', [DemandePanneInconnuController::class, 'store']);
+        Route::get('/{id}', [DemandePanneInconnuController::class, 'show']);
+    });
 Route::apiResource('rapport-maintenance', RapportMaintenanceController::class);
+Route::get('/demandes/statistics', [DemandeController::class, 'getDemandeStatistics']);
 
 
 Route::get('/rapport-maintenance/demande/{demandeId}', [RapportMaintenanceController::class, 'showByDemande']);

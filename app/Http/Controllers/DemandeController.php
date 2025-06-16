@@ -698,6 +698,38 @@ public function updateTechniciens(Request $request, Demande $demande)
         ], 500);
     }
 }
+public function getDemandeStatistics(): JsonResponse
+{
+    $total = Demande::count();
 
+    $parStatut = Demande::selectRaw('status, COUNT(*) as count')
+        ->groupBy('status')
+        ->pluck('count', 'status');
+
+    $parMois = Demande::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as mois, COUNT(*) as total')
+        ->groupBy('mois')
+        ->orderBy('mois', 'asc')
+        ->get();
+
+    $delaiMoyen = Demande::whereNotNull('date_maintenance')
+        ->selectRaw('AVG(TIMESTAMPDIFF(HOUR, created_at, date_maintenance)) as moyenne_heures')
+        ->value('moyenne_heures');
+
+    return response()->json([
+        'total' => $total,
+        'par_statut' => $parStatut,
+        'par_mois' => $parMois,
+        'delai_moyen_heures' => round($delaiMoyen, 2),
+    ]);
+}
+
+
+/**
+ * Affiche la vue des statistiques
+ */
+public function showStatistics()
+{
+    return view('expert.statistiques');
+}
 
 }

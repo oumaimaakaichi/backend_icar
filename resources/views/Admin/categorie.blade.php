@@ -258,7 +258,7 @@
                     </div>
 
                     <!-- Services Card -->
-                    <div class="category-card" onclick="window.location.href='{{ route('service.index') }}'">
+                    <div class="category-card" onclick="window.location.href='{{ route('servicee.index') }}'">
                         <div class="card-header">
                             <i class="fas fa-concierge-bell"></i>
                             Services
