@@ -9,6 +9,7 @@
     <style>
         :root {
             --sidebar-width: 280px;
+            --sidebar-collapsed-width: 80px;
             --primary-color: #4361ee;
             --secondary-color: #3f37c9;
             --text-color: #2b2d42;
@@ -48,10 +49,85 @@
             transition: var(--transition);
         }
 
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        .sidebar.collapsed .sidebar-header {
+            padding: 25px 10px;
+        }
+
+        .sidebar.collapsed .sidebar-logo {
+            width: 40px;
+            height: 40px;
+            margin: 5px auto;
+        }
+
+        .sidebar.collapsed .sidebar-title,
+        .sidebar.collapsed .menu-section-title,
+        .sidebar.collapsed .menu-link span {
+            display: none;
+        }
+
+        .sidebar.collapsed .menu-link {
+            justify-content: center;
+            padding: 12px 0;
+        }
+
+        .sidebar.collapsed .menu-link i {
+            margin-right: 0;
+            font-size: 18px;
+        }
+
+        .sidebar.collapsed .sidebar-footer {
+            padding: 20px 10px;
+        }
+
+        .sidebar.collapsed #logout-button {
+            justify-content: center;
+            padding: 12px 0;
+        }
+
+        .sidebar.collapsed #logout-button i {
+            margin-right: 0;
+        }
+
+        .sidebar.collapsed #logout-button span {
+            display: none;
+        }
+
         .sidebar-header {
             padding: 25px 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
+            position: relative;
+        }
+
+        .toggle-sidebar {
+            position: absolute;
+            right: -12px;
+            top: 10%;
+            transform: translateY(-50%);
+            background: white;
+            border: 2px solid #eee;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1001;
+        }
+
+        .toggle-sidebar i {
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        .sidebar.collapsed .toggle-sidebar i {
+            transform: rotate(180deg);
         }
 
         .sidebar-logo {
@@ -63,6 +139,7 @@
             display: block;
             border: 3px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
         }
 
         .sidebar-title {
@@ -70,6 +147,7 @@
             font-weight: 600;
             font-size: 1.2rem;
             margin: 0;
+            transition: var(--transition);
         }
 
         .sidebar-menu {
@@ -90,6 +168,7 @@
             margin-bottom: 15px;
             padding-left: 15px;
             font-weight: 600;
+            transition: var(--transition);
         }
 
         .menu-link {
@@ -103,6 +182,7 @@
             transition: var(--transition);
             position: relative;
             font-weight: 500;
+            overflow: hidden;
         }
 
         .menu-link i {
@@ -146,6 +226,7 @@
         .sidebar-footer {
             padding: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
         }
 
         #logout-button {
@@ -184,6 +265,11 @@
             padding: 0 30px;
             box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
             z-index: 100;
+            transition: var(--transition);
+        }
+
+        body.sidebar-collapsed .main-header {
+            left: var(--sidebar-collapsed-width);
         }
 
         .header-right {
@@ -332,6 +418,10 @@
             transition: var(--transition);
         }
 
+        body.sidebar-collapsed .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+
         /* Animation for menu items */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateX(-20px); }
@@ -352,10 +442,14 @@
 </head>
 <body>
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
+                        <div class="toggle-sidebar" id="toggle-sidebar">
+                <i class="fas fa-chevron-left"></i>
+            </div>
             <img src="{{ asset('images/5.jpg') }}" alt="Logo" class="sidebar-logo">
             <h3 class="sidebar-title">Maintenance System</h3>
+
         </div>
 
         <div class="sidebar-menu">
@@ -365,7 +459,9 @@
                     <i class="fas fa-chart-bar"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ route('atelierss.demandes-par-atelier') }}" class="menu-link">
+
+
+                 <a href="{{ route('ateliers.choice') }}" class="menu-link">
                     <i class="fas fa-tools"></i>
                     <span>Current Requests</span>
                 </a>
@@ -453,6 +549,27 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Toggle sidebar
+            const toggleSidebar = document.getElementById('toggle-sidebar');
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+
+            toggleSidebar.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+                body.classList.toggle('sidebar-collapsed');
+
+                // Store state in localStorage
+                const isCollapsed = sidebar.classList.contains('collapsed');
+                localStorage.setItem('sidebarCollapsed', isCollapsed);
+            });
+
+            // Check localStorage for saved state
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+                body.classList.add('sidebar-collapsed');
+            }
+
             // Active menu item
             const menuLinks = document.querySelectorAll(".menu-link");
             const currentURL = window.location.pathname;

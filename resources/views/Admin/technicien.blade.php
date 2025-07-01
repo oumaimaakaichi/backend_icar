@@ -33,7 +33,10 @@
                     <option value="prenom">LastName</option>
                     <option value="email">Email</option>
                 </select>
-                <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search..." style="margin-right : 20px">
+                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTechnicienModal">
+                <i class="fas fa-plus me-2"></i>Nouveau Technicien
+            </button>
             </div>
 
             @if (isset($users) && $users->count() > 0)
@@ -178,7 +181,64 @@
         </div>
     </div>
 </div>
+  <div class="modal fade" id="addTechnicienModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-plus me-2"></i>Nouveau Technicien
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('techniciens.storeTech') }}" method="POST">
+                    @csrf
 
+
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nom <span class="text-danger">*</span></label>
+                                <input type="text" name="nom" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Prénom <span class="text-danger">*</span></label>
+                                <input type="text" name="prenom" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                                <input type="text" name="phone" class="form-control" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Adresse <span class="text-danger">*</span></label>
+                                <input type="text" name="adresse" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Spécialité <span class="text-danger">*</span></label>
+                                <select name="specialite" class="form-select" required>
+                                    <option value="" selected disabled>Choisir une spécialité</option>
+                                    @foreach($specialisations as $specialite)
+                                        <option value="{{ $specialite->nom_specialite }}">{{ $specialite->nom_specialite }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Années d'expérience</label>
+                                <input type="number" name="annee_experience" class="form-control" min="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -347,7 +407,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         let rows = document.querySelectorAll('#employeeTable tr');
         let currentPage = 1;
-        let rowsPerPage = 5;
+        let rowsPerPage = 7;
         function showPage(page) {
             let start = (page - 1) * rowsPerPage;
             let end = start + rowsPerPage;

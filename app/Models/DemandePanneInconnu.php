@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 class DemandePanneInconnu extends Model
 {
     use HasFactory;
@@ -13,7 +13,7 @@ class DemandePanneInconnu extends Model
 
     protected $fillable = [
         'forfait_id',
-'category_id',
+'categories',
         'voiture_id',
         'client_id',
         'pieces_choisies',
@@ -29,7 +29,8 @@ class DemandePanneInconnu extends Model
         'status',
         'techniciens',
         'description_probleme', // Nouvel attribut spécifique
-
+         'panne',
+ 'main_oeuvre_pieces',
 
         // Attributs pour différents types d'emplacement
         'surface_maison',
@@ -45,6 +46,8 @@ class DemandePanneInconnu extends Model
     ];
 
     protected $casts = [
+        'categories' => 'array',
+         'main_oeuvre_pieces' => 'array',
         'pieces_choisies' => 'array',
         'techniciens' => 'array',
         'date_maintenance' => 'date',
@@ -71,9 +74,9 @@ class DemandePanneInconnu extends Model
         return $this->belongsTo(Voiture::class);
     }
 
-    public function catalogues()
+    public function category()
     {
-        return $this->belongsTo(CategoryPanne::class);
+        return $this->belongsTo(CategoryPane::class);
     }
 
     public function forfait()
@@ -103,4 +106,23 @@ class DemandePanneInconnu extends Model
         }
         return json_decode($value, true) ?: [];
     }
+public function catalogues()
+{
+    return Catalogue::whereIn('id', $this->pieces_choisies ?? []);
 }
+        public function flux()
+    {
+        return $this->hasOne(FluxDirectInconnuPanne::class, 'demande_id');
+    }
+
+
+
+    public function getMainOeuvrePiecesAttribute($value)
+{
+    if (is_array($value)) {
+        return $value;
+    }
+    return json_decode($value, true) ?: [];
+}
+}
+

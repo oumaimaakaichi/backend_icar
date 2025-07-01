@@ -11,9 +11,12 @@ class CategoryPane extends Model
 
     protected $fillable = [
         'titre',
-        'description'
+        'description',
+        'is_visible'
     ];
-
+  protected $attributes = [
+        'is_visible' => true
+    ];
     protected $table = 'category_panes';
     public function services()
 {

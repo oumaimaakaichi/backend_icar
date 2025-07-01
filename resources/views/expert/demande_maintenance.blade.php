@@ -238,7 +238,7 @@
 
 @include('Sidebar.sidebarExpert')
 
-<div class="container-main">
+<div class="container-main" style="margin-right: 80px">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="page-title">Liste des Demandes</h1>
         <div>
@@ -289,7 +289,7 @@
                     <th>Voiture</th>
                     <th>Service</th>
                     <th>Catégorie</th>
-                    <th>Pack</th>
+
                     <th>Type</th>
                     <th>Date</th>
                     <th class="text-center">Pièces</th>
@@ -319,7 +319,7 @@
                     <td>
                         <span class="badge bg-light text-dark">{{ $demande['categorie_titre'] }}</span>
                     </td>
-                    <td > {{ $demande['forfait_titre']  }}</td>
+
                     <td>
 
                             <span class="badge bg-info bg-opacity-10 text-info"><i class="fas fa-home me-1"></i> {{$demande['type_emplacement']}}</span>
@@ -355,7 +355,7 @@
                     </td>
                     <td>
                         <div class="d-flex gap-2">
-                            <a href="{{ route('expert.show', $demande['id']) }}" class="btn-action btn-details">
+                            <a href="{{ route('expert.show4', $demande['id']) }}" class="btn-action btn-details">
                                 <i class="fas fa-eye me-1"></i> Détails
                             </a>
 

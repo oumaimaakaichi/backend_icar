@@ -45,24 +45,36 @@ use App\Http\Controllers\FluxDirectController;
 use App\Http\Controllers\PieceRecommandeeController;
 use App\Http\Controllers\DemandeFluxController;
 use App\Http\Controllers\ServicePanneController;
+use App\Http\Controllers\CategoryPaneController;
+use App\Http\Controllers\DemandePanneInconnuController;
+use App\Http\Controllers\DemandeFluxInconnuPanneController;
 Route::prefix('demande-flux')->group(function () {
     Route::post('/', [DemandeFluxController::class, 'store']);
     Route::get('/by-demande/{demandeId}', [DemandeFluxController::class, 'getFluxByDemandeId']);
     Route::put('/permission/{id}', [DemandeFluxController::class, 'updatePermission']);
 });
+Route::put('/demande-flux-inconnu/permission/{id}', [DemandeFluxInconnuPanneController::class, 'updatePermission']);
 Route::get('/piece-recommandee/voir/{demandeId}', [PieceRecommandeeController::class, 'voir'])->name('piece_recommandee.voir');
 Route::middleware(['auth:atelier'])->get('/atelierss/view', [DemandeController::class, 'showDemandesParAtelierPage'])
     ->name('atelierss.demandes-par-atelier');
+
+
+    Route::middleware(['auth:atelier'])->get('/atelierss/viewInconnu', [DemandePanneInconnuController::class, 'showDemandesParAtelierPage'])
+    ->name('ateliers.demandeInconnu');
 Route::get('/demandes/{id}', [DemandeController::class, 'show'])->name('ateliers.show');
+
+Route::get('/demandesI/{id}', [DemandePanneInconnuController::class, 'show1'])->name('ateliers.showInconnu');
 Route::get('/flux-direct/{flux}', [FluxDirectController::class, 'show'])
 
      ->name('flux-direct.show');
-Route::get('/demandesPourExpert/{id}', [DemandeController::class, 'show2'])->name('expert.show');
+Route::get('/demandesPourExpertt/{id}', [DemandeController::class, 'show2'])->name('expert.show4');
+Route::get('/demandesPourExpert/{id}', [DemandePanneInconnuController::class, 'show2'])->name('expert.show2');
 Route::put('/demandes/{demande}/update-techniciens', [DemandeController::class, 'updateTechniciens'])
      ->name('demandes.updateTechniciens');
-
+Route::put('/demandesI/{demande}/update-techniciensInco', [DemandePanneInconnuController::class, 'updateTechniciens'])
+     ->name('demandes.updateTechniciensInconnu');
 Route::get('/demande_maintenance', [DemandeController::class, 'getAllDemandeToExpert'])->name('expert.demande_maintenance');
-
+Route::get('/demande_maintenanceInconnu', [DemandePanneInconnuController::class, 'getAllDemandeToExpert'])->name('expert.demande_maintenanceInconnu');
 // Pour l'API (api.php)
 Route::get('/demandes/statistics', [DemandeController::class, 'getDemandeStatistics']);
 
@@ -74,7 +86,14 @@ Route::get('/statistiques/demandes', [DemandeController::class, 'showStatistics'
 
 
 Route::get('/demande_autorisation', [DemandeController::class, 'getAllDemandeAtelierToExpert'])->name('expert.demande_autorisation');
+Route::get('/request-choice', [DemandeController::class, 'showRequestChoice'])
+         ->name('expert.request_choice');
+Route::get('/request-choiceP', [DemandePanneInconnuController::class, 'showRequestChoice'])
+         ->name('ateliers.choice');
 
+
+         Route::get('/request-choiceResponsable', [UserController::class, 'showRequestChoice'])
+         ->name('responsable.choice');
 // Ou si vous utilisez un contrôleur
 Route::get('/demandes-expert', [DemandeController::class, 'getAllDemandeToExpert'])->name('expert.demandes');
 Route::post('/demandes/{id}/prix-main-oeuvre', [DemandeController::class, 'ajouterPrixMainOeuvre'])->name('demandes.ajouterPrixMainOeuvre');
@@ -111,7 +130,12 @@ Route::middleware('auth:atelier')->get('atelierss/factures', [FactureController:
 Route::patch('/ville/{ville}/toggle-visibility', [VilleController::class, 'toggleVisibility'])
     ->name('ville.toggle-visibility');
 Route::get('/ville', [VilleController::class, 'index'])->name('ville.index');
+
+
+Route::get('/categoryPanne', [CategoryPaneController::class, 'indexx'])->name('category.indexx');
+Route::get('/toggle-visibility', [CategoryPaneController::class, 'toggle-visibility'])->name('category-panes.toggle-visibility');
 Route::get('/ville/create', [VilleController::class, 'create'])->name('ville.create');
+  Route::resource('category-panes', CategoryPaneController::class);
 Route::post('/ville', [VilleController::class, 'store'])->name('ville.store');
 Route::get('/ville/{ville}/edit', [VilleController::class, 'edit'])->name('ville.edit');
 Route::put('/ville/{ville}', [VilleController::class, 'update'])->name('ville.update');
@@ -328,7 +352,8 @@ Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::put('/users/{id}', [UserController::class, 'updateEmail'])->name('users.update');
 Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
 Route::get('/users/{id}', [UserController::class, 'show']);
-Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
+Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
 Route::put('/techniciens/{id}', [UserController::class, 'update'])->name('techniciens.update');
 Route::get('/csrf-token', function () {
     return response()->json(['csrfToken' => csrf_token()]);
@@ -393,12 +418,14 @@ Route::get('/employee', function () {
 })->name('employee');
 Route::get('/experts', function () {
     return view('Admin.experts', [
-       'experts' => User::where('role', 'expert')->get()
+       'experts' => User::where('role', 'expert')->get(),
+        'specialisations' => Specialisation::where('is_visible', true)->get()
     ]);
 })->name('experts');
 Route::get('/technicien', function () {
     return view('Admin.technicien', [
-       'users' => User::where('role', 'technicien')->get()
+       'users' => User::where('role', 'technicien')->get(),
+        'specialisations' => Specialisation::where('is_visible', true)->get()
     ]);
 })->name('technicien');
 Route::get('/atelier', function () {
@@ -533,6 +560,6 @@ Route::middleware(['auth:entreprise'])->group(function () {
     });
 
 Route::post('/techniciens', [UserController::class, 'storee'])->name('techniciens.storee');
-
-
+Route::post('/techniciensStore', [UserController::class, 'storeTech'])->name('techniciens.storeTech');
+Route::post('/expertStore', [UserController::class, 'storeExpert'])->name('expert.storeExpert');
 

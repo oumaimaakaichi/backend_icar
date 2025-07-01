@@ -7,105 +7,386 @@
     <title>Liste des Ateliers</title>
     <!-- Lien vers Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-,   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <style>
-        #map {
-            height: 300px;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        .table-container {
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .table thead {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .table tbody tr:nth-child(odd) {
-            background-color: #f9f9f9;
+        :root {
+            --primary-color: #e3e4e7;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --success-color: #4facfe;
+            --warning-color: #ff9a9e;
+            --danger-color: #ffa085;
+            --light-bg: #f8fafc;
+            --white: #ffffff;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
-        .table td, .table th {
-            vertical-align: middle;
+        body {
+            background: linear-gradient(135deg, #f6f6f8 0%, #f2f1f4 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-section {
+
+            padding: 40px 30px;
+            border-radius: 20px 20px 0 0;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-sm {
-            padding: 5px 10px;
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 2px,
+                rgba(255,255,255,0.1) 2px,
+                rgba(255,255,255,0.1) 4px
+            );
+            animation: shimmer 3s linear infinite;
         }
 
-        .btn-info {
-            background-color: cadetblue;
-            border: none;
-        }
-
-        .btn-outline-primary {
-            border: 1px solid #007bff;
-            color: #007bff;
-        }
-
-        .btn-outline-primary:hover {
-            background-color: #007bff;
-            color: white;
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
         .header-title {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-title h1 {
+            color: rgb(73, 115, 145);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 2px 10px rgba(130, 224, 237, 0.3);
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            color: rgba(110, 108, 108, 0.9);
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
+        .content-section {
+            padding: 30px;
+        }
+
+        .search-container {
             display: flex;
             justify-content: center;
-            align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
-        .table thead tr {
-            background-color: #007bff !important;
-            color: white !important;
-        }
-
-        .table th, .table td {
-            text-align: center;
-            padding: 10px;
-        }
         .search-box {
             position: relative;
             width: 100%;
             max-width: 500px;
-            margin-bottom: 10px
         }
 
         .search-box input {
             width: 100%;
-            padding: 12px 10px 12px 40px;
+            padding: 15px 20px 15px 55px;
             font-size: 16px;
-            border: 2px solid #999b9e;
-            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
             outline: none;
             transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .search-box input:focus {
-            border-color: #0056b3;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+            border-color: var(--primary-color);
+            box-shadow: 0 5px 25px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
         }
 
-        .search-box::before {
-            content: "🔍";
+        .search-icon {
             position: absolute;
-            left: 15px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
+            color: var(--primary-color);
             font-size: 18px;
-            color: #007bff;
             pointer-events: none;
         }
 
-        .search-box input::placeholder {
-            color: #999;
-            font-style: italic;
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .table {
+            margin: 0;
+            background: transparent;
+        }
+
+
+
+        .table thead th {
+            color: rgb(133, 131, 131) !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+            padding: 20px 15px;
+            border: none;
+            text-align: center;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .table tbody tr:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .table td {
+            padding: 20px 15px;
+            vertical-align: middle;
+            text-align: center;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .btn-modern {
+            border: none;
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(236, 232, 232, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-modern:hover::before {
+            left: 100%;
+        }
+
+        .btn-visit {
+
+            color: white;
+        }
+
+        .btn-visit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+            color: white;
+        }
+
+        .btn-activate {
+            background: linear-gradient(135deg, #be3b03, #be3b03);
+            color: white;
+        }
+
+        .btn-activate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-deactivate {
+            background: linear-gradient(135deg, #6aa67c, #6aa67c);
+            color: white;
+        }
+
+        .btn-deactivate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4);
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: linear-gradient(135deg, #54b988, #4a8f70);
+            color: white;
+        }
+
+        .status-inactive {
+            background: linear-gradient(135deg, #fa4c52, #fa4c52);
+            color: white;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+            gap: 15px;
+        }
+
+        .btn-pagination {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .btn-pagination:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .btn-pagination:disabled {
+            background: #e2e8f0;
+            color: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+        }
+
+        #map {
+            height: 300px;
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header-section {
+                padding: 30px 20px;
+                border-radius: 15px 15px 0 0;
+            }
+
+            .header-title h1 {
+                font-size: 2rem;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -113,68 +394,105 @@
 
 <!-- Sidebar inclusion (assurez-vous que le fichier sidebar.blade.php existe) -->
 @include('Sidebar.sidebar')
-<div class="container mt-5">
-    <!-- Titre centré -->
-    <div class="header-title">
-        <h1  style="margin-top: 70px">Workshop List</h1>
-    </div>
 
-    <!-- Tableau des ateliers -->
-    <div class="search-box">
-        <input type="text" id="search" placeholder="Search ...">
-    </div>
+<div class="container-fluid" style="margin-top: 60px">
+    <div class="main-container animate-fade-in">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-title">
+                <h1><i class="fas fa-tools"></i> Workshop Management</h1>
+                <p class="header-subtitle">Gérez et supervisez tous vos ateliers en un seul endroit</p>
+            </div>
+        </div>
 
-    <div class="table-responsive table-container">
-        <table class="table table-bordered table-hover" id="workshopTable">
-            <thead>
-                <tr>
-                    <th>Trade Name</th>
-                    <th>Email</th>
-                    <th>Website Link</th>
-                    <th>City</th>
-                    <th>Bank Name</th>
-                    <th>Director Name</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="AtelierTable">
-                @foreach ($ateliers as $atelier)
-                    <tr>
-                        <td>{{ $atelier->nom_commercial }}</td>
-                        <td>{{ $atelier->email }}</td>
-                        <td>
-                            <a href="{{ $atelier->site_web }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-map-marked-alt"></i> View Site
-                            </a>
-                        </td>
-                        <td>{{ $atelier->ville }}</td>
-                        <td>{{ $atelier->nom_banque }}</td>
-                        <td>{{ $atelier->nom_directeur }}</td>
-                        <td class="{{ $atelier->is_active == 0 ? 'text-primary' : 'text-success' }}">
-                            {{ $atelier->is_active == 0 ? 'Désactivé ' : 'Activé' }}
-                        </td>
-                        <td>
-                            @if ($atelier->is_active == 0)
-                                <button class="btn btn-success btn-sm activate-btn" data-id="{{ $atelier->id }}" title="activate workshop">
-                                    <i class="fas fa-toggle-off"></i>
-                                </button>
-                            @else
-                                <button class="btn btn-secondary btn-sm deactivate-btn" data-id="{{ $atelier->id }}" title="desactivate workshop">
-                                    <i class="fas fa-toggle-on"></i>
-                                </button>
-                            @endif
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div class="d-flex " style="margin-left: 50%">
-            <button id="prevBtn" class="btn btn-secondary" disabled>  <i class="fas fa-arrow-left" ></i></button> &nbsp;
-            <button id="nextBtn" class="btn btn-secondary">  <i class="fas fa-arrow-right"></i></button>
+        <!-- Content Section -->
+        <div class="content-section">
+            <!-- Statistics Cards -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalWorkshops">0</div>
+                    <div class="stat-label">Total Ateliers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number text-success" id="activeWorkshops">0</div>
+                    <div class="stat-label">Ateliers Actifs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number text-warning" id="inactiveWorkshops">0</div>
+                    <div class="stat-label">Ateliers Inactifs</div>
+                </div>
+            </div>
+
+            <!-- Search Container -->
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search" placeholder="Rechercher par nom ou email...">
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="table-responsive table-container">
+                <table class="table" id="workshopTable">
+                    <thead style="background-color: #00f2fe">
+                        <tr>
+                            <th><i class="fas fa-store"></i> Trade Name</th>
+                            <th><i class="fas fa-envelope"></i> Email</th>
+                            <th><i class="fas fa-globe"></i> Website</th>
+                            <th><i class="fas fa-map-marker-alt"></i> City</th>
+
+                            <th><i class="fas fa-user-tie"></i> Director</th>
+                            <th><i class="fas fa-toggle-on"></i> Status</th>
+                            <th><i class="fas fa-cogs"></i> Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="AtelierTable">
+                        @foreach ($ateliers as $atelier)
+                            <tr>
+                                <td><strong>{{ $atelier->nom_commercial }}</strong></td>
+                                <td>{{ $atelier->email }}</td>
+                                <td>
+                                    <a href="{{ $atelier->site_web }}" target="_blank" class="btn btn-modern btn-visit">
+                                        <i class="fas fa-external-link-alt" style="color: cadetblue"></i> <b style="color: cadetblue">Visiter</b>
+                                    </a>
+                                </td>
+                                <td>{{ $atelier->ville }}</td>
+
+                                <td>{{ $atelier->nom_directeur }}</td>
+                                <td>
+                                    <span class="status-badge {{ $atelier->is_active == 0 ? 'status-inactive' : 'status-active' }}">
+                                        {{ $atelier->is_active == 0 ? 'Inactif' : 'Actif' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @if ($atelier->is_active == 0)
+                                        <button class="btn btn-modern btn-activate activate-btn" data-id="{{ $atelier->id }}" title="Activer l'atelier">
+                                            <i class="fas fa-toggle-off" style="color: white"></i>
+                                        </button>
+                                    @else
+                                        <button class="btn btn-modern btn-deactivate deactivate-btn" data-id="{{ $atelier->id }}" title="Désactiver l'atelier">
+                                            <i class="fas fa-toggle-on" style="color: white"></i>
+                                        </button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <div class="pagination-container">
+                    <button id="prevBtn" class="btn-pagination" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span id="pageInfo" style="margin: 0 20px; font-weight: 600; color: var(--text-dark);">Page 1</span>
+                    <button id="nextBtn" class="btn-pagination">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
-
 </div>
 
 <!-- Bootstrap JS et dépendances -->
@@ -183,9 +501,14 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- Leaflet JS pour la carte -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Calcul des statistiques
+        updateStatistics();
+
         // Activation d'un atelier
         document.querySelectorAll('.activate-btn').forEach(button => {
             button.addEventListener('click', function () {
@@ -202,11 +525,11 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.message || "Atelier activé !");
+                    showNotification(data.message || "Atelier activé !", 'success');
                     setTimeout(() => location.reload(), 1000);
                 })
                 .catch(error => {
-                    alert("Une erreur s'est produite lors de l'activation.");
+                    showNotification("Une erreur s'est produite lors de l'activation.", 'error');
                 });
             });
         });
@@ -227,15 +550,69 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.message || "Atelier désactivé !");
+                    showNotification(data.message || "Atelier désactivé !", 'warning');
                     setTimeout(() => location.reload(), 1000);
                 })
                 .catch(error => {
-                    alert("Une erreur s'est produite lors de la désactivation.");
+                    showNotification("Une erreur s'est produite lors de la désactivation.", 'error');
                 });
             });
         });
     });
+
+    // Fonction pour afficher les statistiques
+    function updateStatistics() {
+        const rows = document.querySelectorAll("#AtelierTable tr");
+        const totalWorkshops = rows.length;
+        let activeWorkshops = 0;
+        let inactiveWorkshops = 0;
+
+        rows.forEach(row => {
+            const statusBadge = row.querySelector('.status-badge');
+            if (statusBadge && statusBadge.classList.contains('status-active')) {
+                activeWorkshops++;
+            } else {
+                inactiveWorkshops++;
+            }
+        });
+
+        document.getElementById('totalWorkshops').textContent = totalWorkshops;
+        document.getElementById('activeWorkshops').textContent = activeWorkshops;
+        document.getElementById('inactiveWorkshops').textContent = inactiveWorkshops;
+    }
+
+    // Fonction pour afficher les notifications
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        `;
+
+        if (type === 'success') {
+            notification.style.background = 'linear-gradient(135deg, #4facfe, #00f2fe)';
+        } else if (type === 'warning') {
+            notification.style.background = 'linear-gradient(135deg, #ff9a9e, #fad0c4)';
+        } else {
+            notification.style.background = 'linear-gradient(135deg, #ffa085, #ffaa85)';
+        }
+
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
 
     //recherche par nom et email une atelier
     document.getElementById("search").addEventListener("keyup", function () {
@@ -252,10 +629,12 @@
                 row.style.display = "none";
             }
         });
+
+        // Recalculer les statistiques après filtrage
+        updateStatistics();
     });
-</script>
-<script>
-    // Afficher 5 atelier par defaut et ajouter les bouttons next et previous
+
+    // Pagination avec indicateur de page
     let currentPage = 0;
     const rowsPerPage = 5;
     const rows = document.querySelectorAll("#AtelierTable tr");
@@ -264,8 +643,12 @@
         rows.forEach((row, index) => {
             row.style.display = (index >= page * rowsPerPage && index < (page + 1) * rowsPerPage) ? "" : "none";
         });
+
         document.getElementById("prevBtn").disabled = page === 0;
         document.getElementById("nextBtn").disabled = (page + 1) * rowsPerPage >= rows.length;
+
+        const totalPages = Math.ceil(rows.length / rowsPerPage);
+        document.getElementById("pageInfo").textContent = `Page ${page + 1} sur ${totalPages}`;
     }
 
     document.getElementById("prevBtn").addEventListener("click", () => {
@@ -283,8 +666,7 @@
     });
 
     showPage(currentPage);
-</script>
-<script>
+
     // Activation des tooltips Bootstrap
     document.addEventListener('DOMContentLoaded', function() {
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -292,6 +674,19 @@
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     });
-    </script>
+</script>
+
+<style>
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+</style>
+
 </body>
 </html>

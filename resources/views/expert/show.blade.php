@@ -1,3 +1,4 @@
+
 <html>
 <head>
     <meta charset="UTF-8">
@@ -6,62 +7,207 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --success: #4cc9f0;
-            --info: #4895ef;
-            --warning: #f8961e;
-            --danger: #f72585;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
-            --light-gray: #f1f3f5;
+            --primary: #000000;
+            --primary-dark: #d3d3dc;
+            --primary-light: #8b5cf6;
+            --secondary: #06b6d4;
+            --success: #10b981;
+            --info: #3b82f6;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --gray: #64748b;
+            --light-gray: #f1f5f9;
+            --border: #e2e8f0;
+            --gradient: linear-gradient(135deg, #a1c4d8 0%, #619bc8 100%);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: #f8f9fc;
-            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: #495057;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+        }
+
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-title i {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 24px;
-            background-color: white;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gradient);
+            opacity: 0.6;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-lg);
         }
 
         .card-header {
-            background-color: white;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            font-weight: 600;
-            padding: 1.25rem 1.5rem;
-            border-radius: 12px 12px 0 0 !important;
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            padding: 1.5rem 2rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-radius: 24px 24px 0 0 !important;
+        }
+
+        .card-header i {
             color: var(--primary);
+            font-size: 1.2rem;
         }
 
         .card-body {
+            padding: 2rem;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+            border-radius: 16px;
             padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient);
+        }
+
+        .info-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-box-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gray);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .info-box-value i {
+            color: var(--primary);
+            font-size: 1.2rem;
         }
 
         .status-badge {
-            padding: 0.5em 0.8em;
-            font-size: 0.75em;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.8rem;
             font-weight: 700;
             border-radius: 50px;
-            text-transform: capitalize;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             display: inline-flex;
             align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .status-badge:hover::before {
+            left: 100%;
         }
 
         .status-badge i {
@@ -69,53 +215,118 @@
             font-size: 0.8em;
         }
 
-        .status-Non_assigné { background-color: var(--primary); color: white; }
-        .status-Assignée_now { background-color: var(--gray); color: white; }
-        .status-en_attente { background-color: var(--warning); color: white; }
-        .status-en_cours { background-color: var(--info); color: white; }
-        .status-termine { background-color: var(--success); color: white; }
-        .status-annule { background-color: var(--danger); color: white; }
-
-        .detail-label {
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 0.3rem;
-            font-size: 0.9rem;
+        .status-Non_assigné {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
         }
-
-        .detail-value {
-            color: var(--gray);
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
+        .status-Assignée_now {
+            background: linear-gradient(135deg, #64748b, #475569);
+            color: white;
         }
-
-        .detail-value i {
-            margin-right: 8px;
-            color: var(--primary);
-            width: 18px;
-            text-align: center;
+        .status-en_attente {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        .status-en_cours {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+        .status-termine {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        .status-annule {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
         }
 
         .btn-submit {
-            background-color: var(--primary);
+            background: var(--gradient);
             border: none;
-            padding: 0.7rem 1.5rem;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            color: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
-            justify-content: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
         .btn-submit:hover {
-            background-color: var(--secondary);
             transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            background: var(--primary-dark);
+        }
+
+        .btn-submit:hover::before {
+            left: 100%;
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
         }
 
         .btn-submit i {
             margin-right: 8px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.15);
+            background: white;
+            transform: translateY(-1px);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .list-group-item {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px !important;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-group-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-group-item i {
+            margin-right: 12px;
+            color: var(--primary);
         }
 
         .section-title {
@@ -134,85 +345,8 @@
             left: 0;
             width: 50px;
             height: 3px;
-            background-color: var(--primary);
+            background: var(--gradient);
             border-radius: 3px;
-        }
-
-        .form-control, .form-select {
-            border-radius: 8px;
-            padding: 0.6rem 1rem;
-            border: 1px solid #e0e0e0;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.15);
-        }
-
-        .list-group-item {
-            border: none;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .list-group-item i {
-            margin-right: 12px;
-            color: var(--primary);
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .page-title {
-            color: var(--dark);
-            font-weight: 700;
-            font-size: 1.8rem;
-            margin: 0;
-        }
-
-        .info-box {
-            background-color: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .info-box-title {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--gray);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        .info-box-value {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-        }
-
-        .info-box-value i {
-            margin-right: 10px;
-            color: var(--primary);
-        }
-
-        .divider {
-            height: 1px;
-            background-color: rgba(0, 0, 0, 0.05);
-            margin: 1.5rem 0;
         }
 
         .technician-select-container {
@@ -225,27 +359,156 @@
             font-weight: 500;
             color: var(--dark);
         }
+
+        .btn-primary {
+            background: var(--gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-outline-success {
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(167, 139, 250, 0.4);
+            color: white;
+        }
+
+        .text-danger {
+            color: var(--danger) !important;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem !important;
+        }
+
+        .small {
+            font-size: 0.875em;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+
+        .shadow-sm {
+            box-shadow: var(--shadow) !important;
+        }
+
+        .bg-primary {
+            background: var(--gradient) !important;
+        }
+
+        .text-white {
+            color: white !important;
+        }
+
+        .fw-bold {
+            font-weight: 700 !important;
+        }
+
+        .text-secondary {
+            color: var(--gray) !important;
+        }
+
+        .badge {
+            border-radius: 50px;
+            padding: 0.4rem 0.8rem;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .bg-secondary {
+            background: var(--gray) !important;
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .info-box {
+                padding: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
     @include('Sidebar.sidebarExpert')
 
-    <div class="container py-4">
-        <div class="page-header">
-            <h1 class="page-title">Détails de la demande #{{ $demande->id }}</h1>
+    <div class="container py-4" >
+        <div class="page-header" style="margin-top: 60px">
+            <h1 class="page-title" >
+                <i class="fas fa-clipboard-list"></i>
+                Détails de la demande
+            </h1>
+             <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('expert.demande_maintenance') }}" class="text-decoration-none">Demandes</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">#{{ $demande->id }}</li>
+                </ol>
+            </nav>
         </div>
 
         <div class="row">
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header">
+                        <i class="fas fa-info-circle"></i>
                         <h6 class="m-0 font-weight-bold">Informations principales</h6>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-4">
                                 <div class="info-box">
-                                    <div class="info-box-title">Client</div>
+                                    <div class="info-box-title">
+                                        <i class="fas fa-user"></i>
+                                        Client
+                                    </div>
                                     <div class="info-box-value">
                                         <i class="fas fa-user"></i>
                                         {{ $demande->client->prenom }} {{ $demande->client->nom }}
@@ -254,7 +517,10 @@
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="info-box">
-                                    <div class="info-box-title">Téléphone</div>
+                                    <div class="info-box-title">
+                                        <i class="fas fa-phone"></i>
+                                        Téléphone
+                                    </div>
                                     <div class="info-box-value">
                                         <i class="fas fa-phone"></i>
                                         {{ $demande->client->phone }}
@@ -266,7 +532,10 @@
                         <div class="row">
                             <div class="col-md-6 mb-4">
                                 <div class="info-box">
-                                    <div class="info-box-title">Véhicule</div>
+                                    <div class="info-box-title">
+                                        <i class="fas fa-car"></i>
+                                        Véhicule
+                                    </div>
                                     <div class="info-box-value">
                                         <i class="fas fa-car"></i>
                                         {{ $demande->voiture->model }} ({{ $demande->voiture->serie }})
@@ -275,7 +544,10 @@
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="info-box">
-                                    <div class="info-box-title">Statut</div>
+                                    <div class="info-box-title">
+                                        <i class="fas fa-flag"></i>
+                                        Statut
+                                    </div>
                                     <div class="info-box-value">
                                         <span class="status-badge status-{{ str_replace(' ', '_', $demande->status) }}">
                                             <i class="fas fa-circle"></i>
@@ -289,7 +561,10 @@
                         <div class="row">
                             <div class="col-md-6 mb-4">
                                 <div class="info-box">
-                                    <div class="info-box-title">Service</div>
+                                    <div class="info-box-title">
+                                        <i class="fas fa-tools"></i>
+                                        Service
+                                    </div>
                                     <div class="info-box-value">
                                         <i class="fas fa-tools"></i>
                                         {{ $demande->servicePanne->titre }}
@@ -298,7 +573,10 @@
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="info-box">
-                                    <div class="info-box-title">Catégorie</div>
+                                    <div class="info-box-title">
+                                        <i class="fas fa-list-alt"></i>
+                                        Catégorie
+                                    </div>
                                     <div class="info-box-value">
                                         <i class="fas fa-list-alt"></i>
                                         {{ $demande->servicePanne->categoryPane->titre }}
@@ -313,6 +591,7 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">
+                        <i class="fas fa-euro-sign"></i>
                         <h6 class="m-0 font-weight-bold">Proposition de prix</h6>
                     </div>
                     <div class="card-body">
@@ -320,6 +599,7 @@
                             @csrf
                             <div class="mb-4">
                                 <label for="prix_main_oeuvre" class="form-label info-box-title">
+                                    <i class="fas fa-hand-holding-usd"></i>
                                     Prix main d'œuvre (€)
                                 </label>
                                 <input type="number" step="0.01" min="0" class="form-control"
@@ -332,7 +612,7 @@
                                 @enderror
                             </div>
                             @if($demande->status === 'Nouvelle_demande')
-                            <button type="submit" class="btn btn-submit w-100">
+                            <button type="submit" class="btn btn-submit w-100 pulse-animation">
                                 <i class="fas fa-paper-plane"></i>Envoyer l'offre
                             </button>
                             @endif
@@ -343,9 +623,8 @@
 @if($demande->techniciens && count($demande->techniciens) > 0)
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-primary text-white">
-        <h6 class="m-0 font-weight-bold">
-            <i class="fas fa-users-cog me-2"></i>Techniciens assignés
-        </h6>
+        <i class="fas fa-users-cog" style="color: white"></i>
+        <h6 class="m-0 font-weight-bold">Techniciens assignés</h6>
     </div>
     <div class="card-body p-0">
         <ul class="list-group list-group-flush">
@@ -364,7 +643,7 @@
                        @if($demandeFlux && $flux && $flux->lien_meet)
     @if($demandeFlux->permission)
         <button class="btn btn-sm btn-success mt-2" disabled>
-            <i class="fas fa-check-circle me-1"></i> Partage autorisé
+            <i class="fas fa-check-circle me-1" style="color: white"></i> Partage autorisé
         </button>
     @else
         <button class="btn btn-sm btn-outline-success mt-2 share-btn"
@@ -377,7 +656,7 @@
                     <div>
                         @if($flux && $flux->lien_meet)
                             <a href="{{ $flux->lien_meet }}" target="_blank" class="btn btn-sm btn-primary" style="margin-top: 30px">
-                                <i class="fas fa-video me-1" style="color: wheat"></i> Meet
+                                <i class="fas fa-video me-1" style="color: rgb(255, 255, 255)"></i> Meet
                             </a>
                         @else
                             <span class="badge bg-secondary">Aucun lien disponible</span>
@@ -390,9 +669,9 @@
 </div>
 @endif
 
-
                 <div class="card">
                     <div class="card-header">
+                        <i class="fas fa-box"></i>
                         <h6 class="m-0 font-weight-bold">Pack</h6>
                     </div>
                     <div class="card-body">
@@ -406,6 +685,7 @@
                 @if($demande->status === 'offre_acceptee')
                 <div class="card">
                     <div class="card-header">
+                        <i class="fas fa-user-plus"></i>
                         <h6 class="m-0 font-weight-bold">Assigner des techniciens</h6>
                     </div>
                     <div class="card-body">

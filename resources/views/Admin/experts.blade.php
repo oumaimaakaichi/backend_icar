@@ -25,6 +25,8 @@
                     <option value="email">Email</option>
                 </select>
                 <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTechnicienModal" style="margin-left: 20px">
+                <i class="fas fa-plus me-2"></i>Nouveau Expert
             </div>
 
             @if (isset($experts) && $experts->count() > 0)
@@ -168,7 +170,53 @@
         </div>
     </div>
 </div>
+ <div class="modal fade" id="addTechnicienModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-plus me-2"></i>Nouveau Expert
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('expert.storeExpert') }}" method="POST">
+                    @csrf
 
+
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nom <span class="text-danger">*</span></label>
+                                <input type="text" name="nom" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Prénom <span class="text-danger">*</span></label>
+                                <input type="text" name="prenom" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                                <input type="text" name="phone" class="form-control" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Adresse <span class="text-danger">*</span></label>
+                                <input type="text" name="adresse" class="form-control" required>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>

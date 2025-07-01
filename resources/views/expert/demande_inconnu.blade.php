@@ -24,9 +24,8 @@
         }
 
         .container-main {
-            margin-top: 20px;
+            margin-top: 10px;
             padding: 2rem;
-            margin-right: 200px;
             transition: all 0.3s;
         }
 
@@ -42,7 +41,7 @@
             font-weight: 700;
             position: relative;
             padding-bottom: 0.75rem;
-            margin-top: 1.5rem;
+            margin-top: 1rem;
         }
 
         .page-title::after {
@@ -69,14 +68,11 @@
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            width: 1200px;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
         }
 
         .table {
             margin-bottom: 0;
-
-
         }
 
         .table thead {
@@ -241,10 +237,9 @@
 <body>
 
 @include('Sidebar.sidebarExpert')
-
-<div class="container-main">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="page-title">Liste des Demandes</h1>
+ <div class="container py-5" style="margin-top: 0px">
+        <div class=" p-4 d-flex justify-content-between align-items-center mb-4" style="background-color: transparent">
+        <h1 class="page-title">Liste des Demandes Inconnu</h1>
         <div>
             <span class="me-3 text-muted small"><span class="status-indicator indicator-new"></span> Nouvelle</span>
             <span class="me-3 text-muted small"><span class="status-indicator indicator-assigned"></span> Assignée</span>
@@ -291,12 +286,12 @@
                 <tr>
                     <th>Client</th>
                     <th>Voiture</th>
-                    <th>Service</th>
+
                     <th>Catégorie</th>
-                    <th>Pack</th>
+                    <th>Description</th>
                     <th>Type</th>
                     <th>Date</th>
-                    <th class="text-center">Pièces</th>
+
                     <th>Statut</th>
                     <th>Actions</th>
                 </tr>
@@ -319,11 +314,13 @@
                         <div class="fw-semibold">{{ $demande['voiture_model'] }}</div>
 
                     </td>
-                    <td>{{ $demande['service_titre'] }}</td>
+
                     <td>
                         <span class="badge bg-light text-dark">{{ $demande['categorie_titre'] }}</span>
                     </td>
-                    <td > {{ $demande['forfait_titre']  }}</td>
+<td>
+                        <span class="badge bg-light text-dark">{{ $demande['description_probleme'] }}</span>
+                    </td>
                     <td>
 
                             <span class="badge bg-info bg-opacity-10 text-info"><i class="fas fa-home me-1"></i> {{$demande['type_emplacement']}}</span>
@@ -337,13 +334,7 @@
                             <span class="text-muted">À planifier</span>
                         @endif
                     </td>
-                    <td class="text-center">
-                        @if($demande['has_piece_recommandee'])
-                            <span class="badge bg-success bg-opacity-10 text-success"><i class="fas fa-check-circle me-1"></i> Oui</span>
-                        @else
-                            <span class="badge bg-light text-muted"><i class="fas fa-times-circle me-1"></i> Non</span>
-                        @endif
-                    </td>
+
                     <td>
                         @if($demande['status'] == 'Nouvelle_demande')
                             <span class="badge-status badge-new"><i class="fas fa-clock me-1"></i> Nouvelle</span>
@@ -359,7 +350,7 @@
                     </td>
                     <td>
                         <div class="d-flex gap-2">
-                            <a href="{{ route('expert.show4', $demande['id']) }}" class="btn-action btn-details">
+                            <a href="{{ route('expert.show2', $demande['id']) }}" class="btn-action btn-details">
                                 <i class="fas fa-eye me-1"></i> Détails
                             </a>
 

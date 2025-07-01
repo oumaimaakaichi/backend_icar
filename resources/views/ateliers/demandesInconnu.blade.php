@@ -368,7 +368,7 @@
         <!-- Header -->
         <div class="header">
             <h3 class="header-title">Demandes de maintenances </h3>
-            <p class="header-subtitle">Gérez et suivez toutes les demandes de maintenance pour les pannes connues </p>
+            <p class="header-subtitle">Gérez et suivez toutes les demandes de maintenance pour les pannes Inconnues </p>
         </div>
 
         <!-- Filters -->
@@ -400,17 +400,7 @@
             <div class="requests-grid">
                 @foreach($demandes as $demande)
                     <div class="request-card" data-status="{{ str_replace(' ', '_', $demande->status) }}">
-                        <div class="card-header">
-                            <h3 class="request-id">
-                                Demande
-                                @if($demande->has_piece_recommandee)
-                                    <i class="fas fa-tools piece-indicator" title="Pièces recommandées"></i>
-                                @endif
-                            </h3>
-                            <span class="status-badge status-{{ str_replace(' ', '_', $demande->status) }}">
-                                {{ str_replace('_', ' ', $demande->status) }}
-                            </span>
-                        </div>
+
 
                         <div class="card-content">
                             <div class="info-section">
@@ -432,22 +422,14 @@
                                 </div>
                             </div>
                             <div class="info-section">
-                                <h4>Détails Service</h4>
+                                <h4>Détails Catgorie</h4>
                                 <div class="info-item">
                                     <i class="fas fa-wrench"></i>
-                                    <strong>Service:</strong>
-                                    <span>{{ $demande->servicePanne->titre }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fas fa-tags"></i>
                                     <strong>Catégorie:</strong>
-                                    <span>{{ $demande->servicePanne->categoryPane->titre }}</span>
+                                    <span>{{ $demande->category->titre }}</span>
                                 </div>
-                                <div class="info-item">
-                                    <i class="fas fa-euro-sign"></i>
-                                    <strong>Forfait:</strong>
-                                    <span>{{ $demande->forfait->nomForfait }}</span>
-                                </div>
+
+
                             </div>
                         </div>
 
@@ -462,7 +444,7 @@
                                     RDV: {{ $demande->date_maintenance->format('d/m/Y H:i') }}
                                 </span>
                             @endif
-                            <a href="{{ route('ateliers.show', $demande->id) }}" class="btn-details">
+                            <a   href="{{ route('ateliers.showInconnu', $demande->id) }}" class="btn-details">
                                 <i class="fas fa-eye"></i>
                                 Détails
                             </a>

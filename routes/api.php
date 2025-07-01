@@ -23,11 +23,35 @@ use Illuminate\Support\Facades\Auth;
 // routes/api.php
 use App\Http\Controllers\DemandeFluxController;
 
+use App\Http\Controllers\FluxDirectInconnuPanneController;
+use App\Http\Controllers\DemandeFluxInconnuPanneController;
 
 // routes/api.php
 use App\Http\Controllers\RapportMaintenanceController;
 
 use App\Http\Controllers\DemandePanneInconnuController;
+// Créer une demande de flux
+Route::post('/demande-flux-inconnu', [DemandeFluxInconnuPanneController::class, 'store']);
+
+// Récupérer le flux par ID de demande (attention : cette méthode semble incorrectement nommée, voir remarque plus bas)
+Route::get('/demande-flux-inconnu/by-demande/{demandeId}', [DemandeFluxInconnuPanneController::class, 'getFluxByDemandeId']);
+
+// Mettre à jour la permission
+Route::put('/demande-flux-inconnu/{id}/permission', [DemandeFluxInconnuPanneController::class, 'updatePermission']);
+
+// Récupérer une demande de flux via l'id_flux
+Route::get('/demande-flux-inconnu/by-flux/{idFlux}', [DemandeFluxInconnuPanneController::class, 'getDemandeByIdFlux']);
+
+// Autoriser le partage du lien Meet avec le client
+Route::put('/demande-flux-inconnu/{id}/autoriser-partage', [DemandeFluxInconnuPanneController::class, 'autoriserPartage']);
+
+Route::get('/demandes-technicien/{technicien_id}', [DemandePanneInconnuController::class, 'getDemandesParTechnicien']);
+
+Route::put('/demande-panne/{id}/update-panne', [DemandePanneInconnuController::class, 'updatePanne']);
+
+        Route::get('/demandeInconnu/{userId}', [DemandePanneInconnuController::class, 'index']);
+        Route::get('/demandeInconnu/{id}', [DemandePanneInconnuController::class, 'show']);
+Route::put('/demandes-panne-inconnue/{id}/main-oeuvre', [DemandePanneInconnuController::class, 'ajouterPrixMainOeuvrePiece']);
  Route::prefix('demandes-panne-inconnue')->group(function () {
         Route::post('/', [DemandePanneInconnuController::class, 'store']);
         Route::get('/{id}', [DemandePanneInconnuController::class, 'show']);
@@ -54,6 +78,7 @@ Route::get('/demandes/{demande_id}/meet-link', function ($demande_id) {
 
     return response()->json([
         'lien_meet' => $fluxDirect->lien_meet,
+        'ouvert' => $fluxDirect->ouvert,
         'partage_with_client' => $fluxDirect->demandeFlux->partage_with_client
     ]);
 });
@@ -64,14 +89,19 @@ Route::prefix('demande-flux')->group(function () {
     Route::get('/by-demande/{demandeId}', [DemandeFluxController::class, 'getFluxByDemandeId']);
     Route::put('/permission/{id}', [DemandeFluxController::class, 'updatePermission']);
 });
-Route::get('/flux-par-demande/{demandeId}', [FluxDirectController::class, 'getFluxParDemande']);
+Route::get('/demandes-inconnues/{demandeId}', [DemandePanneInconnuController::class, 'show']);
 
-Route::get('/flux-direct/{demandeId}/{technicienId}', [FluxDirectController::class, 'getOrCreate']);
+Route::get('/flux-par-demande/{demandeId}', [FluxDirectController::class, 'getFluxParDemande']);
+Route::post('/flux-par-demandeInconnu', [FluxDirectInconnuPanneController::class, 'store']);
+Route::get('/flux-par-demande_inconnu/{demandeId}', [FluxDirectInconnuPanneController::class, 'getFluxParDemande']);
+Route::get('/flux-direct/{demandeId}/{technicienId}', [FluxDirectInconnuPanneController::class, 'getOrCreate']);
+Route::get('/flux-direct-inconnu/{demandeId}/{technicienId}', [FluxDirectController::class, 'getOrCreate']);
 Route::get('/demande/{demandeId}/flux', [FluxDirectController::class, 'getFluxForDemande']);
 Route::put('/demandes/{id}/update-location', [DemandeController::class, 'updateLocation']);
 Route::get('/demandes/user/{id}', [DemandeController::class, 'getByDemandeWithTechnicien']);
 Route::get('/demandes/technicien/{technicien_id}', [DemandeController::class, 'getDemandesParTechnicien']);
 Route::put('/flux-direct/{fluxId}/fermer', [FluxDirectController::class, 'fermerFlux']);
+Route::put('/flux-direct-inconnu/{fluxId}/fermer', [FluxDirectInconnuPanneController::class, 'fermerFlux']);
 Route::put('/demandes/{id}/update-link', [DemandeController::class, 'updateFluxLink']);
 Route::get('/{id}/confirmation-details', [DemandeController::class, 'getDetailsForConfirmation']);
     Route::get('/{id}/total-pieces', [DemandeController::class, 'getTotalPrixPieces']);

@@ -412,6 +412,12 @@ public function getByDemandeWithTechnicien($client_id)
 
     return response()->json($formatted, 200);
 }
+public function showRequestChoice()
+{
+    return view('expert.choice');
+}
+
+
 
 // Dans DemandeController.php
 

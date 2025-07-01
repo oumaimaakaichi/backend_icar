@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\VerificationCode;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ExpertAccountCreated;
 use Illuminate\Support\Facades\Auth;
 use App\Services\SmsService;
 use App\Notifications\SendVerificationCode;
@@ -17,36 +20,118 @@ class UserController extends Controller
         $users = User::all(); // Récupérer tous les utilisateurs
         return view('users.index', compact('users'));
     }
-    public function storee(Request $request)
-    {
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|max:20',
-            'adresse' => 'required|string|max:255',
-            'atelier_id' => 'required|exists:users,id',
-            'specialite' => 'nullable|string',
-            'annee_experience' => 'nullable|integer'
-        ]);
+   public function storee(Request $request)
+{
+    $request->validate([
+        'nom' => 'required|string|max:255',
+        'prenom' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'phone' => 'required|string|max:20',
+        'adresse' => 'required|string|max:255',
+        'atelier_id' => 'required|exists:users,id',
+        'specialite' => 'nullable|string',
+        'annee_experience' => 'nullable|integer'
+    ]);
 
-        $technicien = User::create([
-            'nom' => $request->nom,
-            'prenom' => $request->prenom,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => bcrypt('password'),
-            'role' => 'technicien',
-            'adresse' => $request->adresse,
-           'atelier_id' => $request->atelier_id,
-            'extra_data' => [
-                'specialite' => $request->specialite,
-                'annee_experience' => $request->annee_experience
-            ]
-        ]);
+    // Générer un mot de passe aléatoire
+    $randomPassword = Str::random(10); // 10 caractères aléatoires
 
-        return redirect()->route('atelierss.techniciensAtelier')->with('success', 'Technicien ajouté avec succès!');
-    }
+    $technicien = User::create([
+        'nom' => $request->nom,
+        'prenom' => $request->prenom,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'password' => bcrypt($randomPassword), // Enregistrer le mot de passe hashé
+        'role' => 'technicien',
+        'adresse' => $request->adresse,
+        'atelier_id' => $request->atelier_id,
+        'extra_data' => [
+            'specialite' => $request->specialite,
+            'annee_experience' => $request->annee_experience
+        ]
+    ]);
+
+    // Envoyer l'email avec le mot de passe
+    Mail::to($technicien->email)->send(new TechnicienAccountCreated($technicien, $randomPassword));
+
+    return redirect()->route('atelierss.techniciensAtelier')->with('success', 'Technicien ajouté avec succès! Un email avec les informations de connexion a été envoyé.');
+}
+
+
+
+
+   public function storeTech(Request $request)
+{
+    $request->validate([
+        'nom' => 'required|string|max:255',
+        'prenom' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'phone' => 'required|string|max:20',
+        'adresse' => 'required|string|max:255',
+        'specialite' => 'nullable|string',
+        'annee_experience' => 'nullable|integer'
+    ]);
+
+    // Générer un mot de passe aléatoire
+    $randomPassword = Str::random(10); // 10 caractères aléatoires
+
+    $technicien = User::create([
+        'nom' => $request->nom,
+        'prenom' => $request->prenom,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'password' => bcrypt($randomPassword), // Enregistrer le mot de passe hashé
+        'role' => 'technicien',
+        'adresse' => $request->adresse,
+        'extra_data' => [
+            'specialite' => $request->specialite,
+            'annee_experience' => $request->annee_experience
+        ]
+    ]);
+
+    // Envoyer l'email avec le mot de passe
+    Mail::to($technicien->email)->send(new TechnicienAccountCreated($technicien, $randomPassword));
+
+    return redirect()->route('atelierss.techniciensAtelier')->with('success', 'Technicien ajouté avec succès! Un email avec les informations de connexion a été envoyé.');
+}
+
+
+   public function storeExpert(Request $request)
+{
+    $request->validate([
+        'nom' => 'required|string|max:255',
+        'prenom' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'phone' => 'required|string|max:20',
+        'adresse' => 'required|string|max:255',
+        'specialite' => 'nullable|string',
+        'annee_experience' => 'nullable|integer',
+        'qualifications' => 'nullable|string',
+    ]);
+
+    // Générer un mot de passe aléatoire
+    $randomPassword = Str::random(10); // 10 caractères aléatoires
+
+    $expert = User::create([
+        'nom' => $request->nom,
+        'prenom' => $request->prenom,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'password' => bcrypt($randomPassword), // Enregistrer le mot de passe hashé
+        'role' => 'expert',
+        'adresse' => $request->adresse,
+        'extra_data' => [
+            'specialite' => $request->specialite,
+            'annee_experience' => $request->annee_experience,
+              'qualifications' => $request->qualifications
+        ]
+    ]);
+
+    // Envoyer l'email avec le mot de passe
+    Mail::to($expert->email)->send(new ExpertAccountCreated($expert, $randomPassword));
+
+    return redirect()->route('experts')->with('success', 'expert ajouté avec succès! Un email avec les informations de connexion a été envoyé.');
+}
     //crréer nouvelle utilisateur
     public function store(Request $request)
     {
@@ -158,29 +243,56 @@ public function getTechniciensSansAtelier()
     }
 
     // Mettre à jour un utilisateur
-    public function update(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
+   public function edit()
+{
+    $user = Auth::user();
+    return view('profile.edit', compact('user'));
+}
 
-        $request->validate([
-            'nom' => 'sometimes|string|max:255',
-            'prenom' => 'sometimes|string|max:255',
-            'email' => 'sometimes|string|email|unique:users,email,' . $id,
-            'phone' => 'sometimes|string|min:6',
-            'password' => 'sometimes|string|min:6',
-        ]);
+public function update(Request $request)
+{
+    $user = Auth::user();
 
-        $user->update([
-            'nom' => $request->nom ?? $user->nom,
-            'prenom' => $request->prenom ?? $user->prenom,
-            'email' => $request->email ?? $user->email,
-            'phone' => $request->phone ?? $user->phone,
-            'password' => $request->password ? Hash::make($request->password) : $user->password,
-        ]);
+    $request->validate([
+        'nom' => 'required|string|max:255',
+        'prenom' => 'required|string|max:255',
+        'email' => 'required|string|email|unique:users,email,' . $user->id,
+        'phone' => 'required|string|min:6',
+        'password' => 'nullable|string|min:6|confirmed',
+        'specialite' => 'required|string|max:255',
+        'annee_experience' => 'required|integer|min:0',
+        'qualifications' => 'required|string',
+    ]);
 
-        return response()->json(['message' => 'Utilisateur mis à jour', 'user' => $user]);
+    $updateData = [
+        'nom' => $request->nom,
+        'prenom' => $request->prenom,
+        'email' => $request->email,
+        'phone' => $request->phone,
+    ];
+
+    if ($request->password) {
+        $updateData['password'] = Hash::make($request->password);
     }
 
+    // Mise à jour des données spécifiques à l'expert
+    $extraData = $user->extra_data ?? [];
+    $extraData = array_merge($extraData, [
+        'specialite' => $request->specialite,
+        'annee_experience' => $request->annee_experience,
+        'qualifications' => $request->qualifications,
+    ]);
+
+    $updateData['extra_data'] = $extraData;
+
+    $user->update($updateData);
+
+    return redirect()->route('profile.edit')->with('success', 'Profil mis à jour avec succès');
+}
+public function showRequestChoice()
+{
+    return view('responsable_piece.choice');
+}
     // Supprimer un utilisateur
     public function destroy($id)
     {

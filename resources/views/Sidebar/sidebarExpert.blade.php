@@ -523,7 +523,11 @@
                     <i class="fas fa-chart-pie"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ route('expert.demande_maintenance') }}" class="menu-link">
+               <!--<a href="{{ route('expert.demande_maintenance') }}" class="menu-link">
+                    <i class="fas fa-tools"></i>
+                    <span>Requests</span>
+                </a>-->
+                <a href="{{ route('expert.request_choice') }}" class="menu-link">
                     <i class="fas fa-tools"></i>
                     <span>Requests</span>
                 </a>
@@ -597,7 +601,7 @@
             @endauth
         </div>
         <ul class="user-popup-menu">
-            <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+           <li><a href="{{ route('profile.edit') }}"><i class="fas fa-user"></i> Profile</a></li>
             <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
             <li><a href="#" id="popup-logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>

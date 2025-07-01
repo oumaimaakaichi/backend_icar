@@ -64,16 +64,17 @@ class AuthController extends Controller
                 case 'web':
                     if ($user->role === 'admin') {
                         return redirect()->route('technicien');
-                    } elseif ($user->role === 'expert') {
-                        return redirect()->route('expert.demande_maintenance');
+                    } elseif ($user->role === 'expert' && $user->isActive ) {
+                        return redirect()->route('demandes.statistics');
                     } elseif ($user->role === 'Responsable_piece') {
                         return redirect()->route('reponsable_piece.demandes');
                     }
                     break;
 
                 case 'atelier':
+                    if($user->is_active){
                     return redirect()->route('atelierss.statistiques');
-
+                    }
                 case 'entreprise':
                     return redirect()->intended(route('entreprise.statistiques'));
             }
