@@ -67,7 +67,7 @@ class AuthController extends Controller
                     } elseif ($user->role === 'expert' && $user->isActive ) {
                         return redirect()->route('demandes.statistics');
                     } elseif ($user->role === 'Responsable_piece') {
-                        return redirect()->route('reponsable_piece.demandes');
+                        return redirect()->route('responsable.choice');
                     }
                     break;
 

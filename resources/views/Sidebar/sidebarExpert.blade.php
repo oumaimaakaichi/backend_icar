@@ -539,9 +539,9 @@
 
             <div class="menu-section">
                 <div class="menu-section-title">Management</div>
-                <a href="#" class="menu-link">
+                <a  href="{{ route('expert.techniciens') }}" class="menu-link">
                     <i class="fas fa-users"></i>
-                    <span>Users</span>
+                    <span>Technician</span>
                 </a>
                 <a href="#" class="menu-link">
                     <i class="fas fa-cog"></i>

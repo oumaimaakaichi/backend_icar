@@ -421,16 +421,7 @@
                                     <span>{{ $demande->voiture->model }} ({{ $demande->voiture->serie }})</span>
                                 </div>
                             </div>
-                            <div class="info-section">
-                                <h4>Détails Catgorie</h4>
-                                <div class="info-item">
-                                    <i class="fas fa-wrench"></i>
-                                    <strong>Catégorie:</strong>
-                                    <span>{{ $demande->category->titre }}</span>
-                                </div>
 
-
-                            </div>
                         </div>
 
                         <div class="card-footer">

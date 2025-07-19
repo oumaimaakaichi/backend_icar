@@ -72,8 +72,8 @@
 
         .kpi-icon {
             font-size: 2.5rem;
-            color: #ffd700;
-            text-shadow: 0 2px 10px rgba(255,215,0,0.5);
+            color: #26d3e2;
+            text-shadow: 0 2px 10px rgba(132, 224, 212, 0.5);
         }
 
         .kpi-text {
@@ -83,7 +83,7 @@
         }
 
         .kpi-value {
-            color: #ffd700;
+            color: #52b1f0;
             font-size: 2rem;
             font-weight: 700;
             text-shadow: 0 2px 10px rgba(255,215,0,0.3);
@@ -218,7 +218,7 @@
             justify-content: center;
             align-items: center;
             height: 200px;
-            color: white;
+            color: rgb(25, 28, 62);
             font-size: 1.2rem;
         }
 
@@ -412,10 +412,10 @@
                     tableBody.innerHTML = ''; // Clear loading
 
                     const statusColors = {
-                        'en_attente': 'background: linear-gradient(135deg, #ffeaa7, #fdcb6e);',
-                        'en_cours': 'background: linear-gradient(135deg, #74b9ff, #0984e3);',
-                        'termine': 'background: linear-gradient(135deg, #00b894, #00a085);',
-                        'rejete': 'background: linear-gradient(135deg, #fd79a8, #e84393);'
+                        'Nouvelle_demande': 'background: linear-gradient(135deg, #ffeaa7, #fdcb6e);',
+                        'Une_offre_a_été_faite': 'background: linear-gradient(135deg, #74b9ff, #0984e3);',
+                        'Assignée': 'background: linear-gradient(135deg, #00b894, #00a085);',
+                        'offre_acceptee': 'background: linear-gradient(135deg, #fd79a8, #e84393);'
                     };
 
                     labels.forEach(label => {

@@ -402,6 +402,8 @@ public function getByDemandeWithTechnicien($client_id)
             'voiture' => [
                 'model' => $demande->voiture->model ?? 'Modèle non spécifié',
                 'serie' => $demande->voiture->serie ?? 'Série non spécifiée',
+                'company' => $demande->voiture->company ?? 'company non spécifiée',
+                  'date_fabrication' => $demande->voiture->date_fabrication ?? 'company non spécifiée',
             ],
             'service_panne' => [
                 'titre' => $demande->servicePanne->titre ?? 'Service non spécifié',

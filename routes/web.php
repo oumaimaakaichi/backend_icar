@@ -48,6 +48,9 @@ use App\Http\Controllers\ServicePanneController;
 use App\Http\Controllers\CategoryPaneController;
 use App\Http\Controllers\DemandePanneInconnuController;
 use App\Http\Controllers\DemandeFluxInconnuPanneController;
+
+
+use App\Http\Controllers\RapportMaintenanceController;
 Route::prefix('demande-flux')->group(function () {
     Route::post('/', [DemandeFluxController::class, 'store']);
     Route::get('/by-demande/{demandeId}', [DemandeFluxController::class, 'getFluxByDemandeId']);
@@ -108,13 +111,16 @@ Route::middleware(['auth:atelier'])->group(function () {
     Route::get('/tickets/{id}', [MaintenanceTicketController::class, 'show'])->name('tickets.show');
     Route::patch('/tickets/{id}/disable', [MaintenanceTicketController::class, 'disable'])->name('tickets.disable');
 });
+Route::post('/disponibilite-piece/{id}', [DemandePanneInconnuController::class, 'updateDisponibilitePiece'])->name('disponibilite.piece.update');
 
+Route::get('/piece-recommandee/show/{demandeId}', [DemandePanneInconnuController::class, 'formAjouter'])->name('piece_recommandee.show');
 Route::get('/statistiques', [StatistiqueController::class, 'index'])->name('statistiques');
 
 Route::middleware(['auth:atelier'])->group(function () {
 Route::get('atelierss/ticket_maintenance', [MaintenanceTicketController::class, 'index'])->name('atelierss.ticket_maintenance');
 
 });
+Route::get('/techniciens/sans-atelier', [UserController::class, 'getTechniciensSansAteliers']);
 
 Route::middleware(['auth:atelier'])->group(function () {
     Route::get('ticket_maintenance', [MaintenanceTicketController::class, 'index'])->name('atelierss.ticket_maintenance');
@@ -176,6 +182,9 @@ Route::get('/demandes', function () {
     return view('reponsable_piece.demandes');
 })->name("reponsable_piece.demandes");
 
+Route::get('/demandesInconnu', function () {
+    return view('reponsable_piece.demande_inconnu');
+})->name("reponsable_piece.demandesInconnu");
 
 Route::get('/entrepriseAutomobile', [EntrepriseAutomobileController::class, 'index'])->name('entrepriseAutomobile.index');
 Route::get('/entrepriseAutomobile/create', [EntrepriseAutomobileController::class, 'create'])->name('entrepriseAutomobile.create');
@@ -354,6 +363,7 @@ Route::post('/users/store', [UserController::class, 'store'])->name('users.store
 Route::get('/users/{id}', [UserController::class, 'show']);
 Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
 Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
+Route::get('/profileAdmin', [UserController::class, 'editAdmin'])->name('profile.editAdmin');
 Route::put('/techniciens/{id}', [UserController::class, 'update'])->name('techniciens.update');
 Route::get('/csrf-token', function () {
     return response()->json(['csrfToken' => csrf_token()]);
@@ -508,6 +518,18 @@ Route::get('atelierss/technicienAtelier', function() {
 })->name('atelierss.techniciensAtelier');
 });
 
+
+
+
+Route::get('exper/technicien', function() {
+    return view('expert.technician', [
+        'techniciens' => User::where('role', 'technicien')
+                         ->whereNull('atelier_id')
+                          ->paginate(6),
+    ]);
+})->name('expert.techniciens');
+
+
 Route::middleware(['auth:atelier'])->group(function () {
     Route::get('/technicienAtelier', function() {
         return view('ateliers.techniciens', [
@@ -562,4 +584,13 @@ Route::middleware(['auth:entreprise'])->group(function () {
 Route::post('/techniciens', [UserController::class, 'storee'])->name('techniciens.storee');
 Route::post('/techniciensStore', [UserController::class, 'storeTech'])->name('techniciens.storeTech');
 Route::post('/expertStore', [UserController::class, 'storeExpert'])->name('expert.storeExpert');
+Route::prefix('rapport-maintenance')->group(function () {
+    // Télécharger un rapport spécifique
+    Route::get('/{id}/download', [RapportMaintenanceController::class, 'download'])
+         ->name('rapport.download');
 
+    // Voir les rapports pour une demande
+    Route::get('/demande/{demandeId}', [RapportMaintenanceController::class, 'showByDemande']);
+
+    // Autres routes si nécessaire...
+});

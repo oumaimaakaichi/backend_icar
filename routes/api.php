@@ -30,6 +30,11 @@ use App\Http\Controllers\DemandeFluxInconnuPanneController;
 use App\Http\Controllers\RapportMaintenanceController;
 
 use App\Http\Controllers\DemandePanneInconnuController;
+
+use App\Http\Controllers\ReviewController;
+Route::get('/reviews/technicien/{technicienId}', [ReviewController::class, 'getReviewsByTechnicien']);
+Route::post('/reviews', [ReviewController::class, 'store']);
+Route::get('/reviews/demande/{demandeId}/technicien/{technicienId}', [ReviewController::class, 'getByDemandeAndTechnicien']);
 // Créer une demande de flux
 Route::post('/demande-flux-inconnu', [DemandeFluxInconnuPanneController::class, 'store']);
 
@@ -147,4 +152,8 @@ Route::get('/voiture/{client_id}', [VoitureController::class, 'index2']);       
 
 
 Route::get('/demandes', [DemandeController::class, 'getAllDemande']);
+Route::get('/demandes-iconnu', [DemandePanneInconnuController::class, 'getAllDemande']);
 Route::post('/flux-direct', [FluxDirectController::class, 'store']);
+Route::get('/demandes/client/{userId}', [DemandePanneInconnuController::class, 'getAllDemandeByUser']);
+Route::get('/demandes/{demande}/pieces-choisies', [DemandePanneInconnuController::class, 'getPiecesChoisies']);
+Route::post('/demandes/{demande}/save-selections', [DemandePanneInconnuController::class, 'saveSelections']);

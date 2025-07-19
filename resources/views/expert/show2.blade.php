@@ -548,7 +548,7 @@
 
 
 
-          <!-- Lien Meet -->
+  @if($demande->techniciens && count($demande->techniciens) > 0)        <!-- Lien Meet -->
 <div class="glass-card p-4">
     <h6 class="section-title">Visioconférence d'examination</h6>
 
@@ -594,6 +594,7 @@
 
 
 </div>
+@endif
         </div>
     </div>
 </div>

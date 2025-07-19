@@ -507,7 +507,7 @@
     </style>
 </head>
 <body>
-@include('Sidebar.sidebarExpert')
+@include('Sidebar.responsablePiece')
 
     <!-- Animated background shapes -->
     <div class="bg-shapes">
@@ -577,7 +577,7 @@
                 </div>
 
                 <!-- Unknown Fault Card -->
-                <div class="service-card unknown-fault" onclick="window.location.href='{{ route('expert.demande_maintenanceInconnu') }}'">
+                <div class="service-card unknown-fault" onclick="window.location.href='{{ route('reponsable_piece.demandesInconnu') }}'">
                     <div class="card-header">
                         <div class="card-icon-wrapper">
                             <i class="fas fa-search-plus card-icon"></i>

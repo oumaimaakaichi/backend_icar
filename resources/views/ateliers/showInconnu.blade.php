@@ -288,13 +288,7 @@
                                     </p>
                                 </div>
 
-                                <div class="mb-4">
-                                    <p class="detail-label">Catgorie demandé</p>
-                                    <p class="detail-value">
-                                        <i class="fas fa-tools"></i>
-                                        {{ $demande->category->titre }}
-                                    </p>
-                                </div>
+
 
                                 <div class="mb-4">
                                     <p class="detail-label">Date et heure de maintenance</p>

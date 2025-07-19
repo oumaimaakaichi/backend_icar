@@ -123,4 +123,8 @@ public function piecesCatalogue()
     {
         return $this->belongsTo(Atelier::class);
     }
+    public function rapport()
+    {
+        return $this->hasOne(RapportMaintenance::class, 'id_demande');
+    }
 }

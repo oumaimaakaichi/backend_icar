@@ -622,7 +622,7 @@
                 @endauth
             </div>
             <ul class="user-popup-menu">
-                <li><a href="#"><i class="fas fa-user-cog"></i> Profile</a></li>
+                <li><a href="{{ route('profile.editAdmin') }}"><i class="fas fa-user-cog"></i> Profile</a></li>
                 <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
                 <li><a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
 

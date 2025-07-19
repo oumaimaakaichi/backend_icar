@@ -255,7 +255,31 @@
             position: relative;
             overflow: hidden;
         }
+.btn-download-rapport {
+            background: linear-gradient(135deg, #5881b1, #5881b1);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1.2rem;
+            margin-left: 10px;
+            margin-bottom: 50px;
+        }
 
+        .btn-download-rapport:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            color: white;
+        }
+
+        .btn-download-rapport i {
+            margin-right: 8px;
+        }
         .btn-submit::before {
             content: '';
             position: absolute;
@@ -376,7 +400,7 @@
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #1f8261, #1f8261);
             border: none;
             border-radius: 8px;
             font-weight: 600;
@@ -661,10 +685,20 @@
                         @else
                             <span class="badge bg-secondary">Aucun lien disponible</span>
                         @endif
+
                     </div>
+
                 </li>
             @endforeach
         </ul>
+         @if($demande && $demande->rapport)
+                                <a href="{{ route('rapport.download', $demande->rapport->id) }}"
+                                   class="btn btn-download-rapport btn-sm"
+                                   download
+                                   title="Télécharger le rapport">
+                                    <i class="fas fa-file-pdf" style="color:white"></i> <b style="color: white">Voir rapport</b>
+                                </a>
+                            @endif
     </div>
 </div>
 @endif

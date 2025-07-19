@@ -8,7 +8,7 @@ use App\Models\Catalogue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 class DemandePanneInconnuController extends Controller
 {
@@ -211,6 +211,118 @@ public function show1($id)
                        ->get();
     return view('ateliers.showInconnu', compact('demande', 'techniciens'));
 }
+
+
+
+public function getAllDemande(): JsonResponse
+{
+    $demandes = DemandePanneInconnu::with([
+        'client:id,nom,prenom,phone',
+        'voiture:id,model,serie',
+    ])
+    ->whereNotNull('pieces_choisies')
+    ->get()
+    // filtrer aussi les tableaux vides
+    ->filter(function ($demande) {
+        return is_array($demande->pieces_choisies) && count($demande->pieces_choisies) > 0;
+    });
+
+    $formattedDemandes = $demandes->map(function ($demande) {
+        return [
+            'id' => $demande->id,
+            'client_nom' => $demande->client->nom ?? null,
+            'client_prenom' => $demande->client->prenom ?? null,
+            'client_phone' => $demande->client->phone ?? null,
+            'voiture_model' => $demande->voiture->model ?? null,
+            'voiture_serie' => $demande->voiture->serie ?? null,
+            'created_at' => $demande->created_at->format('Y-m-d H:i:s'),
+        ];
+    });
+
+    return response()->json($formattedDemandes->values());
+}
+public function updateDisponibilitePiece(Request $request, $id)
+{
+    $request->validate([
+        'idPiece' => 'required|integer',
+        'prixOriginal' => 'nullable|numeric|min:0',
+        'prixCommercial' => 'nullable|numeric|min:0',
+        'datedisponibiliteOriginale' => 'nullable|date',
+        'dateDisponibiliteComercial' => 'nullable|date',
+        'disponibiliteOriginal' => 'required|boolean',
+        'disponibiliteCommercial' => 'required|boolean',
+    ]);
+
+    $demande = DemandePanneInconnu::findOrFail($id);
+
+    $disponibilites = $demande->disponibilite_pieces ?? [];
+
+    // Vérifie si une entrée existe déjà pour cette pièce
+    $existingIndex = null;
+    foreach ($disponibilites as $index => $item) {
+        if (isset($item['idPiece']) && $item['idPiece'] == $request->idPiece) {
+            $existingIndex = $index;
+            break;
+        }
+    }
+
+    $disponibiliteData = [
+        'idPiece' => $request->idPiece,
+        'prixOriginal' => $request->prixOriginal,
+        'prixCommercial' => $request->prixCommercial,
+        'datedisponibiliteOriginale' => $request->datedisponibiliteOriginale,
+        'dateDisponibiliteComercial' => $request->dateDisponibiliteComercial,
+        'disponibiliteOriginal' => $request->disponibiliteOriginal,
+        'disponibiliteCommercial' => $request->disponibiliteCommercial,
+        'updated_at' => now()->toDateTimeString()
+    ];
+
+    if ($existingIndex !== null) {
+        $disponibilites[$existingIndex] = $disponibiliteData;
+    } else {
+        $disponibilites[] = $disponibiliteData;
+    }
+
+    $demande->disponibilite_pieces = $disponibilites;
+    $demande->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Disponibilité enregistrée avec succès.',
+        'disponibilites' => $disponibilites
+    ]);
+}
+
+
+protected function calculateTotalPrice($disponibilites)
+{
+    $total = 0;
+
+    foreach ($disponibilites as $piece) {
+        // Prendre le prix le plus bas disponible (original ou commercial)
+        if ($piece['disponibiliteOriginal'] && $piece['disponibiliteCommercial']) {
+            $total += min($piece['prixOriginal'], $piece['prixCommercial']);
+        } elseif ($piece['disponibiliteOriginal']) {
+            $total += $piece['prixOriginal'];
+        } elseif ($piece['disponibiliteCommercial']) {
+            $total += $piece['prixCommercial'];
+        }
+    }
+
+    return $total;
+}
+
+public function formAjouter($demandeId)
+{
+    // Récupérer une seule demande par son ID
+    $demande = DemandePanneInconnu::findOrFail($demandeId);
+
+    // Récupérer les pièces choisies s'il y en a
+    $pieces = Catalogue::whereIn('id', $demande->pieces_choisies ?? [])->get();
+
+    return view('reponsable_piece.piece_recommandee.showInconnu', compact('demande', 'pieces'));
+}
+
 public function showRequestChoice()
 {
     return view('ateliers.choice');
@@ -399,6 +511,131 @@ public function ajouterPrixMainOeuvrePiece(Request $request, $id)
         'success' => true,
         'message' => 'Prix main d\'œuvre ajouté avec succès',
         'data' => $demande
+    ]);
+}
+
+
+public function getAllDemandeByUser($userId): JsonResponse
+{
+    $user = User::find($userId);
+
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Utilisateur non trouvé.'
+        ], 404);
+    }
+
+    $demandes = DemandePanneInconnu::with([
+        'voiture:id,model,serie,couleur',
+        'category:id,titre',
+        'atelier:id,nom_commercial',
+
+    ])
+    ->where('client_id', $userId)
+    ->orderBy('created_at', 'desc')
+    ->get();
+
+    $formatted = $demandes->map(function ($demande) {
+        // Récupérer les informations des pièces disponibles
+        $piecesDisponibles = [];
+        if (!empty($demande->disponibilite_pieces)) {
+            $catalogueIds = array_keys($demande->disponibilite_pieces);
+            $pieces = Catalogue::whereIn('id', $catalogueIds)->get();
+
+            foreach ($pieces as $piece) {
+                $piecesDisponibles[] = [
+                    'id' => $piece->id,
+                    'nom' => $piece->nom,
+                    'prix' => $piece->prix,
+                    'quantite' => $demande->disponibilite_pieces[$piece->id] ?? 1,
+                ];
+            }
+        }
+
+        return [
+            'id' => $demande->id,
+            'voiture_model' => $demande->voiture->model ?? null,
+            'voiture_serie' => $demande->voiture->serie ?? null,
+            'type_emplacement' => $demande->type_emplacement,
+            'description_probleme' => $demande->description_probleme,
+            'date_maintenance' => $demande->date_maintenance ? $demande->date_maintenance->format('Y-m-d') : null,
+            'heure_maintenance' => $demande->heure_maintenance,
+            'status' => $demande->status,
+            'atelier' => $demande->atelier ? $demande->atelier->nom : null,
+            'categorie' => $demande->category->titre ?? null,
+            'created_at' => $demande->created_at->format('Y-m-d H:i:s'),
+            'disponibilite_pieces' => $piecesDisponibles,
+            'prix_total' => $demande->prix_total,
+            'prix_main_oeuvre' => $demande->prix_main_oeuvre,
+        ];
+    });
+
+    return response()->json([
+        'success' => true,
+        'data' => $formatted
+    ]);
+}
+public function getPiecesChoisies($demandeId) {
+    $demande = DemandePanneInconnu::with(['voiture', 'client'])->findOrFail($demandeId);
+
+    $pieces = [];
+    if (!empty($demande->disponibilite_pieces)) {
+        foreach ($demande->disponibilite_pieces as $piece) {
+            $catalogue = Catalogue::find($piece['idPiece']);
+            if ($catalogue) {
+                $pieces[] = [
+                    'info' => [
+                        'idPiece' => $catalogue->id,
+                        'nom' => $catalogue->nom_piece,
+                        'num_piece' => $catalogue->num_piece,
+                        'photo' => $catalogue->photo_piece,
+                    ],
+                    'original' => [
+                        'prix' => $piece['prixOriginal'] ?? null,
+                        'disponibiliteOriginal' => isset($piece['disponibiliteOriginal']) ? (int)$piece['disponibiliteOriginal'] : 0,
+                        'date_disponibilite' => $piece['datedisponibiliteOriginale'] ?? null,
+                    ],
+                    'commercial' => [
+                        'prix' => $piece['prixCommercial'] ?? null,
+                        'disponibiliteCommercial' => isset($piece['disponibiliteCommercial']) ? (int)$piece['disponibiliteCommercial'] : 0,
+                        'date_disponibilite' => $piece['dateDisponibiliteComercial'] ?? null,
+                    ]
+                ];
+            }
+        }
+    }
+
+    return response()->json([
+        'success' => true,
+        'demande' => [
+            'id' => $demande->id,
+            'voiture_model' => $demande->voiture->model ?? 'Inconnu',
+        ],
+        'pieces' => $pieces
+    ]);
+}
+public function saveSelections(Request $request, $demandeId)
+{
+    $request->validate([
+        'pieces' => 'required|array',
+        'pieces.*.piece_id' => 'required|integer|exists:catalogues,id',
+        'pieces.*.type' => 'required|in:original,commercial',
+        'pieces.*.prix' => 'required|numeric|min:0',
+    ]);
+
+    $demande = DemandePanneInconnu::findOrFail($demandeId);
+
+    // Calcul du prix total
+    $prixTotal = collect($request->pieces)->sum('prix');
+
+    // Vous pouvez ajouter ici la logique pour enregistrer les sélections
+    // Par exemple, dans un nouveau champ ou table
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Sélections enregistrées avec succès',
+        'prix_total' => $prixTotal,
     ]);
 }
 }

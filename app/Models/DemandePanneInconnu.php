@@ -31,7 +31,7 @@ class DemandePanneInconnu extends Model
         'description_probleme', // Nouvel attribut spécifique
          'panne',
  'main_oeuvre_pieces',
-
+'disponibilite_pieces',
         // Attributs pour différents types d'emplacement
         'surface_maison',
         'hauteur_plafond_maison',
@@ -48,6 +48,7 @@ class DemandePanneInconnu extends Model
     protected $casts = [
         'categories' => 'array',
          'main_oeuvre_pieces' => 'array',
+           'disponibilite_pieces' => 'array',
         'pieces_choisies' => 'array',
         'techniciens' => 'array',
         'date_maintenance' => 'date',
@@ -98,6 +99,13 @@ class DemandePanneInconnu extends Model
     {
         return $this->hasMany(RapportMaintenance::class, 'id_demande');
     }
+public function getDisponibilitePiecesAttribute($value)
+{
+    if (is_array($value)) {
+        return $value;
+    }
+    return json_decode($value, true) ?: [];
+}
 
     public function getPiecesChoisiesAttribute($value)
     {

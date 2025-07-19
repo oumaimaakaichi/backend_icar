@@ -248,7 +248,11 @@ public function getTechniciensSansAtelier()
     $user = Auth::user();
     return view('profile.edit', compact('user'));
 }
-
+   public function editAdmin()
+{
+    $user = Auth::user();
+    return view('profile.admin-profil', compact('user'));
+}
 public function update(Request $request)
 {
     $user = Auth::user();
@@ -291,7 +295,7 @@ public function update(Request $request)
 }
 public function showRequestChoice()
 {
-    return view('responsable_piece.choice');
+    return view('reponsable_piece.choice');
 }
     // Supprimer un utilisateur
     public function destroy($id)
@@ -613,6 +617,22 @@ public function registerClient(Request $request)
         'user' => $user
     ]);
 }
+
+
+
+public function getTechniciensSansAteliers()
+{
+    $techniciens = User::where('role', 'technicien')
+        ->whereNull('atelier_id')
+        ->where('isActive', true)
+        ->get();
+
+    return response()->json([
+        'success' => true,
+        'data' => $techniciens,
+    ]);
+}
+
 
     }
 
