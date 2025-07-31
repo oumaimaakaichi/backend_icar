@@ -48,9 +48,10 @@ use App\Http\Controllers\ServicePanneController;
 use App\Http\Controllers\CategoryPaneController;
 use App\Http\Controllers\DemandePanneInconnuController;
 use App\Http\Controllers\DemandeFluxInconnuPanneController;
-
+use App\Http\Controllers\AtelierAvailabilityController;
 
 use App\Http\Controllers\RapportMaintenanceController;
+
 Route::prefix('demande-flux')->group(function () {
     Route::post('/', [DemandeFluxController::class, 'store']);
     Route::get('/by-demande/{demandeId}', [DemandeFluxController::class, 'getFluxByDemandeId']);
@@ -362,6 +363,7 @@ Route::put('/users/{id}', [UserController::class, 'updateEmail'])->name('users.u
 Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
 Route::get('/users/{id}', [UserController::class, 'show']);
 Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
+Route::get('/profileResponsable', [UserController::class, 'editResponsable'])->name('profile.editResponsable');
 Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
 Route::get('/profileAdmin', [UserController::class, 'editAdmin'])->name('profile.editAdmin');
 Route::put('/techniciens/{id}', [UserController::class, 'update'])->name('techniciens.update');
@@ -529,23 +531,46 @@ Route::get('exper/technicien', function() {
     ]);
 })->name('expert.techniciens');
 
+Route::middleware(['auth:atelier'])->prefix('atelier')->name('atelier.')->group(function () {
 
-Route::middleware(['auth:atelier'])->group(function () {
-    Route::get('/technicienAtelier', function() {
-        return view('ateliers.techniciens', [
-            'techniciens' => User::where('role', 'technicien')
-                              ->where('atelier_id', Auth::id())
-                              ->paginate(6)
-        ]);
-    })->name('techniciensAtelier');
-    });
+    // Afficher le profil
+    Route::get('/profile', [AtelierController::class, 'showProfile'])->name('profile.show');
+
+    // Formulaire d'édition
+    Route::get('/profile/edit', [AtelierController::class, 'update'])->name('profile.edit');
+
+    // Mettre à jour le profil
+    Route::put('/profile', [AtelierController::class, 'update'])->name('profile.update');
+    Route::post('/profile', [AtelierController::class, 'update'])->name('profile.update.post');
+
+    // Mettre à jour la disponibilité
+
+    // Changer le statut
+    Route::patch('/profile/status', [AtelierController::class, 'toggleStatus'])->name('profile.toggle-status');
+
+});
+
 Route::middleware(['auth:entreprise'])->group(function () {
     Route::get('/entreprise/statistiques', [UserController::class, 'statistiquesEntreprise'])
          ->name('entreprise.statistiques');
 });
 
+Route::prefix('ateliers')->group(function () {
+    // Récupérer les disponibilités d'un atelier
+    Route::get('/{id}/availability', [AtelierController::class, 'getAvailability']);
 
+    // Mettre à jour les disponibilités
+    Route::post('/{id}/availability', [AtelierController::class, 'updateAvailability']);
 
+    // Ajouter un créneau spécifique
+    Route::post('/{id}/availability/{day}/add-slot', [AtelierController::class, 'addTimeSlot']);
+
+    // Supprimer un créneau spécifique
+    Route::delete('/{id}/availability/{day}/remove-slot', [AtelierController::class, 'removeTimeSlot']);
+});
+Route::get('/atelierss/availability', [AtelierController::class, 'availabilityView'])->name('atelierss.availability');
+Route::get('/atelier/{id}/availability', [AtelierAvailabilityController::class, 'showForm'])->name('atelier.availability.form');
+Route::post('/atelier/{id}/availability', [AtelierAvailabilityController::class, 'store'])->name('atelier.availability.store');
 
 Route::middleware(['auth:atelier'])->group(function () {
 Route::get('atelierss/employeeAtelier', function() {
@@ -556,6 +581,15 @@ Route::get('atelierss/employeeAtelier', function() {
     ]);
 })->name('atelierss.employeeAtelier');
 
+});
+
+
+
+Route::middleware(['auth:atelier'])->group(function () {
+    Route::get('/atelier/disponibilites', [AtelierController::class, 'showAvailabilityForm'])->name('atelier.availability');
+    Route::post('/atelier/disponibilites', [AtelierController::class, 'updateAvailability'])->name('atelier.availability.update');
+    Route::get('/atelier/disponibilites', [AtelierController::class, 'availabilityView'])
+         ->name('atelier.availability');
 });
 Route::middleware(['auth:atelier'])->group(function () {
     Route::get('/employeeAtelier', function() {
@@ -589,8 +623,14 @@ Route::prefix('rapport-maintenance')->group(function () {
     Route::get('/{id}/download', [RapportMaintenanceController::class, 'download'])
          ->name('rapport.download');
 
+
+
+
+
     // Voir les rapports pour une demande
     Route::get('/demande/{demandeId}', [RapportMaintenanceController::class, 'showByDemande']);
 
     // Autres routes si nécessaire...
 });
+
+Route::get('/rapport-maintenance-inconnu/{id}/download', [RapportMaintenanceInconnuController::class, 'download'])->name('rapportt.downloadd');;

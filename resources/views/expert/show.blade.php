@@ -672,11 +672,11 @@
     @else
         <button class="btn btn-sm btn-outline-success mt-2 share-btn"
                 data-flux-id="{{ $demandeFlux->id }}">
-            <i class="fas fa-share-square me-1"></i> Autoriser le partage
+            <i class="fas fa-share-square me-1" style="color: white"></i><b style="color: white"> Autoriser le partage</b>
         </button>
     @endif
 @endif    </div>
-
+   @if($flux && $flux->ouvert)
                     <div>
                         @if($flux && $flux->lien_meet)
                             <a href="{{ $flux->lien_meet }}" target="_blank" class="btn btn-sm btn-primary" style="margin-top: 30px">
@@ -687,7 +687,9 @@
                         @endif
 
                     </div>
-
+ @else
+                            <span class="badge bg-secondary">VidéoConférence fermé</span>
+                        @endif
                 </li>
             @endforeach
         </ul>

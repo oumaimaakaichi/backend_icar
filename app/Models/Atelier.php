@@ -30,6 +30,7 @@ class Atelier extends Authenticatable
         'email',
         'password',
         'is_active',
+         'availability',
     ];
 
     // Hachage du mot de passe avant de le sauvegarder dans la base de données
@@ -40,9 +41,26 @@ class Atelier extends Authenticatable
 
     protected $casts = [
         'is_active' => 'boolean',
+         'availability' => 'array',
     ];
 
     protected $guard = 'atelier';
 
     protected $hidden = ['password', 'remember_token'];
+    public function availabilities()
+{
+    return $this->hasMany(AtelierAvailability::class);
+}
+public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'notifiable');
+    }
+
+    /**
+     * Route notifications pour le canal mail
+     */
+    public function routeNotificationForMail()
+    {
+        return $this->email;
+    }
 }

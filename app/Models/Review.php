@@ -15,6 +15,7 @@ class Review extends Model
         'client_id',
         'technicien_id',
         'demande_id',
+        'demande_inconnu_id'
     ];
 
     // Relations
@@ -25,6 +26,12 @@ class Review extends Model
 public function demande()
 {
     return $this->belongsTo(Demande::class, 'demande_id');
+}
+
+
+public function demandeInconnu()
+{
+    return $this->belongsTo(DemandePanneInconnu::class, 'demande_id');
 }
     public function technicien()
     {

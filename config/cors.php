@@ -1,9 +1,11 @@
 <?php
 
+
+
 return [
-    'paths' => ['api/*', 'sanctum/csrf-cookie' , 'api/demande','api/demandes/*' ,'api/tickets/*','api/catalogues/*' , 'api/paniers/*' , 'storage/*' , 'api/panier/*' ],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
     'allowed_methods' => ['*'],
-   'allowed_origins' => ['http://localhost:*', 'http://127.0.0.1:*'],
+    'allowed_origins' => ['*'], // For development only, specify domains in production
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],

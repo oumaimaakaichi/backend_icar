@@ -127,4 +127,5 @@ public function piecesCatalogue()
     {
         return $this->hasOne(RapportMaintenance::class, 'id_demande');
     }
+
 }

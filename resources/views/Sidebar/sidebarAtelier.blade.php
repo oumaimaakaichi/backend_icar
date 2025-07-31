@@ -473,9 +473,9 @@
 
             <div class="menu-section">
                 <div class="menu-section-title">Management</div>
-                <a href="{{ route('atelierss.factures') }}" class="menu-link">
+                <a href="{{ route('atelierss.availability') }}" class="menu-link">
                     <i class="fas fa-money-bill-wave"></i>
-                    <span>Financial Management</span>
+                    <span>Availability</span>
                 </a>
                 <a href="technicienAtelier" class="menu-link">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
@@ -535,7 +535,7 @@
             @endauth
         </div>
         <ul class="user-popup-menu">
-            <li><a href="#"><i class="fas fa-user-cog"></i> Profile</a></li>
+            <li><a href="{{ route('atelier.profile.show') }}"><i class="fas fa-user-cog"></i> Profile</a></li>
             <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
             <li><a href="#" id="popup-logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>

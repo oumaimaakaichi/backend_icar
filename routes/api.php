@@ -17,23 +17,38 @@ use App\Http\Controllers\PanierController;
 use App\Http\Controllers\DemandeAchatPieceController;
 use App\Http\Controllers\ForfaitController;
 use App\Http\Controllers\EntrepriseAutomobileController;
+
+
 use App\Http\Controllers\PieceRecommandeeController;
 use App\Http\Controllers\FluxDirectController;
+use App\Http\Controllers\NotificationPrixController;
 use Illuminate\Support\Facades\Auth;
 // routes/api.php
 use App\Http\Controllers\DemandeFluxController;
 
 use App\Http\Controllers\FluxDirectInconnuPanneController;
 use App\Http\Controllers\DemandeFluxInconnuPanneController;
+use App\Http\Controllers\NotificationTechnicienController;
 
 // routes/api.php
 use App\Http\Controllers\RapportMaintenanceController;
+use App\Http\Controllers\RapportMaintenanceInconnuController;
 
 use App\Http\Controllers\DemandePanneInconnuController;
 
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\NotificationController;
+Route::get('/atelier/{id}/disponibilite', [AtelierController::class, 'getAvailability']);
+
+
 Route::get('/reviews/technicien/{technicienId}', [ReviewController::class, 'getReviewsByTechnicien']);
 Route::post('/reviews', [ReviewController::class, 'store']);
+
+
+Route::get('/reviews2/demande/{demandeId}/technicienI/{technicienId}', [ReviewController::class, 'getByDemandeAndTechnicien2']);
+
+
+Route::post('/reviewsStore', [ReviewController::class, 'store2']);
 Route::get('/reviews/demande/{demandeId}/technicien/{technicienId}', [ReviewController::class, 'getByDemandeAndTechnicien']);
 // Créer une demande de flux
 Route::post('/demande-flux-inconnu', [DemandeFluxInconnuPanneController::class, 'store']);
@@ -64,10 +79,61 @@ Route::put('/demandes-panne-inconnue/{id}/main-oeuvre', [DemandePanneInconnuCont
 Route::apiResource('rapport-maintenance', RapportMaintenanceController::class);
 Route::get('/demandes/statistics', [DemandeController::class, 'getDemandeStatistics']);
 
-
+Route::post('/demande-panne/generate-recommendations', [DemandePanneInconnuController::class, 'generateRecommendations']);
 Route::get('/rapport-maintenance/demande/{demandeId}', [RapportMaintenanceController::class, 'showByDemande']);
 
 Route::get('/rapport-maintenance/{id}/download', [RapportMaintenanceController::class, 'download']);
+
+
+
+
+
+
+
+
+Route::apiResource('rapport-maintenance-inconnu', RapportMaintenanceInconnuController::class);
+
+Route::post('/demande-panne-inconnu/generate-recommendations', [RapportMaintenanceInconnuController::class, 'generateRecommendations']);
+Route::get('/rapport-maintenance-inconnu/demande/{demandeId}', [RapportMaintenanceInconnuController::class, 'showByDemande']);
+
+Route::get('/rapport-maintenance-inconnu/{id}/download', [RapportMaintenanceInconnuController::class, 'download']);
+
+
+
+
+
+Route::get('/demandes/{demande_id}/meet-link-inconnu', function ($demande_id) {
+    // Récupération du flux direct avec relation 'demandeFlux'
+    $fluxDirect = \App\Models\FluxDirectInconnuPanne::with('demandeFlux')
+        ->where('demande_id', $demande_id)
+        ->where('type_meet', 'Examination')
+        ->first();
+
+    // Vérification si le flux existe
+    if (!$fluxDirect) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Flux direct non trouvé'
+        ], 404);
+    }
+
+    // Vérification des permissions de partage
+    if (!$fluxDirect->demandeFlux || !$fluxDirect->demandeFlux->partage_with_client) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Visioconférence non disponible'
+        ], 403);
+    }
+
+    // Retour des informations de la visioconférence
+    return response()->json([
+        'success' => true,
+        'lien_meet' => $fluxDirect->lien_meet,
+        'ouvert' => $fluxDirect->ouvert,
+        'partage_with_client' => $fluxDirect->demandeFlux->partage_with_client,
+    ]);
+});
+
 Route::get('/demandes/{demande_id}/meet-link', function ($demande_id) {
     $fluxDirect = \App\Models\FluxDirect::where('demande_id', $demande_id)
         ->with('demandeFlux')
@@ -87,6 +153,13 @@ Route::get('/demandes/{demande_id}/meet-link', function ($demande_id) {
         'partage_with_client' => $fluxDirect->demandeFlux->partage_with_client
     ]);
 });
+// Handle preflight OPTIONS requests
+Route::options('{any}', function () {
+    return response('', 200)
+        ->header('Access-Control-Allow-Origin', '*')
+        ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+})->where('any', '.*');
 Route::get('demande-flux/by-flux/{idFlux}', [DemandeFluxController::class, 'getDemandeByIdFlux']);
 Route::put('/autoriser-partage/{id}', [DemandeFluxController::class, 'autoriserPartage']);
 Route::prefix('demande-flux')->group(function () {
@@ -97,8 +170,11 @@ Route::prefix('demande-flux')->group(function () {
 Route::get('/demandes-inconnues/{demandeId}', [DemandePanneInconnuController::class, 'show']);
 
 Route::get('/flux-par-demande/{demandeId}', [FluxDirectController::class, 'getFluxParDemande']);
+
 Route::post('/flux-par-demandeInconnu', [FluxDirectInconnuPanneController::class, 'store']);
 Route::get('/flux-par-demande_inconnu/{demandeId}', [FluxDirectInconnuPanneController::class, 'getFluxParDemande']);
+
+Route::get('/flux-par-demande_inconnu-entretient/{demandeId}', [FluxDirectInconnuPanneController::class, 'getFluxParDemandeEntretient']);
 Route::get('/flux-direct/{demandeId}/{technicienId}', [FluxDirectInconnuPanneController::class, 'getOrCreate']);
 Route::get('/flux-direct-inconnu/{demandeId}/{technicienId}', [FluxDirectController::class, 'getOrCreate']);
 Route::get('/demande/{demandeId}/flux', [FluxDirectController::class, 'getFluxForDemande']);
@@ -149,11 +225,87 @@ Route::get('/voiture/{client_id}', [VoitureController::class, 'index2']);       
     Route::delete('/voitures/{id}', [VoitureController::class, 'destroy']);
     Route::get('/panne/category/{categoryId}', [ServicePanneController::class, 'getByCategory']);
     Route::apiResource('category-panes', CategoryPaneController::class);
+    Route::get('/notifications', [NotificationController::class, 'index']);
+     Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
+Route::middleware('auth:api')->group(function() {
+
+    Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount']);
+});
 
 
+
+
+Route::prefix('notificationsT')->group(function () {
+
+    // CRUD de base
+    Route::post('/', [NotificationTechnicienController::class, 'store']);
+    Route::get('/{id}', [NotificationTechnicienController::class, 'show']);
+    Route::delete('/{id}', [NotificationTechnicienController::class, 'destroy']);
+
+    // Routes pour un technicien spécifique
+    Route::prefix('technicien/{technicienId}')->group(function () {
+
+        // Récupérer les notifications
+        Route::get('/', [NotificationTechnicienController::class, 'index']);
+        Route::get('/non-lues', [NotificationTechnicienController::class, 'getNonLues']);
+        Route::get('/recentes', [NotificationTechnicienController::class, 'getRecentes']);
+        Route::get('/statistiques', [NotificationTechnicienController::class, 'getStatistiques']);
+
+        // Actions en lot
+        Route::patch('/marquer-toutes-lues', [NotificationTechnicienController::class, 'marquerToutesLues']);
+        Route::delete('/supprimer-lues', [NotificationTechnicienController::class, 'supprimerLues']);
+    });
+
+    // Actions sur une notification spécifique
+    Route::patch('/{id}/marquer-lue', [NotificationTechnicienController::class, 'marquerLue']);
+    Route::patch('/{id}/marquer-non-lue', [NotificationTechnicienController::class, 'marquerNonLue']);
+
+    // Route de maintenance (peut être protégée par un middleware admin)
+    Route::delete('/nettoyer-anciennes', [NotificationTechnicienController::class, 'nettoyerAnciennes']);
+});
+
+Route::middleware('auth:api')->post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
 Route::get('/demandes', [DemandeController::class, 'getAllDemande']);
 Route::get('/demandes-iconnu', [DemandePanneInconnuController::class, 'getAllDemande']);
 Route::post('/flux-direct', [FluxDirectController::class, 'store']);
 Route::get('/demandes/client/{userId}', [DemandePanneInconnuController::class, 'getAllDemandeByUser']);
 Route::get('/demandes/{demande}/pieces-choisies', [DemandePanneInconnuController::class, 'getPiecesChoisies']);
 Route::post('/demandes/{demande}/save-selections', [DemandePanneInconnuController::class, 'saveSelections']);
+Route::prefix('ateliers')->group(function () {
+    // Récupérer les disponibilités d'un atelier
+    Route::get('/{id}/availability', [AtelierController::class, 'getAvailability']);
+
+    // Mettre à jour les disponibilités
+    Route::post('/{id}/availability', [AtelierController::class, 'updateAvailability']);
+
+    // Ajouter un créneau spécifique
+    Route::post('/{id}/availability/{day}/add-slot', [AtelierController::class, 'addTimeSlot']);
+
+    // Supprimer un créneau spécifique
+    Route::delete('/{id}/availability/{day}/remove-slot', [AtelierController::class, 'removeTimeSlot']);
+
+
+
+
+
+
+
+
+
+
+
+});
+
+
+Route::get('/notificationsPrix/demandes-client/{clientId}', [NotificationPrixController::class, 'getNotificationsByClientDemande']);
+
+    Route::get('/notificationsPrix/unread-count/{clientId}', [NotificationPrixController::class, 'getUnreadCount']);
+
+    Route::patch('/notificationsPrix/{clientId}/read', [NotificationPrixController::class, 'markAsRead']);
+
+    Route::patch('/notificationsPrix/read-all/{clientId}', [NotificationPrixController::class, 'markAllAsRead']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/notificationsPrix', [NotificationPrixController::class, 'index']);
+    Route::delete('/notificationsPrix/{id}', [NotificationPrixController::class, 'destroy']);
+
+});

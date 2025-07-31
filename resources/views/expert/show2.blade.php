@@ -503,7 +503,14 @@
         </div>
     </div>
 @endif
-
+ @if($demande && $demande->rapport)
+                                <a href="{{ route('rapportt.downloadd', $demande->rapport->id) }}"
+                                   class="btn btn-download-rapport btn-sm"
+                                   download
+                                   title="Télécharger le rapport">
+                                    <i class="fas fa-file-pdf" style="color:black"></i> <b style="color: rgb(0, 0, 0)">Voir rapport</b>
+                                </a>
+                            @endif
 @if($demande->techniciens && count($demande->techniciens) > 0)
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white d-flex align-items-center">
@@ -553,8 +560,10 @@
     <h6 class="section-title">Visioconférence d'examination</h6>
 
     @php
-        $flux = App\Models\FluxDirectInconnuPanne::where('demande_id', $demande->id)->first();
-        $demandeFlux = $flux ? $flux->demandeFlux : null;
+        $flux = \App\Models\FluxDirectInconnuPanne::where('demande_id', $demande->id)
+    ->where('type_meet', 'Examination')
+    ->first();
+   $demandeFlux = $flux ? $flux->demandeFlux : null;
     @endphp
 
     <div class="d-flex justify-content-between align-items-center">
@@ -579,24 +588,71 @@
               <span >Aucun demande de partage</span>
 
               @endif
-
+@if($flux && $flux->ouvert )
                 <a href="{{ $flux->lien_meet }}" target="_blank" class="meet-btn">
                     <i class="fas fa-video me-1"></i> Rejoindre Meet
                 </a>
+ @else
+                <span class="badge bg-secondary">Vidéoconférence fermé</span>
+            @endif
             @else
                 <span class="badge bg-secondary">Aucun lien disponible</span>
             @endif
         </div>
     </div>
 </div>
-<div class="glass-card p-4">
-    <h6 class="section-title">Visioconférence d'entretien</h6>
 
 
-</div>
 @endif
         </div>
     </div>
+
+
+
+
+ @if ($demande->pieces_selectionnees)
+    <div class="glass-card p-4">
+        <h6 class="section-title">Visioconférence d'entretien</h6>
+         @php
+       $flux = \App\Models\FluxDirectInconnuPanne::where('demande_id', $demande->id)
+    ->where('type_meet', 'Entretient')
+    ->first();
+  $demandeFlux = $flux ? $flux->demandeFlux : null;
+    @endphp
+        <div class="d-flex gap-2">
+
+            @if ($flux && $flux->lien_meet )
+
+                @if ($demandeFlux)
+                    @if ($demandeFlux->permission)
+                        <button class="share-btn disabled" disabled>
+                            <i class="fas fa-check-circle me-1"></i> Partage autorisé
+                        </button>
+                    @else
+                        <button class="share-btn share-btn-action" data-flux-id="{{ $demandeFlux->id }}">
+                            <i class="fas fa-share-square me-1"></i> Autoriser le partage
+                        </button>
+                    @endif
+                @else
+                    <span>Aucune demande de partage</span>
+                @endif
+
+                @if ($flux->ouvert)
+                    <a href="{{ $flux->lien_meet }}" target="_blank" class="meet-btn">
+                        <i class="fas fa-video me-1"></i> Rejoindre Meet
+                    </a>
+                @else
+                    <span class="badge bg-secondary">Vidéoconférence fermée</span>
+                @endif
+
+            @else
+                <span class="badge bg-secondary">Aucun lien disponible</span>
+            @endif
+
+        </div>
+    </div>
+@endif
+
 </div>
 
 <!-- Floating Action Button -->

@@ -1,278 +1,635 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Employés</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .modal-header {
-            padding: 1rem 2rem;
+        :root {
+            --primary-gradient: linear-gradient(135deg, #b2b5c2 0%, #b2b5c2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --shadow-soft: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --shadow-hover: 0 15px 35px rgba(31, 38, 135, 0.5);
+
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --bg-light: #f7fafc;
         }
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 600;
+
+        * {
+            box-sizing: border-box;
         }
-        .form-label {
-            font-weight: 500;
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 60px; height: 60px; left: 20%; animation-delay: 1s; }
+        .particle:nth-child(3) { width: 40px; height: 40px; left: 30%; animation-delay: 2s; }
+        .particle:nth-child(4) { width: 100px; height: 100px; left: 40%; animation-delay: 3s; }
+        .particle:nth-child(5) { width: 50px; height: 50px; left: 60%; animation-delay: 4s; }
+        .particle:nth-child(6) { width: 70px; height: 70px; left: 80%; animation-delay: 5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(-60px) rotate(240deg); }
+        }
+
+        /* Glass morphism container */
+        .glass-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 25px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-soft);
+            padding: 2rem;
+            margin: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .glass-container:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-5px);
+        }
+
+        /* Header styling */
+        .page-header {
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 0.5rem;
         }
-        .bg-gradient-primary {
-            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+
+        .page-subtitle {
+            color: rgba(78, 76, 76, 0.8);
+            font-size: 1.1rem;
+            font-weight: 400;
         }
-        .modal-content {
+
+        /* Control section */
+        .controls-section {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
             border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Modern buttons */
+        .btn-modern {
+            position: relative;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            border: none;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.5s;
+        }
+
+        .btn-modern:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary-modern {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary-modern:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+            color: white;
+        }
+
+        .btn-success-modern {
+            background: var(--success-gradient);
+            color: white;
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-warning-modern {
+            background: var(--warning-gradient);
+            color: white;
+            box-shadow: 0 8px 25px rgba(67, 233, 123, 0.4);
+        }
+
+        .btn-danger-modern {
+            background: var(--danger-gradient);
+            color: white;
+            box-shadow: 0 8px 25px rgba(250, 112, 154, 0.4);
+        }
+
+        .btn-secondary-modern {
+            background: var(--dark-gradient);
+            color: white;
+            box-shadow: 0 8px 25px rgba(44, 62, 80, 0.4);
+        }
+
+        /* Modern table */
+        .table-modern {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .table-modern thead th {
+            background: var(--primary-gradient);
+            color: rgb(0, 0, 0);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            padding: 1.5rem 1rem;
+            border: none;
+        }
+
+        .table-modern tbody td {
+            padding: 1.25rem 1rem;
+            border: none;
+            vertical-align: middle;
+            background: rgba(255,255,255,0.8);
+            transition: all 0.3s ease;
+        }
+
+        .table-modern tbody tr {
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .table-modern tbody tr:hover td {
+            background: rgba(102, 126, 234, 0.1);
+            transform: scale(1.02);
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: var(--success-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .status-inactive {
+            background: var(--secondary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+        }
+
+        /* Action buttons */
+        .action-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50px;
+            border: none;
+            margin: 0 0.25rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        /* Modern modals */
+        .modal-modern .modal-content {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
             overflow: hidden;
         }
-        .form-control, .form-select {
-            transition: all 0.3s;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: #00d2ff;
-            box-shadow: 0 0 0 0.25rem rgba(58, 123, 213, 0.25);
-        }
-        .btn-primary {
-            background-color: #3a7bd5;
+
+        .modal-modern .modal-header {
+            background: var(--primary-gradient);
+            color: white;
             border: none;
+            padding: 2rem;
         }
-        .btn-primary:hover {
-            background-color: #2a6bc4;
+
+        .modal-modern .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
         }
-        .bg-gradient-warning {
-            background: linear-gradient(135deg, #ff9a00 0%, #ffd700 100%);
+
+        .modal-modern .modal-body {
+            padding: 2rem;
         }
-        .table thead th {
-            background-color: #9ca4b0;
-            color: white;
-            vertical-align: middle;
+
+        /* Modern form inputs */
+        .form-modern {
+            position: relative;
+            margin-bottom: 1.5rem;
         }
-        .btn-warning {
-            background-color: #ff9a00;
+
+        .form-modern .form-control {
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-modern .form-control:focus {
+            background: rgba(255,255,255,0.95);
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .form-modern .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Modern pagination */
+        .pagination-modern {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.5rem;
+            display: inline-flex;
+        }
+
+        .pagination-modern .page-link {
+            background: transparent;
             border: none;
             color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0.25rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
         }
-        .btn-warning:hover {
-            background-color: #e68a00;
+
+        .pagination-modern .page-item.active .page-link {
+            background: var(--primary-gradient);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            transform: scale(1.1);
         }
-        .pagination .page-item .page-link {
-            color: #3a7bd5;
-            border: 1px solid #dee2e6;
-            margin: 0 2px;
-            border-radius: 5px;
+
+        .pagination-modern .page-link:hover:not(.active) {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
         }
-        .pagination .page-item.active .page-link {
-            background-color: #3a7bd5;
-            border-color: #3a7bd5;
-            color: white;
+
+        /* Loading animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
         }
-        .pagination .page-item.disabled .page-link {
-            color: #6c757d;
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
-        .pagination .page-link:hover:not(.active) {
-            background-color: #f8f9fa;
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .glass-container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .controls-section {
+                padding: 1rem;
+            }
+
+            .table-responsive {
+                border-radius: 15px;
+            }
         }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .animate-delay-1 { animation-delay: 0.1s; }
+        .animate-delay-2 { animation-delay: 0.2s; }
+        .animate-delay-3 { animation-delay: 0.3s; }
     </style>
 </head>
-<body class="bg-light">
-    @include('Sidebar.sidebarAtelier')
-    <div class="container py-5" style="margin-top: 50px">
-        <div class="card shadow p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0"><i class="bi bi-people-fill me-2"></i>My Workshop Clients</h2>
-                <div class="d-flex">
-                    <div class="me-3">
-                        <select class="form-select form-select-sm" id="perPage" onchange="changePerPage(this)">
-                            <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10 per page</option>
-                            <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25 per page</option>
-                            <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50 per page</option>
-                            <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100 per page</option>
-                        </select>
+<body>
+      @include('Sidebar.sidebarAtelier')
+    <!-- Background particles -->
+    <div class="bg-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container-fluid py-4" style="margin-top: 50px">
+        <!-- Page Header -->
+        <div class="page-header animate-fade-in">
+            <h1 class="page-title">
+                <i class="bi bi-people-fill me-3"></i>
+                Gestion des Clients
+            </h1>
+            <p class="page-subtitle">Gérez efficacement vos Clients</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="glass-container animate-fade-in animate-delay-1">
+            <!-- Controls Section -->
+            <div class="controls-section">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="form-modern">
+                            <label class="form-label">Affichage</label>
+                            <select class="form-control" id="perPage" onchange="changePerPage(this)">
+                                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10 par page</option>
+                                <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25 par page</option>
+                                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50 par page</option>
+                                <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100 par page</option>
+                            </select>
+                        </div>
+                        <div class="form-modern">
+                            <label class="form-label">Recherche</label>
+                            <input type="text" class="form-control" placeholder="Rechercher un employé..." id="searchInput">
+                        </div>
                     </div>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
-                        <i class="bi bi-plus-circle me-2"></i>Add an Employee
-                    </button>
+
                 </div>
             </div>
 
-            @if($employees->count())
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead  >
+            <!-- Employees Table -->
+            <div class="table-responsive animate-fade-in animate-delay-2">
+                <div class="table-modern">
+                    <table class="table table-hover mb-0">
+                        <thead>
                             <tr>
-                                <th>Last Name</th>
-                                <th>First Name</th>
-                                <th>Company</th>
-                                <th>Phone</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th><i class="bi bi-person me-2"></i>Nom</th>
+                                <th><i class="bi bi-person-badge me-2"></i>Prénom</th>
+                              <th><i class="bi bi-envelope me-2"></i>Email</th>
+
+                                <th><i class="bi bi-telephone me-2"></i>Téléphone</th>
+                                <th><i class="bi bi-check-circle me-2"></i>Statut</th>
+                                <th><i class="bi bi-gear me-2"></i>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach($employees as $employee)
-                            <tr>
-                                <td>{{ $employee->nom }}</td>
-                                <td>{{ $employee->prenom }}</td>
-                                <td>{{ $employee->extra_data['nom_entreprise'] ?? 'N/A' }}</td>
-                                <td>{{ $employee->phone}}</td>
-                                <td class="{{ $employee->isActive ? 'text-success' : 'text-primary' }}">
-                                    {{ $employee->isActive ? 'Active' : 'Inactive' }}
-                                </td>
-                                <td>
-                                    <button class="btn btn-warning btn-sm edit-btn"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#editUserModal"
-                                        data-id="{{ $employee->id }}"
-                                        data-email="{{ $employee->email }}"
-                                        data-phone="{{ $employee->phone }}"
-                                        data-adresse="{{ $employee->adresse }}"
-                                        title="edit User"
-                                        >
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    @if ($employee->isActive == 0)
-                                    <button class="btn btn-success btn-sm accept-btn me-1"
+                        <tbody id="employeesTableBody">
+                            @if($employees->count())
+                                @foreach($employees as $employee)
+                                <tr>
+                                    <td><strong>{{ $employee->nom }}</strong></td>
+                                    <td>{{ $employee->prenom }}</td>
+                                    <td>{{ $employee->email }}</td>
+                                    <td>{{ $employee->phone }}</td>
+                                    <td>
+                                        <span class="status-badge {{ $employee->isActive ? 'status-active' : 'status-inactive' }}">
+                                            {{ $employee->isActive ? 'Actif' : 'Inactif' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn btn-warning-modern edit-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editUserModal"
                                             data-id="{{ $employee->id }}"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-placement="top"
-                                            title="Activate User">
-                                        <i class="fas fa-toggle-off"></i>
-                                    </button>
-                                @else
-                                    <button class="btn btn-secondary btn-sm refuse-btn"
-                                            data-id="{{ $employee->id }}"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-placement="top"
-                                            title="Deactivate User">
-                                        <i class="fas fa-toggle-on"></i>
-                                    </button>
-                                @endif
-                                </td>
-                            </tr>
-                            @endforeach
+                                            data-email="{{ $employee->email }}"
+                                            data-phone="{{ $employee->phone }}"
+                                            data-adresse="{{ $employee->adresse }}"
+                                            title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        @if ($employee->isActive == 0)
+                                            <button class="action-btn btn-success-modern accept-btn"
+                                                data-id="{{ $employee->id }}"
+                                                title="Activer">
+                                                <i class="bi bi-toggle-off"></i>
+                                            </button>
+                                        @else
+                                            <button class="action-btn btn-secondary-modern refuse-btn"
+                                                data-id="{{ $employee->id }}"
+                                                title="Désactiver">
+                                                <i class="bi bi-toggle-on"></i>
+                                            </button>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <div class="alert alert-info border-0" style="background: rgba(79, 172, 254, 0.1);">
+                                            <i class="bi bi-info-circle me-2"></i>Aucun employé trouvé pour votre atelier.
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
+            </div>
 
-                <!-- Pagination Links -->
-                <div class="d-flex justify-content-between align-items-center mt-4">
-                    <div class="text-muted">
-                        Showing {{ $employees->firstItem() }} to {{ $employees->lastItem() }} of {{ $employees->total() }} entries
-                    </div>
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination mb-0">
-                            {{-- Previous Page Link --}}
-                            @if ($employees->onFirstPage())
-                                <li class="page-item disabled">
-                                    <span class="page-link">&laquo;</span>
+            <!-- Pagination -->
+            @if($employees->count())
+            <div class="d-flex justify-content-between align-items-center mt-4 animate-fade-in animate-delay-3">
+                <div class="text-muted">
+                    <strong>Affichage {{ $employees->firstItem() }} à {{ $employees->lastItem() }} sur {{ $employees->total() }} entrées</strong>
+                </div>
+                <nav>
+                    <ul class="pagination pagination-modern mb-0">
+                        @if ($employees->onFirstPage())
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo;</span>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $employees->previousPageUrl() }}" rel="prev">&laquo;</a>
+                            </li>
+                        @endif
+
+                        @foreach ($employees->getUrlRange(1, $employees->lastPage()) as $page => $url)
+                            @if ($page == $employees->currentPage())
+                                <li class="page-item active">
+                                    <span class="page-link">{{ $page }}</span>
                                 </li>
                             @else
                                 <li class="page-item">
-                                    <a class="page-link" href="{{ $employees->previousPageUrl() }}" rel="prev">&laquo;</a>
+                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
                                 </li>
                             @endif
+                        @endforeach
 
-                            {{-- Pagination Elements --}}
-                            @foreach ($employees->getUrlRange(1, $employees->lastPage()) as $page => $url)
-                                @if ($page == $employees->currentPage())
-                                    <li class="page-item active" aria-current="page">
-                                        <span class="page-link">{{ $page }}</span>
-                                    </li>
-                                @else
-                                    <li class="page-item">
-                                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                                    </li>
-                                @endif
-                            @endforeach
-
-                            {{-- Next Page Link --}}
-                            @if ($employees->hasMorePages())
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $employees->nextPageUrl() }}" rel="next">&raquo;</a>
-                                </li>
-                            @else
-                                <li class="page-item disabled">
-                                    <span class="page-link">&raquo;</span>
-                                </li>
-                            @endif
-                        </ul>
-                    </nav>
-                </div>
-            @else
-                <div class="alert alert-info">
-                    No employees found for your workshop.
-                </div>
+                        @if ($employees->hasMorePages())
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $employees->nextPageUrl() }}" rel="next">&raquo;</a>
+                            </li>
+                        @else
+                            <li class="page-item disabled">
+                                <span class="page-link">&raquo;</span>
+                            </li>
+                        @endif
+                    </ul>
+                </nav>
+            </div>
             @endif
         </div>
     </div>
 
     <!-- Add Employee Modal -->
-    <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+    <div class="modal fade modal-modern" id="addEmployeeModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-gradient-primary text-white">
+            <div class="modal-content">
+                <div class="modal-header">
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-user-plus fa-xl me-3"></i>
-                        <h5 class="modal-title fs-4 fw-bold">Add New Employee</h5>
+                        <i class="bi bi-person-plus-fill me-3" style="font-size: 1.5rem;"></i>
+                        <h5 class="modal-title">Ajouter un Nouvel Employé</h5>
                     </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-
-                <div class="modal-body p-4">
+                <div class="modal-body">
                     <form action="{{ route('atelier.employes.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="atelier_id" value="{{ auth()->id() }}">
-
-                        <div class="mb-4">
-                            <h6 class="mb-3 border-bottom pb-2">
-                                <i class="fas fa-id-card me-2"></i>Personal Information
-                            </h6>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Last Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="nom" class="form-control border-2 rounded-3" required>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-modern">
+                                    <label class="form-label">Nom <span class="text-danger">*</span></label>
+                                    <input type="text" name="nom" class="form-control" required>
                                 </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-semibold">First Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="prenom" class="form-control border-2 rounded-3" required>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-modern">
+                                    <label class="form-label">Prénom <span class="text-danger">*</span></label>
+                                    <input type="text" name="prenom" class="form-control" required>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="mb-4">
-                            <h6 class=" mb-3 border-bottom pb-2">
-                                <i class="fas fa-address-book me-2"></i>Contact Information
-                            </h6>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
-                                        <input type="email" name="email" class="form-control border-start-0 border-2 rounded-end-3" required>
-                                    </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-modern">
+                                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                                    <input type="email" name="email" class="form-control" required>
                                 </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Phone <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fas fa-phone"></i></span>
-                                        <input type="text" name="phone" class="form-control border-start-0 border-2 rounded-end-3" required>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label fw-semibold">Address <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="fas fa-map-marker-alt"></i></span>
-                                        <input type="text" name="adresse" class="form-control border-start-0 border-2 rounded-end-3" required>
-                                    </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-modern">
+                                    <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                                    <input type="tel" name="phone" class="form-control" required>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="modal-footer border-0 pt-4">
-                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
-                                <i class="fas fa-times me-2"></i>Cancel
+                        <div class="form-modern">
+                            <label class="form-label">Adresse <span class="text-danger">*</span></label>
+                            <input type="text" name="adresse" class="form-control" required>
+                        </div>
+                        <div class="d-flex justify-content-end gap-3 mt-4">
+                            <button type="button" class="btn btn-modern btn-secondary-modern" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle me-2"></i>Annuler
                             </button>
-                            <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
-                                <i class="fas fa-save me-2"></i>Save
+                            <button type="submit" class="btn btn-modern btn-primary-modern">
+                                <i class="bi bi-check-circle me-2"></i>Enregistrer
                             </button>
                         </div>
                     </form>
@@ -282,44 +639,43 @@
     </div>
 
     <!-- Edit Employee Modal -->
-    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal fade modal-modern" id="editUserModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content shadow-lg border-0">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="editUserModalLabel">
-                        <i class="fas fa-user-edit"></i> Edit Employee
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-person-gear me-3" style="font-size: 1.5rem;"></i>
+                        <h5 class="modal-title">Modifier l'Employé</h5>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="editUserForm">
                         <input type="hidden" id="userId">
-                        <div class="row g-3">
+                        <div class="row">
                             <div class="col-md-6">
-                                <label for="email" class="form-label">
-                                    <i class="fas fa-envelope"></i> New Email
-                                </label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter new email" required>
+                                <div class="form-modern">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" name="email" class="form-control" id="email">
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <label for="phone" class="form-label">
-                                    <i class="fas fa-phone"></i> New Phone
-                                </label>
-                                <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter new phone number" required>
-                            </div>
-                            <div class="col-12">
-                                <label for="adresse" class="form-label">
-                                    <i class="fas fa-map-marker-alt"></i> New Address
-                                </label>
-                                <input type="text" id="adresse" name="adresse" class="form-control" placeholder="Enter new address" required>
+                                <div class="form-modern">
+                                    <label class="form-label">Téléphone</label>
+                                    <input type="tel" name="phone" class="form-control" id="phone">
+                                </div>
                             </div>
                         </div>
-                        <div class="mt-4 d-flex justify-content-end">
-                            <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">
-                                <i class="fas fa-times"></i> Cancel
+                        <div class="form-modern">
+                            <label class="form-label">Adresse</label>
+                            <input type="text" name="adresse" class="form-control" id="adresse">
+                        </div>
+                        <div class="d-flex justify-content-end gap-3 mt-4">
+                            <button type="button" class="btn btn-modern btn-secondary-modern" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle me-2"></i>Annuler
                             </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Update
+                            <button type="submit" class="btn btn-modern btn-primary-modern">
+                                <i class="bi bi-check-circle me-2"></i>Mettre à jour
                             </button>
                         </div>
                     </form>

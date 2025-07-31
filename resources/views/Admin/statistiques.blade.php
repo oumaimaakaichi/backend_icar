@@ -15,7 +15,7 @@
             --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             --tertiary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             --quaternary-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            --background: linear-gradient(135deg, #f5f7fa 0%, #d6d7d9 100%);
+            --background: linear-gradient(135deg, white 0%, white 100%);
             --card-bg: rgba(255, 255, 255, 0.95);
             --text-dark: #2d3748;
             --text-light: #718096;
@@ -24,7 +24,7 @@
         }
 
         body {
-           background-color: whitesmoke;
+           background-color: white;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             position: relative;
@@ -38,9 +38,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background:
-                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+
             pointer-events: none;
             z-index: -1;
         }

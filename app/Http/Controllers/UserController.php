@@ -253,6 +253,13 @@ public function getTechniciensSansAtelier()
     $user = Auth::user();
     return view('profile.admin-profil', compact('user'));
 }
+
+
+   public function editResponsable()
+{
+    $user = Auth::user();
+    return view('profile.responsablePiéce', compact('user'));
+}
 public function update(Request $request)
 {
     $user = Auth::user();

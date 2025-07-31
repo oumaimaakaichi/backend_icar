@@ -65,6 +65,28 @@ public function getFluxParDemande($demandeId)
         'has_demande_flux' => false
     ], 200);
 }
+
+
+
+public function getFluxParDemandeEntretient($demandeId)
+{
+  $flux = FluxDirectInconnuPanne::where('demande_id', $demandeId)
+            ->where('type_meet', 'Entretient')
+            ->first();
+  if ($flux) {
+        return response()->json([
+            'lien_meet' => $flux->lien_meet,
+            'id_flux' => $flux->id,
+            'has_demande_flux' => $flux->demandeFlux ? true : false,
+            'ouvert'  => $flux->ouvert ?  true : false,
+        ]);
+    }
+
+    return response()->json([
+        'lien_meet' => null,
+        'has_demande_flux' => false
+    ], 200);
+}
  public function getFluxForDemande($demandeId)
     {
         $flux = FluxDirectInconnuPanne::with(['demandeFlux', 'technicien'])

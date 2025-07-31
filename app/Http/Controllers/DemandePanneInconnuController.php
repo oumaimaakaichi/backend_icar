@@ -530,7 +530,6 @@ public function getAllDemandeByUser($userId): JsonResponse
         'voiture:id,model,serie,couleur',
         'category:id,titre',
         'atelier:id,nom_commercial',
-
     ])
     ->where('client_id', $userId)
     ->orderBy('created_at', 'desc')
@@ -539,23 +538,55 @@ public function getAllDemandeByUser($userId): JsonResponse
     $formatted = $demandes->map(function ($demande) {
         // Récupérer les informations des pièces disponibles
         $piecesDisponibles = [];
-        if (!empty($demande->disponibilite_pieces)) {
-            $catalogueIds = array_keys($demande->disponibilite_pieces);
-            $pieces = Catalogue::whereIn('id', $catalogueIds)->get();
 
-            foreach ($pieces as $piece) {
-                $piecesDisponibles[] = [
-                    'id' => $piece->id,
-                    'nom' => $piece->nom,
-                    'prix' => $piece->prix,
-                    'quantite' => $demande->disponibilite_pieces[$piece->id] ?? 1,
-                ];
+        // Debug: voir le contenu de disponibilite_pieces
+        \Log::info('disponibilite_pieces brut:', ['data' => $demande->disponibilite_pieces]);
+
+        if (!empty($demande->disponibilite_pieces)) {
+            // Si c'est déjà un array PHP
+            if (is_array($demande->disponibilite_pieces)) {
+                $catalogueIds = array_keys($demande->disponibilite_pieces);
+            }
+            // Si c'est une string JSON, la décoder
+            else if (is_string($demande->disponibilite_pieces)) {
+                $decoded = json_decode($demande->disponibilite_pieces, true);
+                if (is_array($decoded)) {
+                    $catalogueIds = array_keys($decoded);
+                } else {
+                    $catalogueIds = [];
+                }
+            }
+            else {
+                $catalogueIds = [];
+            }
+
+            if (!empty($catalogueIds)) {
+                $pieces = Catalogue::whereIn('id', $catalogueIds)->get();
+
+                foreach ($pieces as $piece) {
+                    $quantite = is_array($demande->disponibilite_pieces)
+                        ? ($demande->disponibilite_pieces[$piece->id] ?? 1)
+                        : 1;
+
+                    $piecesDisponibles[] = [
+                        'id' => $piece->id,
+                        'nom' => $piece->nom,
+                        'prix' => $piece->prix,
+                        'quantite' => $quantite,
+                    ];
+                }
             }
         }
+
+        // Debug: voir le résultat final
+        \Log::info('piecesDisponibles final:', ['data' => $piecesDisponibles]);
 
         return [
             'id' => $demande->id,
             'voiture_model' => $demande->voiture->model ?? null,
+             'voiture' => $demande->voiture ?? null,
+             'serie'=> $demande->voiture->serie ?? null,
+               'date_fabrication'=> $demande->voiture->date_fabrication ?? null,
             'voiture_serie' => $demande->voiture->serie ?? null,
             'type_emplacement' => $demande->type_emplacement,
             'description_probleme' => $demande->description_probleme,
@@ -565,9 +596,10 @@ public function getAllDemandeByUser($userId): JsonResponse
             'atelier' => $demande->atelier ? $demande->atelier->nom : null,
             'categorie' => $demande->category->titre ?? null,
             'created_at' => $demande->created_at->format('Y-m-d H:i:s'),
-            'disponibilite_pieces' => $piecesDisponibles,
+            'disponibilite_pieces' => $piecesDisponibles, // Array vide ou avec des éléments
             'prix_total' => $demande->prix_total,
             'prix_main_oeuvre' => $demande->prix_main_oeuvre,
+            'techniciens' => $demande->techniciens,
         ];
     });
 
@@ -618,10 +650,10 @@ public function getPiecesChoisies($demandeId) {
 public function saveSelections(Request $request, $demandeId)
 {
     $request->validate([
-        'pieces' => 'required|array',
-        'pieces.*.piece_id' => 'required|integer|exists:catalogues,id',
-        'pieces.*.type' => 'required|in:original,commercial',
-        'pieces.*.prix' => 'required|numeric|min:0',
+        'pieces_selectionnees' => 'required|array',
+        'pieces_selectionnees.*.piece_id' => 'required|integer|exists:catalogues,id',
+        'pieces_selectionnees.*.type' => 'required|in:original,commercial',
+        'pieces_selectionnees.*.prix' => 'required|numeric|min:0',
     ]);
 
     $demande = DemandePanneInconnu::findOrFail($demandeId);

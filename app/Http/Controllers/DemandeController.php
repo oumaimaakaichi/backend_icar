@@ -2,15 +2,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Demande;
+use App\Models\Notification;
+use App\Models\NotificationTechnicien;
 use App\Models\Voiture;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth; // ✅ Ceci est correct
+use App\Events\DemandeCreated;
+
+use App\Events\NotificationSent;
 
 class DemandeController extends Controller
 {
-   public function store(Request $request)
+public function store(Request $request)
 {
     $request->validate([
         'forfait_id' => 'required|exists:forfaits,id',
@@ -18,23 +23,40 @@ class DemandeController extends Controller
         'voiture_id' => 'required|exists:voitures,id',
     ]);
 
-    // Récupérer la voiture pour obtenir le client_id
     $voiture = Voiture::findOrFail($request->voiture_id);
     $clientId = $voiture->client_id;
 
-    // Créer la demande
     $demande = Demande::create([
-        'forfait_id' => $request->forfait_id, // Correction ici
+        'forfait_id' => $request->forfait_id,
         'service_panne_id' => $request->service_panne_id,
         'voiture_id' => $request->voiture_id,
         'client_id' => $clientId,
     ]);
+
+    $responsables = User::where('role', 'Responsable_piece')->get();
+
+    foreach ($responsables as $responsable) {
+        $notification = Notification::create([
+            'user_id' => $responsable->id,
+            'type' => 'new_demande',
+            'message' => 'Nouvelle demande de maintenance pour ' . ($voiture->marque . ' ' . $voiture->modele),
+            'data' => [
+                'demande_id' => $demande->id,
+                'url' => '/demandes/' . $demande->id,
+                'client' => $demande->client->nom ?? 'Client inconnu',
+                'voiture' => $voiture->marque . ' ' . $voiture->modele
+            ]
+        ]);
+
+        broadcast(new NotificationSent($notification, $responsable->id))->toOthers();
+    }
 
     return response()->json([
         'message' => 'Demande créée avec succès',
         'demande' => $demande,
     ], 201);
 }
+
 
 
 public function updatePiecesChoisies(Request $request, Demande $demande)
@@ -228,10 +250,10 @@ public function updateInfo(Request $request, $id)
 {
     // Validation des champs
     $validated = $request->validate([
-          'type_emplacement' => 'nullable|string|max:255',
-    'date_maintenance' => 'nullable|date',
-    'heure_maintenance' => 'nullable|date_format:H:i',
-    'atelier_id' => 'nullable|exists:ateliers,id',
+        'type_emplacement' => 'nullable|string|max:255',
+        'date_maintenance' => 'nullable|date',
+        'heure_maintenance' => 'nullable|date_format:H:i',
+        'atelier_id' => 'nullable|exists:ateliers,id',
     ]);
 
     // Récupération de la demande
@@ -241,24 +263,35 @@ public function updateInfo(Request $request, $id)
         return response()->json(['message' => 'Demande non trouvée'], 404);
     }
 
-    // Mise à jour des champs autorisés
-    $demande->type_emplacement = $validated['type_emplacement'] ?? $demande->type_emplacement;
+    // Stocker l'ancien atelier pour comparaison
+    $ancienAtelierId = $demande->atelier_id;
 
-    // Gestion de la date et heure
-    if (isset($validated['date_maintenance'])) {
-        $demande->date_maintenance = $validated['date_maintenance'];
+    // Mise à jour des champs
+    $demande->fill($validated);
+    $demande->save();
 
-        // Si une heure est fournie, on l'enregistre séparément
-        if (isset($validated['heure_maintenance'])) {
-            $demande->heure_maintenance = $validated['heure_maintenance'];
-        } else {
-            // Si pas d'heure fournie, on réinitialise le champ
-            $demande->heure_maintenance = null;
+    // Envoyer une notification si l'atelier a changé
+    if ($demande->atelier_id && $demande->atelier_id != $ancienAtelierId) {
+        $atelier = Atelier::find($demande->atelier_id);
+
+        if ($atelier) {
+            $notification = Notification::create([
+                'user_id' => $atelier->id, // Assurez-vous que votre modèle Atelier utilise le même ID que User
+                'type' => 'demande_assignee',
+                'message' => 'Une nouvelle demande vous a été assignée',
+                'data' => [
+                    'demande_id' => $demande->id,
+                    'url' => '/demandes/' . $demande->id,
+                    'client' => $demande->client->nom ?? 'Client inconnu',
+                    'date_maintenance' => $demande->date_maintenance,
+                    'heure_maintenance' => $demande->heure_maintenance
+                ]
+            ]);
+
+            // Diffuser la notification en temps réel
+            event(new NotificationSent($notification));
         }
     }
-
-    $demande->atelier_id = $validated['atelier_id'] ?? $demande->atelier_id;
-    $demande->save();
 
     return response()->json([
         'message' => 'Demande mise à jour avec succès',
@@ -686,9 +719,44 @@ public function updateTechniciens(Request $request, Demande $demande)
     \Log::info('Données à enregistrer:', $techniciensData);
 
     try {
+        // Récupérer les anciens techniciens pour comparaison
+        $anciensTechniciens = collect($demande->techniciens ?? [])->pluck('id')->toArray();
+        $nouveausTechniciens = collect($techniciensData)->pluck('id')->toArray();
+
+        // Mise à jour de la demande
         $demande->techniciens = $techniciensData;
         $demande->status = 'Assignée';
         $demande->save();
+
+        // Créer des notifications pour les nouveaux techniciens assignés
+        $techniciensANotifier = array_diff($nouveausTechniciens, $anciensTechniciens);
+
+        foreach ($techniciensANotifier as $technicienId) {
+            $technicien = collect($techniciensData)->firstWhere('id', $technicienId);
+
+            NotificationTechnicien::create([
+                'technicien_id' => $technicienId,
+                'demande_id' => $demande->id,
+                'titre' => 'Nouvelle demande assignée',
+                'message' => "Une nouvelle demande #{$demande->id} vous a été assignée. " ,
+
+                'type' => 'assignation'
+            ]);
+
+            \Log::info("Notification créée pour le technicien {$technicien['nom']} (ID: {$technicienId})");
+        }
+
+        // Optionnel: Notifier aussi les techniciens qui ont été retirés
+        $techniciensRetires = array_diff($anciensTechniciens, $nouveausTechniciens);
+        foreach ($techniciensRetires as $technicienId) {
+            NotificationTechnicien::create([
+                'technicien_id' => $technicienId,
+                'demande_id' => $demande->id,
+                'titre' => 'Assignation retirée',
+                'message' => "Vous n'êtes plus assigné à la demande #{$demande->id}.",
+                'type' => 'modification'
+            ]);
+        }
 
         \Log::info('Demande après mise à jour:', $demande->fresh()->toArray());
 
@@ -696,7 +764,9 @@ public function updateTechniciens(Request $request, Demande $demande)
             'success' => true,
             'message' => 'Techniciens assignés avec succès',
             'data' => $demande->fresh(),
+            'notifications_creees' => count($techniciensANotifier)
         ]);
+
     } catch (\Exception $e) {
         \Log::error('Erreur lors de la mise à jour:', ['error' => $e->getMessage()]);
         return response()->json([

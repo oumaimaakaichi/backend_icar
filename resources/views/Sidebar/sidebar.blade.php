@@ -528,8 +528,12 @@
                     <span class="menu-link-text">Companies</span>
                     <span class="tooltip">Companies</span>
                 </a>
+                <a href="atelier" class="menu-link">
+                    <i class="fa-solid fa-tools"></i>
+                    <span class="menu-link-text">Workshop</span>
+                    <span class="tooltip">Workshop</span>
+                </a>
             </div>
-
             <div class="menu-section">
                 <div class="menu-section-title">Inventory</div>
                 <a href="catalogues" class="menu-link">
@@ -551,11 +555,7 @@
 
             <div class="menu-section">
                 <div class="menu-section-title">Operations</div>
-                <a href="atelier" class="menu-link">
-                    <i class="fa-solid fa-tools"></i>
-                    <span class="menu-link-text">Workshop</span>
-                    <span class="tooltip">Workshop</span>
-                </a>
+
                 <a href="statistiques" class="menu-link">
                     <i class="fa-solid fa-chart-line"></i>
                     <span class="menu-link-text">Statistics</span>

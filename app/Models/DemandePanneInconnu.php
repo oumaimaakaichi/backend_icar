@@ -17,6 +17,7 @@ class DemandePanneInconnu extends Model
         'voiture_id',
         'client_id',
         'pieces_choisies',
+         'pieces_selectionnees',
         'type_emplacement',
         'atelier_id',
         'date_maintenance',
@@ -50,6 +51,7 @@ class DemandePanneInconnu extends Model
          'main_oeuvre_pieces' => 'array',
            'disponibilite_pieces' => 'array',
         'pieces_choisies' => 'array',
+        'pieces_selectionnees'=> 'array',
         'techniciens' => 'array',
         'date_maintenance' => 'date',
         'heure_maintenance' => 'string',
@@ -132,5 +134,13 @@ public function catalogues()
     }
     return json_decode($value, true) ?: [];
 }
+
+
+
+
+  public function rapport()
+    {
+        return $this->hasOne(RapportDemandeInconnu::class, 'id_demande');
+    }
 }
 

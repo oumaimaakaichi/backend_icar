@@ -335,7 +335,7 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            margin-left: 10px;
+            margin-left: 0px;
         }
 
         .user-avatar {
@@ -350,6 +350,7 @@
             font-weight: 600;
             font-size: 14px;
             transition: var(--transition);
+            margin-right: 15px;
         }
 
         .user-info:hover .user-avatar {
@@ -543,7 +544,7 @@
                     <i class="fas fa-users"></i>
                     <span>Technician</span>
                 </a>
-                <a href="#" class="menu-link">
+                <a href="{{ route('profile.edit') }}" class="menu-link">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </a>
@@ -575,7 +576,7 @@
 
             <div class="user-info" id="user-info-trigger">
            <div class="user-avatar">
-  <i class="fas fa-user" style="font-size: 20px;color:gray"></i>
+  <i class="fas fa-user" style="font-size: 20px;color:rgb(105, 104, 104)"></i>
 </div>
 
 

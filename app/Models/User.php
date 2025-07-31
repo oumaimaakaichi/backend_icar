@@ -93,4 +93,37 @@ public function isResponsablePiece()
             return $point->type === 'credit' ? $point->points : -$point->points;
         });
     }
+
+
+     public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+  public function notificationsPrix()
+    {
+        return $this->hasMany(NotificationPrix::class);
+    }
+    public function unreadNotifications()
+    {
+        return $this->notifications()->unread();
+    }
+
+
+
+     public function getFormattedNotifications()
+    {
+        return $this->notificationsPrix()->orderBy('created_at', 'desc')->get()->map(function ($notification) {
+            $data = json_decode($notification->data, true);
+            return [
+                'id' => $notification->id,
+                'type' => $notification->type,
+                'message' => $data['message'] ?? '',
+                'demande_id' => $data['demande_id'] ?? null,
+                'pieces' => $data['pieces'] ?? [],
+                'read_at' => $notification->read_at,
+                'created_at' => $notification->created_at,
+                'formatted_date' => $notification->created_at->diffForHumans(),
+            ];
+        });
+    }
 }
