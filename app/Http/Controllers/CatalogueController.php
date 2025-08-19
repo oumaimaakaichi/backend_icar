@@ -118,8 +118,7 @@ class CatalogueController extends Controller
             ];
         });
 
-        return response()->json($catalogues)
-            ->header('Access-Control-Allow-Origin', '*')
-            ->header('Access-Control-Allow-Methods', 'GET');
+        return response()->json($catalogues);
+
     }
 }

@@ -244,13 +244,7 @@ public function healthCheck()
 }
 
 // Middleware CORS personnalisé si nécessaire
-public function handleCors()
-{
-    return response()->json(['message' => 'OK'])
-        ->header('Access-Control-Allow-Origin', '*')
-        ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-}
+
 
  public function storeTech(Request $request)
 {
