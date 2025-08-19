@@ -401,7 +401,8 @@
         <div class="header-section">
             <div class="header-title">
                 <h1><i class="fas fa-tools"></i> Workshop Management</h1>
-                <p class="header-subtitle">Gérez et supervisez tous vos ateliers en un seul endroit</p>
+              <p class="header-subtitle">Manage and oversee all your workshops in one place</p>
+
             </div>
         </div>
 
@@ -409,25 +410,26 @@
         <div class="content-section">
             <!-- Statistics Cards -->
             <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalWorkshops">0</div>
-                    <div class="stat-label">Total Ateliers</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number text-success" id="activeWorkshops">0</div>
-                    <div class="stat-label">Ateliers Actifs</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number text-warning" id="inactiveWorkshops">0</div>
-                    <div class="stat-label">Ateliers Inactifs</div>
-                </div>
-            </div>
+    <div class="stat-card">
+        <div class="stat-number" id="totalWorkshops">0</div>
+        <div class="stat-label">Total Workshops</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number text-success" id="activeWorkshops">0</div>
+        <div class="stat-label">Active Workshops</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number text-warning" id="inactiveWorkshops">0</div>
+        <div class="stat-label">Inactive Workshops</div>
+    </div>
+</div>
+
 
             <!-- Search Container -->
             <div class="search-container">
                 <div class="search-box">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="search" placeholder="Rechercher par nom ou email...">
+                    <input type="text" id="search" placeholder="Search by par name or email...">
                 </div>
             </div>
 

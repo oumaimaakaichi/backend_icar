@@ -512,10 +512,17 @@
             <i class="fas fa-chevron-left"></i>
         </button>
 
-        <div class="sidebar-header">
-            <div class="sidebar-logo">ES</div>
-            <h3 class="sidebar-title">Expert Space</h3>
-        </div>
+       <div class="sidebar-header">
+    <div class="sidebar-logo">
+        @auth('web')
+            {{ strtoupper(substr(Auth::guard('web')->user()->nom, 0, 1)) }}
+            {{ strtoupper(substr(Auth::guard('web')->user()->prenom, 0, 1)) }}
+        @else
+            ES
+        @endauth
+    </div>
+    <h3 class="sidebar-title">Expert Space</h3>
+</div>
 
         <div class="sidebar-menu">
             <div class="menu-section">

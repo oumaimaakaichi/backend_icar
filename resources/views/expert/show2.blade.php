@@ -29,7 +29,153 @@
             color: #1e293b;
             line-height: 1.6;
         }
+  .rapport-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 400px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
+        .rapport-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .rapport-header {
+            margin-bottom: 25px;
+        }
+
+        .rapport-title {
+            color: #2c3e50;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .rapport-subtitle {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin: 0;
+        }
+
+        .btn-download-rapport {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-download-rapport::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-download-rapport:hover::before {
+            left: 100%;
+        }
+
+        .btn-download-rapport:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(231, 76, 60, 0.4);
+            background: linear-gradient(135deg, #c0392b, #a93226);
+        }
+
+        .btn-download-rapport:active {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-icon {
+            font-size: 1.3em;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-download-rapport:hover .btn-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .btn-text {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .download-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid #3498db;
+        }
+
+        .download-info p {
+            margin: 0;
+            color: #2980b9;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .file-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(46, 204, 113, 0.1);
+            border-radius: 12px;
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 480px) {
+            .rapport-container {
+                margin: 20px;
+                padding: 25px 20px;
+            }
+
+            .btn-download-rapport {
+                padding: 14px 28px;
+                font-size: 1em;
+            }
+
+            .rapport-title {
+                font-size: 1.2em;
+            }}
         .glass-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
@@ -194,6 +340,8 @@
             transition: all 0.3s ease;
         }
 
+
+
         .technician-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
@@ -302,10 +450,10 @@
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold mb-1">Détails de la Demande</h2>
+            <h2 class="fw-bold mb-1">Request detail</h2>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('expert.demande_maintenanceInconnu') }}" class="text-decoration-none">Demandes</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('expert.demande_maintenanceInconnu') }}" class="text-decoration-none">Requests</a></li>
                     <li class="breadcrumb-item active" aria-current="page">#{{ $demande->id }}</li>
                 </ol>
             </nav>
@@ -343,29 +491,31 @@
 
                 <div class="divider"></div>
 
-                <h6 class="section-title mb-3">Véhicule</h6>
+                <h6 class="section-title mb-3">Car</h6>
 
                 <div class="row">
-                    <div class="col-6 mb-3">
-                        <div class="info-label">Modèle</div>
-                        <div class="info-value">{{ $demande->voiture->model }}</div>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <div class="info-label">Série</div>
-                        <div class="info-value">{{ $demande->voiture->serie ?? '-' }}</div>
-                    </div>
-                    <div class="col-6">
-                        <div class="info-label">Année</div>
-                        <div class="info-value">{{ $demande->voiture->date_fabrication ?? '-' }}</div>
-                    </div>
-                    <div class="col-6">
-                        <div class="info-label">Couleur</div>
-                        <div class="info-value">{{ $demande->voiture->couleur ?? '-' }}</div>
-                    </div>
+                   <div class="col-6 mb-3">
+    <div class="info-label">Model</div>
+    <div class="info-value">{{ $demande->voiture->model }}</div>
+</div>
+<div class="col-6 mb-3">
+    <div class="info-label">Series</div>
+    <div class="info-value">{{ $demande->voiture->serie ?? '-' }}</div>
+</div>
+<div class="col-6">
+    <div class="info-label">Year</div>
+    <div class="info-value">{{ $demande->voiture->date_fabrication ?? '-' }}</div>
+</div>
+<div class="col-6">
+    <div class="info-label">Color</div>
+    <div class="info-value">{{ $demande->voiture->couleur ?? '-' }}</div>
+</div>
+
                 </div>
                  <div class="divider"></div>
                 <div class="glass-card p-4 mb-4">
-                <h6 class="section-title">Description du problème</h6>
+              <h6 class="section-title">Problem Description</h6>
+
                 <div class="problem-description">
                     {{ $demande->description_probleme }}
                 </div>
@@ -379,12 +529,13 @@
 
             <!-- Details Card -->
             <div class="glass-card p-4 mb-4">
-                <h6 class="section-title">Détails de la demande</h6>
+                <h6 class="section-title">Request detail</h6>
 
                 <div class="row">
 
                     <div class="col-md-6 mb-3">
-                        <div class="info-label">Type d'emplacement</div>
+                      <div class="info-label">Location Type</div>
+
                         <div class="info-value">
                             <span class="badge bg-info bg-opacity-10 text-info">
                                 <i class="fas fa-{{ $demande->type_emplacement == 'À domicile' ? 'home' : 'wrench' }} me-1"></i>
@@ -393,7 +544,8 @@
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <div class="info-label">Date de maintenance</div>
+                        <div class="info-label">Maintenance Date</div>
+
                         <div class="info-value">
                             @if($demande->date_maintenance)
                                 {{ \Carbon\Carbon::parse($demande->date_maintenance)->format('d/m/Y') }}
@@ -406,7 +558,8 @@
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <div class="info-label">Date de création</div>
+                       <div class="info-label">Creation Date</div>
+
                         <div class="info-value">
                             {{ $demande->created_at->format('d/m/Y à H:i') }}
                         </div>
@@ -415,24 +568,26 @@
             </div>
 
             <!-- Techniciens Assignés -->
-  @if($demande->status === 'Nouvelle_demande')
+  @if($demande->status === 'Nouvelle_demande' && $demande->atelier_id == null)
                 <div class="card">
                     <div class="card-header">
                         <i class="fas fa-user-plus"></i>
-                        <h6 class="m-0 font-weight-bold">Assigner des techniciens</h6>
+                      <h6 class="m-0 font-weight-bold">Assign Technicians</h6>
+
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label for="nombre_techniciens" class="info-box-title">Nombre de techniciens</label>
-                            <input type="number" min="1" max="{{ $techniciens->count() }}" class="form-control" id="nombre_techniciens" value="1">
+                           <label for="nombre_techniciens" class="info-box-title">Number of Technicians</label>
+      <input type="number" min="1" max="{{ $techniciens->count() }}" class="form-control" id="nombre_techniciens" value="1">
                         </div>
 
                         <form id="assignTechniciensForm">
                             <div id="techniciens_select_container">
                                 <div class="technician-select-container">
-                                    <label>Technicien 1</label>
+                                    <label>Technician 1</label>
                                     <select class="form-select" name="techniciens[]" required>
-                                        <option value="" disabled selected>Sélectionner un technicien</option>
+                                      <option value="" disabled selected>Select a Technician</option>
+
                                         @foreach($techniciens as $tech)
                                             <option value="{{ $tech->id }}">{{ $tech->prenom ?? '' }} {{ $tech->nom ?? $tech->name }}</option>
                                         @endforeach
@@ -441,7 +596,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-submit w-100 mt-3">
-                                <i class="fas fa-user-plus"></i>Assigner
+                                <i class="fas fa-user-plus"></i>Assign
                             </button>
                         </form>
                     </div>
@@ -459,15 +614,17 @@
     @endphp
 
     <div class="glass-card p-4 mt-4">
-        <h6 class="section-title">Pièces sélectionnées</h6>
+        <h6 class="section-title">Selected Parts</h6>
+
 
         <div class="table-responsive">
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Pièce</th>
-                        <th>Référence</th>
-                        <th>Type véhicule</th>
+                       <th>Part</th>
+<th>Reference</th>
+<th>Vehicle Type</th>
+
 <th>Action</th>
                     </tr>
                 </thead>
@@ -499,23 +656,18 @@
 @else
     <div class="glass-card p-4 mt-4">
         <div class="alert alert-info">
-            Aucune pièce sélectionnée pour cette demande.
+          “No parts selected for this request.”
+
         </div>
     </div>
 @endif
- @if($demande && $demande->rapport)
-                                <a href="{{ route('rapportt.downloadd', $demande->rapport->id) }}"
-                                   class="btn btn-download-rapport btn-sm"
-                                   download
-                                   title="Télécharger le rapport">
-                                    <i class="fas fa-file-pdf" style="color:black"></i> <b style="color: rgb(0, 0, 0)">Voir rapport</b>
-                                </a>
-                            @endif
+
 @if($demande->techniciens && count($demande->techniciens) > 0)
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white d-flex align-items-center">
             <i class="fas fa-users-cog me-2"></i>
-            <h6 class="m-0 font-weight-bold">Techniciens assignés</h6>
+           <h6 class="m-0 font-weight-bold">Assigned Technicians</h6>
+
         </div>
         <div class="card-body p-0">
             <ul class="list-group list-group-flush">
@@ -536,13 +688,14 @@
                             @if($demandeFlux && $flux && $flux->lien_meet)
                                 @if($demandeFlux->permission)
                                     <button class="btn btn-sm btn-success mt-2" disabled>
-                                        <i class="fas fa-check-circle me-1 text-white"></i> Partage autorisé
-                                    </button>
-                                @else
-                                    <button class="btn btn-sm btn-outline-success mt-2 share-btn"
-                                            data-flux-id="{{ $demandeFlux->id }}">
-                                        <i class="fas fa-share-square me-1"></i> Autoriser le partage
-                                    </button>
+                                      <i class="fas fa-check-circle me-1 text-white"></i> Sharing Allowed
+</button>
+@else
+<button class="btn btn-sm btn-outline-success mt-2 share-btn"
+        data-flux-id="{{ $demandeFlux->id }}">
+    <i class="fas fa-share-square me-1"></i> Allow Sharing
+</button>
+
                                 @endif
                             @endif
                         </div>
@@ -557,7 +710,7 @@
 
   @if($demande->techniciens && count($demande->techniciens) > 0)        <!-- Lien Meet -->
 <div class="glass-card p-4">
-    <h6 class="section-title">Visioconférence d'examination</h6>
+    <h6 class="section-title">Examination Video Conference</h6>
 
     @php
         $flux = \App\Models\FluxDirectInconnuPanne::where('demande_id', $demande->id)
@@ -568,7 +721,8 @@
 
     <div class="d-flex justify-content-between align-items-center">
         <div>
-            <i class="fas fa-video me-2"></i> Lien de visioconférence de
+           <i class="fas fa-video me-2"></i> Video Conference Link for
+
              <b style="color: #059669">{{ $flux && $flux->techniciens ? $flux->techniciens->nom : $tech['nom'] }}</b>
 
         </div>
@@ -576,13 +730,15 @@
             @if($flux && $flux->lien_meet )
             @if($demandeFlux)
                 @if( $demandeFlux->permission)
-                    <button class="share-btn disabled" disabled>
-                        <i class="fas fa-check-circle me-1"></i> Partage autorisé
-                    </button>
+                   <button class="share-btn disabled" disabled>
+    <i class="fas fa-check-circle me-1"></i> Sharing Authorized
+</button>
+
                 @else
-                    <button class="share-btn share-btn-action" data-flux-id="{{ $demandeFlux->id }}">
-                        <i class="fas fa-share-square me-1"></i> Autoriser le partage
-                    </button>
+                   <button class="share-btn share-btn-action" data-flux-id="{{ $demandeFlux->id }}">
+    <i class="fas fa-share-square me-1"></i> Allow Sharing
+</button>
+
                 @endif
               @else
               <span >Aucun demande de partage</span>
@@ -590,8 +746,9 @@
               @endif
 @if($flux && $flux->ouvert )
                 <a href="{{ $flux->lien_meet }}" target="_blank" class="meet-btn">
-                    <i class="fas fa-video me-1"></i> Rejoindre Meet
-                </a>
+    <i class="fas fa-video me-1"></i> Join Meet
+</a>
+
  @else
                 <span class="badge bg-secondary">Vidéoconférence fermé</span>
             @endif
@@ -612,7 +769,8 @@
 
  @if ($demande->pieces_selectionnees)
     <div class="glass-card p-4">
-        <h6 class="section-title">Visioconférence d'entretien</h6>
+       <h6 class="section-title">Interview Videoconference</h6>
+
          @php
        $flux = \App\Models\FluxDirectInconnuPanne::where('demande_id', $demande->id)
     ->where('type_meet', 'Entretient')
@@ -626,11 +784,13 @@
                 @if ($demandeFlux)
                     @if ($demandeFlux->permission)
                         <button class="share-btn disabled" disabled>
-                            <i class="fas fa-check-circle me-1"></i> Partage autorisé
+                            <i class="fas fa-check-circle me-1"></i> Authorized sharing
+
                         </button>
                     @else
                         <button class="share-btn share-btn-action" data-flux-id="{{ $demandeFlux->id }}">
-                            <i class="fas fa-share-square me-1"></i> Autoriser le partage
+                            <i class="fas fa-share-square me-1"></i> Allow sharing
+
                         </button>
                     @endif
                 @else
@@ -639,20 +799,51 @@
 
                 @if ($flux->ouvert)
                     <a href="{{ $flux->lien_meet }}" target="_blank" class="meet-btn">
-                        <i class="fas fa-video me-1"></i> Rejoindre Meet
+                        <i class="fas fa-video me-1"></i>Join Meet
+
                     </a>
                 @else
-                    <span class="badge bg-secondary">Vidéoconférence fermée</span>
+                    <span class="badge bg-secondary">Video conference closed
+</span>
                 @endif
 
             @else
-                <span class="badge bg-secondary">Aucun lien disponible</span>
+                <span class="badge bg-secondary">No link available
+</span>
             @endif
 
         </div>
     </div>
 @endif
+ <div class="rapport-container" style="margin-top: 50px">
+        <div class="rapport-header">
+            <h2 class="rapport-title">Document Available</h2>
+            <p class="rapport-subtitle">Your report is ready to be viewed</p>
+        </div>
 
+        <div class="file-preview">
+            <i class="fas fa-file-check"></i>
+            <span>Report generated successfully.
+</span>
+        </div>
+
+        <!-- Version Laravel Blade avec design amélioré -->
+        @if($demande && $demande->rapport)
+            <a href="{{ route('rapportt.downloadd', $demande->rapport->id) }}"
+               class="btn-download-rapport pulse-animation"
+               download
+               title="Télécharger le rapport PDF">
+                <i class="fas fa-file-pdf btn-icon"></i>
+                <span class="btn-text">View Report
+</span>
+            </a>
+        @endif
+
+        <div class="download-info">
+            <p><i class="fas fa-info-circle"></i> The report will open in a new tab or be downloaded depending on your browser.
+</p>
+        </div>
+    </div>
 </div>
 
 <!-- Floating Action Button -->
@@ -664,25 +855,27 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="mainOeuvreModalLabel">Ajouter prix main d'œuvre</h5>
+                <h5 class="modal-title" id="mainOeuvreModalLabel">Add labor cost
+</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="mainOeuvreForm">
                     <input type="hidden" id="pieceId" name="piece_id">
                     <div class="mb-3">
-                        <label for="pieceName" class="form-label">Pièce</label>
+                        <label for="pieceName" class="form-label">Spare part
+</label>
                         <input type="text" class="form-control" id="pieceName" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="prixMainOeuvre" class="form-label">Prix main d'œuvre (DH)</label>
+                        <label for="prixMainOeuvre" class="form-label">Labor cost (DH)</label>
                         <input type="number" step="0.01" class="form-control" id="prixMainOeuvre" name="prix" required>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary" id="saveMainOeuvre">Enregistrer</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveMainOeuvre">Save</button>
             </div>
         </div>
     </div>

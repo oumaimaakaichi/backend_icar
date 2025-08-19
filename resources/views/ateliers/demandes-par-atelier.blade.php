@@ -366,15 +366,17 @@
 
     <div class="container">
         <!-- Header -->
-        <div class="header">
-            <h3 class="header-title">Demandes de maintenances </h3>
-            <p class="header-subtitle">Gérez et suivez toutes les demandes de maintenance pour les pannes connues </p>
-        </div>
+      <div class="header">
+    <h3 class="header-title">Maintenance Requests</h3>
+    <p class="header-subtitle">Manage and track all maintenance requests for known issues</p>
+</div>
+
 
         <!-- Filters -->
         <div class="filters">
             <div class="filter-group">
-                <label for="statusFilter" style="font-weight: 600; color: #4a5568;">Filtrer par statut:</label>
+               <label for="statusFilter" style="font-weight: 600; color: #4a5568;">Filter by status:</label>
+
                 <select id="statusFilter" class="filter-select">
                     <option value="all">Tous les statuts</option>
                     <option value="Nouvelle_demande">Nouvelle demande</option>
@@ -384,10 +386,11 @@
                     <option value="Non_assigné">Non assigné</option>
                     <option value="Assigné">Assigné</option>
                 </select>
-                <button id="applyFilter" class="btn-filter">
-                    <i class="fas fa-filter"></i>
-                    Appliquer
-                </button>
+               <button id="applyFilter" class="btn-filter">
+    <i class="fas fa-filter"></i>
+    Apply
+</button>
+
             </div>
         </div>
 
@@ -402,7 +405,7 @@
                     <div class="request-card" data-status="{{ str_replace(' ', '_', $demande->status) }}">
                         <div class="card-header">
                             <h3 class="request-id">
-                                Demande
+                                Request
                                 @if($demande->has_piece_recommandee)
                                     <i class="fas fa-tools piece-indicator" title="Pièces recommandées"></i>
                                 @endif
@@ -414,25 +417,27 @@
 
                         <div class="card-content">
                             <div class="info-section">
-                                <h4>Informations Client</h4>
+                               <h4>Customer Information</h4>
+
                                 <div class="info-item">
                                     <i class="fas fa-user"></i>
-                                    <strong>Client:</strong>
+                                    <strong>Customer:</strong>
                                     <span>{{ $demande->client->prenom }} {{ $demande->client->nom }}</span>
                                 </div>
                                 <div class="info-item">
                                     <i class="fas fa-phone"></i>
-                                    <strong>Téléphone:</strong>
+                                    <strong>Phone:</strong>
                                     <span>{{ $demande->client->phone }}</span>
                                 </div>
                                 <div class="info-item">
                                     <i class="fas fa-car"></i>
-                                    <strong>Véhicule:</strong>
+                                    <strong>Car:</strong>
                                     <span>{{ $demande->voiture->model }} ({{ $demande->voiture->serie }})</span>
                                 </div>
                             </div>
                             <div class="info-section">
-                                <h4>Détails Service</h4>
+                              <h4>Service Details</h4>
+
                                 <div class="info-item">
                                     <i class="fas fa-wrench"></i>
                                     <strong>Service:</strong>
@@ -440,12 +445,12 @@
                                 </div>
                                 <div class="info-item">
                                     <i class="fas fa-tags"></i>
-                                    <strong>Catégorie:</strong>
+                                    <strong>Category:</strong>
                                     <span>{{ $demande->servicePanne->categoryPane->titre }}</span>
                                 </div>
                                 <div class="info-item">
                                     <i class="fas fa-euro-sign"></i>
-                                    <strong>Forfait:</strong>
+                                    <strong>Package:</strong>
                                     <span>{{ $demande->forfait->nomForfait }}</span>
                                 </div>
                             </div>
@@ -454,7 +459,7 @@
                         <div class="card-footer">
                             <span class="created-date">
                                 <i class="far fa-clock"></i>
-                                Créée le {{ $demande->created_at->format('d/m/Y H:i') }}
+                                CreatedAt {{ $demande->created_at->format('d/m/Y H:i') }}
                             </span>
                             @if($demande->date_maintenance)
                                 <span class="rdv-date">
@@ -464,7 +469,7 @@
                             @endif
                             <a href="{{ route('ateliers.show', $demande->id) }}" class="btn-details">
                                 <i class="fas fa-eye"></i>
-                                Détails
+                                Details
                             </a>
                         </div>
                     </div>

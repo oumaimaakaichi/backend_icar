@@ -367,7 +367,7 @@ margin-right: 500px,
 
 
     <!-- Main Content -->
-        <div class="container py-5" style="margin-top: 50px">
+        <div class="container py-5" style="margin-top: 50px ; margin-right:50px">
         <div class="card shadow p-4">
             <!-- En-tête de la page -->
             <div class="page-header">

@@ -144,16 +144,24 @@ public function showDemandesParAtelierPage()
         abort(403, 'Accès non autorisé');
     }
 
-    $demandes = DemandePanneInconnu::with([
-        'client',
-        'voiture',
-        'category'
+    // Récupérer le paramètre de filtre s'il existe
+    $status = request()->input('status');
 
-    ])->where('atelier_id', $atelier->id)->get();
+    // Construire la requête avec eager loading
+    $query = DemandePanneInconnu::with(['client', 'voiture', 'category'])
+                ->where('atelier_id', $atelier->id)
+                ->orderBy('created_at', 'desc');
+
+    // Appliquer le filtre si spécifié
+    if ($status && $status !== 'all') {
+        $query->where('status', str_replace('_', ' ', $status));
+    }
+
+    // Paginer les résultats (10 par défaut)
+    $demandes = $query->paginate(5);
 
     return view('ateliers.demandesInconnu', compact('atelier', 'demandes'));
 }
-
 
 
 public function updateTechniciens(Request $request, DemandePanneInconnu $demande)
@@ -372,7 +380,7 @@ public function showRequestChoice()
         'client:id,nom,prenom,phone',
         'voiture:id,model,serie',
 
-    ])->where('type_emplacement', '!=', 'fixe');
+    ]);
 
     // Filtrage par statut
     $demandesQuery->when($status, function ($query, $status) {
@@ -597,6 +605,8 @@ public function getAllDemandeByUser($userId): JsonResponse
             'categorie' => $demande->category->titre ?? null,
             'created_at' => $demande->created_at->format('Y-m-d H:i:s'),
             'disponibilite_pieces' => $piecesDisponibles, // Array vide ou avec des éléments
+              'pieces_selectionnees' =>$demande->pieces_selectionnees,
+              'disponibilite_piecess' =>$demande->disponibilite_pieces,
             'prix_total' => $demande->prix_total,
             'prix_main_oeuvre' => $demande->prix_main_oeuvre,
             'techniciens' => $demande->techniciens,
@@ -658,11 +668,15 @@ public function saveSelections(Request $request, $demandeId)
 
     $demande = DemandePanneInconnu::findOrFail($demandeId);
 
-    // Calcul du prix total
-    $prixTotal = collect($request->pieces)->sum('prix');
+    // CORRECTION: Utiliser 'pieces_selectionnees' au lieu de 'pieces'
+    $prixTotal = collect($request->pieces_selectionnees)->sum('prix');
 
-    // Vous pouvez ajouter ici la logique pour enregistrer les sélections
-    // Par exemple, dans un nouveau champ ou table
+    // Enregistrer les sélections dans le champ JSON pieces_selectionnees
+    $demande->update([
+        'pieces_selectionnees' => $request->pieces_selectionnees,
+        'prix_total' => $prixTotal,
+        'statut' => 'selections_enregistrees' // Optionnel: changer le statut
+    ]);
 
     return response()->json([
         'success' => true,

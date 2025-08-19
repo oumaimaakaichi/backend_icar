@@ -152,11 +152,11 @@
                 <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                     <h1 class="text-2xl font-bold flex items-center">
                         <i class="fas fa-car mr-3"></i>
-                        Détails de l'Entreprise
+                        Company Details
                     </h1>
                     <div class="flex space-x-3">
                         <a href="{{ route('entrepriseAutomobile.index') }}" class="bg-white text-indigo-800 px-4 py-2 rounded-full font-medium hover:bg-gray-100 transition whitespace-nowrap" style="color: #5e8899">
-                            <i class="fas fa-arrow-left mr-2" style="color: #5e8899"></i> Retour
+                            <i class="fas fa-arrow-left mr-2" style="color: #5e8899"></i> Back
                         </a>
                     </div>
                 </div>
@@ -203,7 +203,7 @@
                                     <i class="fas fa-globe mr-2"></i>{{ $entrepriseAutomobile->pays }}
                                 </span>
                                 <span class="text-gray-500 flex items-center">
-                                    <i class="fas fa-car mr-2"></i> {{ count($entrepriseAutomobile->voitures ?? []) }} modèle(s)
+                                    <i class="fas fa-car mr-2"></i> {{ count($entrepriseAutomobile->voitures ?? []) }} model(s)
                                 </span>
                             </div>
 
@@ -217,10 +217,10 @@
                             <!-- Actions -->
                             <div class="flex flex-wrap gap-3 justify-center md:justify-start">
                                 <button onclick="openAddCarModal()" class="btn-primary text-white px-4 py-2 rounded-lg flex items-center transition-transform">
-                                    <i class="fas fa-plus-circle mr-2"></i> Ajouter un modèle
+                                    <i class="fas fa-plus-circle mr-2"></i> Add a model
                                 </button>
                                 <a href="{{ route('entrepriseAutomobile.edit', $entrepriseAutomobile->id) }}" class="btn-secondary text-white px-4 py-2 rounded-lg flex items-center transition-transform">
-                                    <i class="fas fa-edit mr-2"></i> Modifier
+                                    <i class="fas fa-edit mr-2"></i> Edit
                                 </a>
                             </div>
                         </div>
@@ -233,7 +233,7 @@
                 <div class="px-6 py-4 border-b border-gray-200 flex items-center">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                         <i class="fas fa-list-ul text-indigo-600 mr-2"></i>
-                        Liste des Modèles
+                        Models List
                     </h2>
                     <span class="ml-auto bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded-full">
                         {{ count($entrepriseAutomobile->voitures ?? []) }}
@@ -252,8 +252,8 @@
                                     <form action="{{ route('entrepriseAutomobile.removeVoiture', ['entreprise' => $entrepriseAutomobile->id, 'index' => $index]) }}" method="POST">
                                         @csrf
                                         <button type="submit" class="btn-danger text-white px-3 py-1 rounded-lg text-sm flex items-center transition-transform"
-                                                onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce modèle?')">
-                                            <i class="fas fa-trash-alt mr-1"></i> Supprimer
+                                                onclick="return confirm('Are you sure you want to delete this model?')">
+                                            <i class="fas fa-trash-alt mr-1"></i> Delete
                                         </button>
                                     </form>
                                 </div>
@@ -265,10 +265,10 @@
                         <div class="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
                             <i class="fas fa-car text-2xl text-indigo-400"></i>
                         </div>
-                        <h3 class="text-lg font-medium text-gray-500">Aucun modèle enregistré</h3>
-                        <p class="text-gray-400 mt-2">Commencez par ajouter votre premier modèle</p>
+                        <h3 class="text-lg font-medium text-gray-500">No models registered</h3>
+                        <p class="text-gray-400 mt-2">Start by adding your first model</p>
                         <button onclick="openAddCarModal()" class="mt-4 btn-primary text-white px-4 py-2 rounded-lg flex items-center mx-auto transition-transform">
-                            <i class="fas fa-plus-circle mr-2"></i> Ajouter un modèle
+                            <i class="fas fa-plus-circle mr-2"></i> Add a model
                         </button>
                     </div>
                 @endif
@@ -281,7 +281,7 @@
                 <div class="modal-header">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                         <i class="fas fa-plus-circle text-indigo-600 mr-2"></i>
-                        Ajouter un nouveau modèle
+                        Add a new model
                     </h2>
                     <span class="close-btn" onclick="closeAddCarModal()">&times;</span>
                 </div>
@@ -289,7 +289,7 @@
                     @csrf
                     <div class="modal-body">
                         <div class="mb-4">
-                            <label for="nom_voiture" class="block text-sm font-medium text-gray-700 mb-2">Nom du modèle*</label>
+                            <label for="nom_voiture" class="block text-sm font-medium text-gray-700 mb-2">Model name*</label>
                             <input type="text" id="nom_voiture" name="nom_voiture" required
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
                                    placeholder="Ex: Model S, Clio, 308...">
@@ -297,10 +297,10 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-50 transition" onclick="closeAddCarModal()">
-                            Annuler
+                            Cancel
                         </button>
                         <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition flex items-center justify-center">
-                            <i class="fas fa-save mr-2"></i> Enregistrer
+                            <i class="fas fa-save mr-2"></i> Save
                         </button>
                     </div>
                 </form>
@@ -336,4 +336,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -12,7 +12,7 @@ class StatistiqueController extends Controller
         // Compter les utilisateurs par rôle
         $techniciensCount = User::where('role', 'technicien')->count();
         $expertsCount = User::where('role', 'expert')->count();
-        $employesCount = User::where('role', 'employe')->count();
+        $employesCount = User::where('role', 'Client')->count();
 
         // Compter les entreprises contractantes
         $entreprisesCount = EntrepriseContractante::count();

@@ -8,10 +8,14 @@ use App\Models\VerificationCode;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ExpertAccountCreated;
+use App\Mail\TechnicienAccountCreated;
 use Illuminate\Support\Facades\Auth;
 use App\Services\SmsService;
 use App\Notifications\SendVerificationCode;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
+
+
 class UserController extends Controller
 {
     // Lister tous les utilisateurs
@@ -58,9 +62,197 @@ class UserController extends Controller
 }
 
 
+public function updateProfilTechnicien(Request $request)
+{
+    try {
+        // Log incoming request for debugging
+        \Log::info('Update profile request received', [
+            'data' => $request->all(),
+            'headers' => $request->headers->all()
+        ]);
+
+        // Validation des données
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:users,id',
+            'email' => 'sometimes|email|unique:users,email,'.$request->id,
+            'phone' => 'sometimes|string|max:20',
+            'password' => 'sometimes|string|min:6',
+            'specialite' => 'sometimes|string',
+            'qualifications' => 'sometimes|string',
+            'annee_experience' => 'sometimes|integer',
+        ]);
+
+        if ($validator->fails()) {
+            \Log::warning('Validation failed', ['errors' => $validator->errors()]);
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()
+            ], 400);
+        }
+
+        // Récupérer l'utilisateur
+        $user = User::find($request->id);
+
+        if (!$user) {
+            \Log::error('User not found', ['id' => $request->id]);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Utilisateur non trouvé'
+            ], 404);
+        }
+
+        \Log::info('User found', ['user_id' => $user->id, 'email' => $user->email]);
+
+        // Mettre à jour les champs de base
+        if ($request->has('email')) {
+            $user->email = $request->email;
+            \Log::info('Email updated', ['new_email' => $request->email]);
+        }
+
+        if ($request->has('phone')) {
+            $user->phone = $request->phone;
+            \Log::info('Phone updated', ['new_phone' => $request->phone]);
+        }
+
+        if ($request->has('password') && !empty($request->password)) {
+            $user->password = Hash::make($request->password);
+            \Log::info('Password updated');
+        }
+
+        // Mettre à jour les données extra
+        $extraData = $user->extra_data ?? [];
+
+        if ($request->has('specialite')) {
+            $extraData['specialite'] = $request->specialite;
+            \Log::info('Specialite updated', ['specialite' => $request->specialite]);
+        }
+
+        if ($request->has('qualifications')) {
+            $extraData['qualifications'] = $request->qualifications;
+            \Log::info('Qualifications updated', ['qualifications' => $request->qualifications]);
+        }
+
+        if ($request->has('annee_experience')) {
+            $extraData['annee_experience'] = $request->annee_experience;
+            \Log::info('Experience updated', ['annee_experience' => $request->annee_experience]);
+        }
+
+        $user->extra_data = $extraData;
+
+        // Sauvegarder les modifications
+        $saved = $user->save();
+
+        if (!$saved) {
+            \Log::error('Failed to save user', ['user_id' => $user->id]);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Échec de la sauvegarde'
+            ], 500);
+        }
+
+        \Log::info('User profile updated successfully', ['user_id' => $user->id]);
+
+        // Recharger l'utilisateur depuis la base de données
+        $user->refresh();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profil mis à jour avec succès',
+            'user' => $user
+        ], 200);
+
+    } catch (\Exception $e) {
+        \Log::error('Exception in updateProfilTechnicien', [
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Une erreur interne s\'est produite'
+        ], 500);
+    }
+}
 
 
-   public function storeTech(Request $request)
+public function updateClient(Request $request, $id)
+{
+    // Valider les données
+    $validated = $request->validate([
+        'email' => 'required|email|unique:users,email,'.$id,
+        'phone' => 'required|string|max:20',
+        'password' => 'nullable|string|min:8|confirmed',
+    ]);
+
+    try {
+        // Trouver l'utilisateur par ID
+        $user = User::findOrFail($id);
+
+        // Mettre à jour les champs
+        $user->email = $validated['email'];
+        $user->phone = $validated['phone'];
+
+        if (!empty($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
+        }
+
+        $user->save();
+
+        // Retourner la réponse
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profil mis à jour avec succès',
+            'user' => [
+                'id' => $user->id,
+                'nom' => $user->nom,
+                'prenom' => $user->prenom,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'isActive' => $user->isActive,
+            ]
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Erreur lors de la mise à jour: ' . $e->getMessage()
+        ], 500);
+    }
+}
+// Ajoutez cette méthode pour tester la connectivité
+public function healthCheck()
+{
+    try {
+        // Test simple de la base de données
+        $userCount = User::count();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'API is working',
+            'timestamp' => now(),
+            'database' => 'connected',
+            'users_count' => $userCount
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Database connection failed',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+// Middleware CORS personnalisé si nécessaire
+public function handleCors()
+{
+    return response()->json(['message' => 'OK'])
+        ->header('Access-Control-Allow-Origin', '*')
+        ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+}
+
+ public function storeTech(Request $request)
 {
     $request->validate([
         'nom' => 'required|string|max:255',
@@ -94,8 +286,6 @@ class UserController extends Controller
 
     return redirect()->route('atelierss.techniciensAtelier')->with('success', 'Technicien ajouté avec succès! Un email avec les informations de connexion a été envoyé.');
 }
-
-
    public function storeExpert(Request $request)
 {
     $request->validate([
@@ -565,7 +755,7 @@ public function sendCode(Request $request)
         'email' => 'required|email',
     ]);
 
-    $code = rand(1000, 9999);
+    $code = random_int(0,99);
 
     VerificationCode::updateOrCreate(
         ['email' => $request->email],

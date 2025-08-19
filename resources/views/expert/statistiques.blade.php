@@ -265,15 +265,15 @@
 <body>
     @include('Sidebar.sidebarExpert')
 
-      <div class="container py-5" style="margin-top: 50px">
-        <div class="card shadow p-4">
+     <div class="container py-5" style="margin-top: 50px">
+    <div class="card shadow p-4">
         <!-- Header Section -->
         <div class="header-section fade-in">
             <h1 class="main-title">
                 <i class="fas fa-chart-line"></i>
-                Tableau de Bord
+                Dashboard
             </h1>
-            <p class="subtitle">Analyse complète des demandes et statistiques en temps réel</p>
+            <p class="subtitle">Comprehensive analysis of requests and real-time statistics</p>
         </div>
 
         <!-- KPI Section -->
@@ -281,8 +281,8 @@
             <div class="kpi-content">
                 <i class="fas fa-clock kpi-icon"></i>
                 <div>
-                    <div class="kpi-text">Délai moyen de traitement</div>
-                    <div class="kpi-value"><span id="avgDelay">...</span> heures</div>
+                    <div class="kpi-text">Average processing time</div>
+                    <div class="kpi-value"><span id="avgDelay">...</span> hours</div>
                 </div>
             </div>
         </div>
@@ -292,7 +292,7 @@
             <div class="chart-card fade-in">
                 <div class="chart-header">
                     <i class="fas fa-chart-pie chart-icon"></i>
-                    <h3 class="chart-title">Répartition par Statut</h3>
+                    <h3 class="chart-title">Distribution by Status</h3>
                 </div>
                 <div class="chart-canvas">
                     <canvas id="statusChart"></canvas>
@@ -302,7 +302,7 @@
             <div class="chart-card fade-in">
                 <div class="chart-header">
                     <i class="fas fa-chart-line chart-icon"></i>
-                    <h3 class="chart-title">Évolution Mensuelle</h3>
+                    <h3 class="chart-title">Monthly Evolution</h3>
                 </div>
                 <div class="chart-canvas">
                     <canvas id="monthlyChart"></canvas>
@@ -314,22 +314,22 @@
         <div class="details-card fade-in">
             <div class="details-header">
                 <i class="fas fa-table details-icon"></i>
-                <h3 class="details-title">Détails des Statistiques</h3>
+                <h3 class="details-title">Statistics Details</h3>
             </div>
             <div class="table-responsive">
                 <table class="table modern-table">
                     <thead>
                         <tr>
-                            <th><i class="fas fa-tag me-2" style="color: cadetblue"></i><b style="color: cadetblue">Statut</b></th>
-                            <th><i class="fas fa-hashtag me-2" style="color: cadetblue"></i><b style="color: cadetblue">Nombre</b></th>
-                            <th><i class="fas fa-percentage me-2" style="color: cadetblue"></i><b style="color: cadetblue">Pourcentage</b></th>
+                            <th><i class="fas fa-tag me-2" style="color: cadetblue"></i><b style="color: cadetblue">Status</b></th>
+                            <th><i class="fas fa-hashtag me-2" style="color: cadetblue"></i><b style="color: cadetblue">Count</b></th>
+                            <th><i class="fas fa-percentage me-2" style="color: cadetblue"></i><b style="color: cadetblue">Percentage</b></th>
                         </tr>
                     </thead>
                     <tbody id="statsTableBody">
                         <tr>
                             <td colspan="3" class="loading-spinner">
                                 <div class="spinner"></div>
-                                Chargement des données...
+                                Loading data...
                             </td>
                         </tr>
                     </tbody>
@@ -337,6 +337,8 @@
             </div>
         </div>
     </div>
+</div>
+
       </div>
     <!-- Script JS (conservé identique) -->
     <script>

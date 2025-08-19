@@ -367,16 +367,16 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h3 class="header-title">Demandes de maintenances </h3>
-            <p class="header-subtitle">Gérez et suivez toutes les demandes de maintenance pour les pannes Inconnues </p>
-        </div>
+            <h3 class="header-title">Maintenance Requests</h3>
+           <p class="header-subtitle">Manage and track all maintenance requests for unknown issues</p>
+    </div>
 
         <!-- Filters -->
         <div class="filters">
             <div class="filter-group">
-                <label for="statusFilter" style="font-weight: 600; color: #4a5568;">Filtrer par statut:</label>
+                <label for="statusFilter" style="font-weight: 600; color: #4a5568;">search by status:</label>
                 <select id="statusFilter" class="filter-select">
-                    <option value="all">Tous les statuts</option>
+                    <option value="all">All status</option>
                     <option value="Nouvelle_demande">Nouvelle demande</option>
                     <option value="Une_offre_a_été_faite">Une offre a été faite</option>
                     <option value="offre_acceptee">Offre acceptée</option>
@@ -386,7 +386,7 @@
                 </select>
                 <button id="applyFilter" class="btn-filter">
                     <i class="fas fa-filter"></i>
-                    Appliquer
+                    Apply
                 </button>
             </div>
         </div>
@@ -404,20 +404,20 @@
 
                         <div class="card-content">
                             <div class="info-section">
-                                <h4>Informations Client</h4>
+                                <h4>Customer informations</h4>
                                 <div class="info-item">
                                     <i class="fas fa-user"></i>
-                                    <strong>Client:</strong>
+                                    <strong>Customer:</strong>
                                     <span>{{ $demande->client->prenom }} {{ $demande->client->nom }}</span>
                                 </div>
                                 <div class="info-item">
                                     <i class="fas fa-phone"></i>
-                                    <strong>Téléphone:</strong>
+                                    <strong>Phone:</strong>
                                     <span>{{ $demande->client->phone }}</span>
                                 </div>
                                 <div class="info-item">
                                     <i class="fas fa-car"></i>
-                                    <strong>Véhicule:</strong>
+                                    <strong>car:</strong>
                                     <span>{{ $demande->voiture->model }} ({{ $demande->voiture->serie }})</span>
                                 </div>
                             </div>
@@ -427,7 +427,7 @@
                         <div class="card-footer">
                             <span class="created-date">
                                 <i class="far fa-clock"></i>
-                                Créée le {{ $demande->created_at->format('d/m/Y H:i') }}
+                                Created At  {{ $demande->created_at->format('d/m/Y H:i') }}
                             </span>
                             @if($demande->date_maintenance)
                                 <span class="rdv-date">
@@ -437,7 +437,7 @@
                             @endif
                             <a   href="{{ route('ateliers.showInconnu', $demande->id) }}" class="btn-details">
                                 <i class="fas fa-eye"></i>
-                                Détails
+                                Details
                             </a>
                         </div>
                     </div>

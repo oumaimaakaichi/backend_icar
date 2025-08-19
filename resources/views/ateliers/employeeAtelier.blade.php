@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #b2b5c2 0%, #b2b5c2 100%);
+            --primary-gradient: linear-gradient(135deg, #4361ee 0%, #4361ee 100%);
             --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
@@ -79,7 +79,7 @@
             border: 1px solid var(--glass-border);
             box-shadow: var(--shadow-soft);
             padding: 2rem;
-            margin: 2rem;
+
             transition: all 0.3s ease;
         }
 
@@ -102,11 +102,11 @@
         .page-title {
             font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #000000, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 0.5rem;
+
         }
 
         .page-subtitle {
@@ -121,7 +121,7 @@
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
+
             border: 1px solid rgba(255,255,255,0.1);
         }
 
@@ -202,12 +202,12 @@
 
         .table-modern thead th {
             background: var(--primary-gradient);
-            color: rgb(0, 0, 0);
+            color: rgb(252, 250, 250);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-size: 0.85rem;
-            padding: 1.5rem 1rem;
+            padding: 0.75rem 1rem;
             border: none;
         }
 
@@ -319,7 +319,7 @@
         .form-modern .form-label {
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 0.5rem;
+
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -419,48 +419,23 @@
 <body>
       @include('Sidebar.sidebarAtelier')
     <!-- Background particles -->
-    <div class="bg-particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
+
 
     <div class="container-fluid py-4" style="margin-top: 50px">
         <!-- Page Header -->
         <div class="page-header animate-fade-in">
-            <h1 class="page-title">
-                <i class="bi bi-people-fill me-3"></i>
-                Gestion des Clients
-            </h1>
-            <p class="page-subtitle">Gérez efficacement vos Clients</p>
+           <h1 class="page-title">
+    <i class="bi bi-people-fill me-3"></i>
+    Client Management
+</h1>
+<p class="page-subtitle">Manage your clients efficiently</p>
+
         </div>
 
         <!-- Main Content -->
         <div class="glass-container animate-fade-in animate-delay-1">
             <!-- Controls Section -->
-            <div class="controls-section">
-                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="form-modern">
-                            <label class="form-label">Affichage</label>
-                            <select class="form-control" id="perPage" onchange="changePerPage(this)">
-                                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10 par page</option>
-                                <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25 par page</option>
-                                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50 par page</option>
-                                <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100 par page</option>
-                            </select>
-                        </div>
-                        <div class="form-modern">
-                            <label class="form-label">Recherche</label>
-                            <input type="text" class="form-control" placeholder="Rechercher un employé..." id="searchInput">
-                        </div>
-                    </div>
 
-                </div>
-            </div>
 
             <!-- Employees Table -->
             <div class="table-responsive animate-fade-in animate-delay-2">
@@ -468,13 +443,13 @@
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr>
-                                <th><i class="bi bi-person me-2"></i>Nom</th>
-                                <th><i class="bi bi-person-badge me-2"></i>Prénom</th>
-                              <th><i class="bi bi-envelope me-2"></i>Email</th>
+                                <th><i class="bi bi-person me-2"></i>First Name</th>
+<th><i class="bi bi-person-badge me-2"></i>Last Name</th>
+<th><i class="bi bi-envelope me-2"></i>Email</th>
+<th><i class="bi bi-telephone me-2"></i>Phone</th>
+<th><i class="bi bi-check-circle me-2"></i>Status</th>
+<th><i class="bi bi-gear me-2"></i>Actions</th>
 
-                                <th><i class="bi bi-telephone me-2"></i>Téléphone</th>
-                                <th><i class="bi bi-check-circle me-2"></i>Statut</th>
-                                <th><i class="bi bi-gear me-2"></i>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="employeesTableBody">
@@ -504,13 +479,13 @@
                                         @if ($employee->isActive == 0)
                                             <button class="action-btn btn-success-modern accept-btn"
                                                 data-id="{{ $employee->id }}"
-                                                title="Activer">
+                                                title="Activate">
                                                 <i class="bi bi-toggle-off"></i>
                                             </button>
                                         @else
                                             <button class="action-btn btn-secondary-modern refuse-btn"
                                                 data-id="{{ $employee->id }}"
-                                                title="Désactiver">
+                                                title="Desactivate">
                                                 <i class="bi bi-toggle-on"></i>
                                             </button>
                                         @endif

@@ -92,7 +92,7 @@ public function updatePiecesChoisies(Request $request, Demande $demande)
 }
 public function showDemandesParAtelierPage()
 {
-    $atelier = Auth::guard('atelier')->user(); // atelier connecté
+    $atelier = Auth::guard('atelier')->user();
 
     if (!$atelier) {
         abort(403, 'Accès non autorisé');
@@ -738,8 +738,9 @@ public function updateTechniciens(Request $request, Demande $demande)
                 'technicien_id' => $technicienId,
                 'demande_id' => $demande->id,
                 'titre' => 'Nouvelle demande assignée',
-                'message' => "Une nouvelle demande #{$demande->id} vous a été assignée. " ,
-
+                'message' => "Une nouvelle demande #{$demande->id} vous a été assignée. " .
+                           "Type: {$demande->type_demande}. " .
+                           "Description: " . Str::limit($demande->description, 100),
                 'type' => 'assignation'
             ]);
 

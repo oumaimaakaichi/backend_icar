@@ -1,242 +1,454 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détails Demande #{{ $demande->id }}</title>
+    <title>Request Details #{{ $demande->id }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
-            --primary: #4e73df;
-            --primary-light: #e8f1ff;
-            --success: #1cc88a;
+            --primary: #667eea;
+            --primary-light: #f0f3ff;
+            --secondary: #764ba2;
+            --accent: #4facfe;
+            --success: #00d4aa;
             --info: #36b9cc;
             --warning: #f6c23e;
             --danger: #e74a3b;
-            --dark: #5a5c69;
-            --light: #f8f9fc;
-            --border: #e3e6f0;
+            --dark: #2c3e50;
+            --light: #ffffff;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: #f5f7fb;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
         }
 
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 24px;
+        .main-content {
+            padding: 2rem 0;
+            position: relative;
+            z-index: 1;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        .page-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            margin-top: 60px;
+            box-shadow: 0 10px 30px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(50px, -50px);
+        }
+
+        .page-title {
+            color: white;
+            font-weight: 800;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+
+        .modern-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px var(--shadow);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .modern-card:nth-child(1) { animation-delay: 0.1s; }
+        .modern-card:nth-child(2) { animation-delay: 0.2s; }
+        .modern-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .modern-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+            border-color: var(--primary);
         }
 
         .card-header {
-            background-color: white;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.05));
             border-bottom: 1px solid var(--border);
-            font-weight: 600;
-            padding: 1.25rem 1.5rem;
-            border-radius: 10px 10px 0 0 !important;
+            padding: 1.5rem 2rem;
+            position: relative;
+        }
+
+        .card-title {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+
+        .card-title i {
+            margin-right: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.4rem;
+            margin-top: 10px;
+            margin-left: 10px
         }
 
         .card-body {
-            padding: 1.5rem;
+            padding: 2rem;
+            position: relative;
         }
 
         .status-badge {
-            padding: 0.5em 1em;
-            font-size: 0.85em;
-            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
             border-radius: 50px;
-            text-transform: capitalize;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             display: inline-flex;
             align-items: center;
+            background: linear-gradient(135deg, var(--success), var(--accent));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
         }
 
-        .status-Non_assigné { background-color: var(--primary-light); color: var(--primary); }
-        .status-Assignée_now { background-color: #e2e3e5; color: #5a5c69; }
-        .status-en_attente { background-color: #fff8e1; color: #ff8f00; }
-        .status-en_cours { background-color: #fff3cd; color: #856404; }
-        .status-termine { background-color: #e6ffed; color: #1b5e20; }
-        .status-annule { background-color: #ffebee; color: #c62828; }
+        .status-Non_assigné {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        .status-Assignée_now {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+        .status-en_attente {
+            background: linear-gradient(135deg, var(--warning), #ff8f00);
+            box-shadow: 0 4px 15px rgba(246, 194, 62, 0.3);
+        }
+        .status-en_cours {
+            background: linear-gradient(135px, var(--info), var(--accent));
+            box-shadow: 0 4px 15px rgba(54, 185, 204, 0.3);
+        }
+        .status-termine {
+            background: linear-gradient(135deg, var(--success), #00a693);
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+        }
+        .status-annule {
+            background: linear-gradient(135deg, var(--danger), #dc3545);
+            box-shadow: 0 4px 15px rgba(231, 74, 59, 0.3);
+        }
+
+        .detail-group {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.03), rgba(255, 255, 255, 0.8));
+            border-radius: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detail-group::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+            border-radius: 0 4px 4px 0;
+        }
+
+        .detail-group:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(255, 255, 255, 0.9));
+            transform: translateX(5px);
+            border-color: var(--primary);
+        }
 
         .detail-label {
             font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 0.25rem;
-            font-size: 0.85rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .detail-value {
             color: var(--dark);
-            font-size: 1rem;
-            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
             display: flex;
             align-items: center;
         }
 
         .detail-value i {
-            margin-right: 10px;
-            color: var(--primary);
-            width: 20px;
+            margin-right: 12px;
+            width: 24px;
             text-align: center;
-        }
-
-        .btn-submit {
-            background-color: var(--success);
-            border: none;
-            padding: 0.75rem;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-submit:hover {
-            background-color: #17a673;
-            transform: translateY(-2px);
+            color: var(--primary);
+            font-size: 1.2rem;
         }
 
         .section-title {
             color: var(--primary);
             font-weight: 700;
-            font-size: 1.25rem;
+            font-size: 1rem;
             margin-bottom: 1.5rem;
             position: relative;
             padding-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
         }
 
-        .section-title:after {
+        .section-title::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
-            width: 50px;
+            width: 60px;
             height: 3px;
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             border-radius: 3px;
         }
 
-        .list-group-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem 1.5rem;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            margin-bottom: 0.5rem;
-            border-radius: 8px !important;
-        }
-
-        .list-group-item i {
+        .section-title i {
             margin-right: 12px;
-            color: var(--primary);
-        }
-
-        .technicien-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--primary-light);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            font-weight: 600;
-        }
-
-        .price-input {
-            position: relative;
-        }
-
-        .price-input:before {
-            content: '€';
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .price-input input {
-            padding-left: 30px !important;
-        }
-
-        .progress-track {
-            height: 8px;
-            border-radius: 4px;
-            background-color: #e9ecef;
-            margin-top: 20px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            background-color: var(--primary);
-            transition: width 0.6s ease;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .timeline {
             position: relative;
-            padding-left: 30px;
-            margin-top: 20px;
+            padding-left: 40px;
         }
 
-        .timeline:before {
+        .timeline::before {
             content: '';
             position: absolute;
-            left: 11px;
+            left: 15px;
             top: 0;
             bottom: 0;
-            width: 2px;
-            background-color: var(--primary-light);
+            width: 3px;
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+            border-radius: 3px;
         }
 
         .timeline-item {
             position: relative;
-            padding-bottom: 20px;
-        }
-
-        .timeline-item:last-child {
-            padding-bottom: 0;
+            margin-bottom: 2rem;
         }
 
         .timeline-dot {
             position: absolute;
-            left: -30px;
-            width: 20px;
-            height: 20px;
+            left: -32px;
+            top: 8px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            background-color: white;
-            border: 3px solid var(--primary);
-            z-index: 1;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            box-shadow: 0 0 0 4px white, 0 0 0 6px rgba(102, 126, 234, 0.2);
         }
 
         .timeline-content {
-            background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 15px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            border-color: var(--primary);
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
         }
 
         .timeline-date {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-bottom: 5px;
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
 
         .timeline-text {
-            font-size: 0.9rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .team-member {
+            display: flex;
+            align-items: center;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.03), rgba(255, 255, 255, 0.8));
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(255, 255, 255, 0.9));
+            transform: translateX(5px);
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .team-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .team-info h6 {
+            color: var(--dark);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .team-info small {
+            color: #6c757d;
+        }
+
+        .form-control, .form-select {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--dark);
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+            color: var(--dark);
+        }
+
+        .form-control::placeholder {
+            color: #6c757d;
+        }
+
+        .form-label {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            padding: 0.875rem 2rem;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
             .card-body {
-                padding: 1.25rem;
+                padding: 1.5rem;
+            }
+
+            .timeline {
+                padding-left: 30px;
+            }
+
+            .main-content {
+                padding: 1rem 0;
             }
         }
     </style>
@@ -244,25 +456,25 @@
 <body>
     @include('Sidebar.sidebarAtelier')
 
-    <div class="container-fluid py-4">
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <div>
-                <h1 class="h3 mb-2 text-gray-800" style="margin-top: 50px">Détails de la demande</h1>
-
-            </div>
-
+  <div class="container-fluid animate-slide-up" style="margin-top: 60px">
+        <div class="page-header">
+            <h1 class="page-title">Request Details</h1>
+            <p class="page-subtitle">Manage and track maintenance requests with advanced tools</p>
         </div>
 
         <div class="row">
             <div class="col-lg-8">
-                <div class="card">
+                <div class="modern-card">
                     <div class="card-header">
-                        <h6 class="m-0 font-weight-bold">Informations sur la demande</h6>
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle"></i>
+                            Request Information
+                        </h6>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="mb-4">
+                                <div class="detail-group">
                                     <p class="detail-label">Client</p>
                                     <p class="detail-value">
                                         <i class="fas fa-user"></i>
@@ -270,8 +482,8 @@
                                     </p>
                                 </div>
 
-                                <div class="mb-4">
-                                    <p class="detail-label">Véhicule</p>
+                                <div class="detail-group">
+                                    <p class="detail-label">Vehicle</p>
                                     <p class="detail-value">
                                         <i class="fas fa-car"></i>
                                         {{ $demande->voiture->model }} ({{ $demande->voiture->serie }})
@@ -280,7 +492,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <div class="mb-4">
+                                <div class="detail-group">
                                     <p class="detail-label">Contact</p>
                                     <p class="detail-value">
                                         <i class="fas fa-phone"></i>
@@ -288,77 +500,78 @@
                                     </p>
                                 </div>
 
-
-
-                                <div class="mb-4">
-                                    <p class="detail-label">Date et heure de maintenance</p>
+                                <div class="detail-group">
+                                    <p class="detail-label">Maintenance Date & Time</p>
                                     <p class="detail-value">
                                         <i class="fas fa-tools"></i>
-                                        {{ $demande->date_maintenance}}   {{ $demande->heure_maintenance }}
+                                        {{ $demande->date_maintenance}} {{ $demande->heure_maintenance }}
                                     </p>
                                 </div>
-
                             </div>
                         </div>
 
-                        <div class="mt-3">
-                            <h6 class="section-title">Historique des statuts</h6>
+                        <div class="mt-4">
+                            <h6 class="section-title">
+                                <i class="fas fa-history"></i>
+                                Status History
+                            </h6>
                             <div class="timeline">
                                 <div class="timeline-item">
                                     <div class="timeline-dot"></div>
                                     <div class="timeline-content">
-                                        <div class="timeline-date">Aujourd'hui, 10:30</div>
-                                        <div class="timeline-text">Demande créée</div>
+                                        <div class="timeline-date">Today, 10:30 AM</div>
+                                        <div class="timeline-text">Request created</div>
                                     </div>
                                 </div>
                                 <div class="timeline-item">
                                     <div class="timeline-dot"></div>
                                     <div class="timeline-content">
-                                        <div class="timeline-date">Aujourd'hui, 11:45</div>
-                                        <div class="timeline-text">En attente de validation</div>
+                                        <div class="timeline-date">Today, 11:45 AM</div>
+                                        <div class="timeline-text">Pending validation</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
 
             <div class="col-lg-4">
-
                 @if($demande->techniciens && count($demande->techniciens) > 0)
-                <div class="card">
+                <div class="modern-card">
                     <div class="card-header">
-                        <h6 class="m-0 font-weight-bold">Équipe assignée</h6>
+                        <h6 class="card-title">
+                            <i class="fas fa-users" style="margin-top:10px"></i>
+                            Assigned Team
+                        </h6>
                     </div>
                     <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            @foreach($demande->techniciens as $tech)
-                                <li class="list-group-item">
-                                    <div class="technicien-avatar">
-                                        {{ substr($tech['nom'], 0, 1) }}
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1">{{ $tech['nom'] }}</h6>
-                                        <small class="text-muted">ID: {{ $tech['id'] }}</small>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
+                        @foreach($demande->techniciens as $tech)
+                            <div class="team-member">
+                                <div class="team-avatar">
+                                    {{ substr($tech['nom'], 0, 1) }}
+                                </div>
+                                <div class="team-info">
+                                    <h6>{{ $tech['nom'] }}</h6>
+                                    <small>ID: {{ $tech['id'] }}</small>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
                 @endif
 
-@if($demande->status === 'Nouvelle_demande')
-                <div class="card">
+                @if($demande->status === 'Nouvelle_demande')
+                <div class="modern-card">
                     <div class="card-header">
-                        <h6 class="m-0 font-weight-bold">Assigner des techniciens</h6>
+                        <h6 class="card-title">
+                            <i class="fas fa-user-plus"></i>
+                            Assign Technicians
+                        </h6>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label for="nombre_techniciens" class="form-label detail-label">Nombre de techniciens</label>
+                            <label for="nombre_techniciens" class="form-label">Number of Technicians</label>
                             <input type="number" min="1" max="{{ $techniciens->count() }}"
                                    class="form-control" id="nombre_techniciens" value="1">
                         </div>
@@ -366,9 +579,9 @@
                         <form id="assignTechniciensForm">
                             <div id="techniciens_select_container">
                                 <div class="mb-3">
-                                    <label class="form-label detail-label">Technicien 1</label>
+                                    <label class="form-label">Technician 1</label>
                                     <select class="form-select" name="techniciens[]" required>
-                                        <option value="" disabled selected>-- Sélectionner --</option>
+                                        <option value="" disabled selected>-- Select Technician --</option>
                                         @foreach($techniciens as $tech)
                                             <option value="{{ $tech->id }}">{{ $tech->prenom ?? '' }} {{ $tech->nom ?? $tech->name }}</option>
                                         @endforeach
@@ -377,12 +590,12 @@
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100">
-                                <i class="fas fa-user-plus me-2"></i>Assigner l'équipe
+                                <i class="fas fa-user-plus me-2"></i>Assign Team
                             </button>
                         </form>
                     </div>
                 </div>
-@endif
+                @endif
             </div>
         </div>
     </div>
@@ -398,8 +611,8 @@
             div.classList.add('mb-3');
 
             const label = document.createElement('label');
-            label.classList.add('form-label', 'detail-label');
-            label.textContent = `Technicien ${index + 1}`;
+            label.classList.add('form-label');
+            label.textContent = `Technician ${index + 1}`;
 
             const select = document.createElement('select');
             select.classList.add('form-select');
@@ -410,7 +623,7 @@
             defaultOption.value = '';
             defaultOption.disabled = true;
             defaultOption.selected = true;
-            defaultOption.textContent = '-- Sélectionner --';
+            defaultOption.textContent = '-- Select Technician --';
             select.appendChild(defaultOption);
 
             techniciens.forEach(t => {
@@ -463,15 +676,15 @@
                 if(data.success) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Succès',
+                        title: 'Success',
                         text: data.message,
-                        confirmButtonColor: '#4e73df',
+                        confirmButtonColor: '#667eea',
                     }).then(() => window.location.reload());
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Erreur',
-                        text: data.message || 'Une erreur est survenue',
+                        title: 'Error',
+                        text: data.message || 'An error occurred',
                         confirmButtonColor: '#e74a3b',
                     });
                 }
@@ -479,53 +692,8 @@
             .catch(error => {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Erreur réseau',
-                    text: 'Impossible de contacter le serveur',
-                    confirmButtonColor: '#e74a3b',
-                });
-            });
-        });
-
-        // Gestion du formulaire de prix
-        document.getElementById('prixForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const form = this;
-            const formData = new FormData(form);
-
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Succès!',
-                        text: "L'offre a été envoyée, en attente d'acceptation du client.",
-                        confirmButtonColor: '#4e73df',
-                    }).then(() => {
-                        window.location.reload();
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: data.message || "Une erreur est survenue lors de l'envoi de l'offre",
-                        confirmButtonColor: '#e74a3b',
-                    });
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erreur',
-                    text: "Une erreur réseau est survenue",
+                    title: 'Network Error',
+                    text: 'Unable to contact the server',
                     confirmButtonColor: '#e74a3b',
                 });
             });

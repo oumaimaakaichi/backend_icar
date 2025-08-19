@@ -108,7 +108,10 @@ public function isResponsablePiece()
         return $this->notifications()->unread();
     }
 
-
+public function tickets()
+{
+    return $this->hasMany(TicketAssistance::class);
+}
 
      public function getFormattedNotifications()
     {

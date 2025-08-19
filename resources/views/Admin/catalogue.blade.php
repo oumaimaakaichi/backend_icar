@@ -36,7 +36,7 @@
         }
 
         .main-content {
-            padding: 2rem;
+
             margin-left: 250px;
             transition: all 0.3s;
         }
@@ -46,6 +46,7 @@
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transition: transform 0.3s, box-shadow 0.3s;
+            width: 1200px;
         }
 
         .card:hover {
@@ -60,6 +61,7 @@
 
         .table {
             margin-bottom: 0;
+
         }
 
         .table thead th {
@@ -217,13 +219,12 @@
 <body>
     <div class="d-flex">
         <!-- Sidebar -->
-         <div class="sidebar-container">
+
         @include('Sidebar.sidebar')
-    </div>
 
 
-        <!-- Main Content -->
-        <div class="container mt-5">
+
+        <div class="container py-5" style="margin-top: 50px">
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4" style="margin-top: 40px">
                     <h3 class="page-title" >Parts Catalog Management</h3>

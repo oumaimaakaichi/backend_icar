@@ -507,11 +507,11 @@
             </div>
 
             <div class="menu-section">
-                <div class="menu-section-title">Management</div>
+                <div class="menu-section-title">Gestion</div>
                 <a href="technicien" class="menu-link">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
-                    <span class="menu-link-text">Technicians</span>
-                    <span class="tooltip">Technicians</span>
+                    <span class="menu-link-text">Techniciens</span>
+                    <span class="tooltip">Techniciens</span>
                 </a>
                 <a href="employee" class="menu-link">
                     <i class="fa-solid fa-users"></i>
@@ -561,11 +561,12 @@
                     <span class="menu-link-text">Statistics</span>
                     <span class="tooltip">Statistics</span>
                 </a>
-                <a href="points" class="menu-link">
-                    <i class="fa-solid fa-gem"></i>
-                    <span class="menu-link-text">Loyalty Points</span>
-                    <span class="tooltip">Loyalty Points</span>
-                </a>
+              <a href="{{ route('tickets.index') }}" class="menu-link" title="Assistance Ticket">
+    <i class="fa-solid fa-headset"></i>
+    <span class="menu-link-text">Assistance Ticket</span>
+</a>
+
+
             </div>
         </div>
 <div class="sidebar-footer">

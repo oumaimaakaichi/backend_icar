@@ -75,6 +75,7 @@
 
         .table {
             margin-bottom: 0;
+            width: 1200px
 
 
         }
@@ -244,26 +245,28 @@
 
 <div class="container-main">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="page-title">Liste des Demandes</h1>
+       <h1 class="page-title">Request List</h1>
+
         <div>
-            <span class="me-3 text-muted small"><span class="status-indicator indicator-new"></span> Nouvelle</span>
-            <span class="me-3 text-muted small"><span class="status-indicator indicator-assigned"></span> Assignée</span>
-            <span class="text-muted small"><span class="status-indicator indicator-offer"></span> Offre</span>
-        </div>
+            <span class="me-3 text-muted small"><span class="status-indicator indicator-new"></span> New</span>
+<span class="me-3 text-muted small"><span class="status-indicator indicator-assigned"></span> Assigned</span>
+<span class="text-muted small"><span class="status-indicator indicator-offer"></span> Offer</span>
+  </div>
     </div>
 
     <!-- Filtres -->
     <div class="filter-card">
         <div class="row g-3">
             <div class="col-md-4">
-                <label for="statusFilter" class="form-label small text-muted mb-1">Statut</label>
+                <label for="statusFilter" class="form-label small text-muted mb-1">statusFilter</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-filter"></i></span>
                     <select id="statusFilter" class="form-select">
-                        <option value="">Tous les statuts</option>
-                        <option value="Nouvelle_demande">Nouvelle demande</option>
-                        <option value="Assignée">Assignée</option>
-                        <option value="Une_offre_a_été_faite">Offre faite</option>
+                        <option value="">All status</option>
+                        <option value="Nouvelle_demande">New Request</option>
+                        <option value="Assigned">Assigned</option>
+<option value="Offer_Made">Offer Made</option>
+
                     </select>
                 </div>
             </div>
@@ -275,10 +278,10 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <label for="clientSearch" class="form-label small text-muted mb-1">Recherche</label>
+                <label for="clientSearch" class="form-label small text-muted mb-1">Search</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    <input type="text" id="clientSearch" class="form-control" placeholder="Client, voiture...">
+                    <input type="text" id="clientSearch" class="form-control" placeholder="Customer, car...">
                 </div>
             </div>
         </div>
@@ -289,15 +292,16 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>Client</th>
-                    <th>Voiture</th>
+                    <th>Customer</th>
+                    <th>car</th>
                     <th>Service</th>
-                    <th>Catégorie</th>
-                    <th>Pack</th>
+                    <th>Category</th>
+                    <th>Package</th>
                     <th>Type</th>
                     <th>Date</th>
-                    <th class="text-center">Pièces</th>
-                    <th>Statut</th>
+               <th class="text-center">Parts</th>
+
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -385,7 +389,7 @@
     @if(count($demandes) > 0)
     <div class="d-flex justify-content-between align-items-center mt-4">
         <div class="text-muted small">
-            Affichage de <span class="fw-semibold">{{ $demandes->firstItem() }}</span> à <span class="fw-semibold">{{ $demandes->lastItem() }}</span> sur <span class="fw-semibold">{{ $demandes->total() }}</span> demandes
+            Display of <span class="fw-semibold">{{ $demandes->firstItem() }}</span> à <span class="fw-semibold">{{ $demandes->lastItem() }}</span> sur <span class="fw-semibold">{{ $demandes->total() }}</span> Requests
         </div>
         <div>
             {{ $demandes->links('pagination::bootstrap-5') }}

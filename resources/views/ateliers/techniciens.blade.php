@@ -10,7 +10,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         :root {
-            --primary: #309ad3;
+            --primary: #4361ee;
             --primary-light: #e0e7ff;
             --primary-dark: #309ad3;
             --secondary: #06b6d4;
@@ -27,7 +27,7 @@
         }
 
         body {
-            background-color: #f8fafc;
+            background-color: white;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--dark);
         }
@@ -61,7 +61,7 @@
             color: white;
             font-weight: 600;
             vertical-align: middle;
-            padding: 1rem 1.25rem;
+            padding: 0.75rem 1rem;
         }
 
         .table tbody td {
@@ -220,36 +220,24 @@
 <body class="bg-light">
     @include('Sidebar.sidebarAtelier')
 
-    <div class="container py-4" style="margin-top: 60px">
+    <div class="container py-4" style="margin-top: 60px ; margin-right:60px">
         <!-- Header avec bouton d'ajout -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h1 class="h2 mb-0 fw-bold" >
-                  Gestion des Techniciens
-                </h1>
-                <nav aria-label="breadcrumb" class="mt-2">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Tableau de bord</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Techniciens</li>
-                    </ol>
-                </nav>
+              <h1 class="h2 mb-0 fw-bold">
+    Technician Management
+</h1>
+
+
             </div>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTechnicienModal">
-                <i class="fas fa-plus me-2"></i>Nouveau Technicien
+                <i class="fas fa-plus me-2"></i>New Technician
             </button>
         </div>
 
         <!-- Carte principale -->
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Liste des Techniciens</h5>
-                <div class="d-flex">
-                    <input type="text" class="form-control form-control-sm" placeholder="Rechercher..." style="width: 200px;">
-                    <button class="btn btn-sm btn-outline-secondary ms-2">
-                        <i class="fas fa-filter"></i>
-                    </button>
-                </div>
-            </div>
+
 
             <div class="card-body">
                 @if($techniciens->count())
@@ -257,9 +245,10 @@
                         <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th>Technicien</th>
-                                    <th>Spécialité</th>
-                                    <th>Expérience</th>
+                                    <th>Technician</th>
+                                  <th>Specialty</th>
+
+                                    <th>Experience</th>
                                     <th>Statut</th>
                                     <th class="text-end">Actions</th>
                                 </tr>
@@ -279,7 +268,7 @@
                                         </div>
                                     </td>
                                     <td>{{ $tech->extra_data['specialite'] ?? 'Non spécifié' }}</td>
-                                    <td>{{ $tech->extra_data['annee_experience'] ?? '0' }} ans</td>
+                                    <td>{{ $tech->extra_data['annee_experience'] ?? '0' }} years</td>
                                     <td>
                                         <span class="status-badge {{ $tech->isActive ? 'status-active' : 'status-inactive' }}">
                                             {{ $tech->isActive ? 'Actif' : 'Inactif' }}
@@ -298,20 +287,20 @@
                                                     data-adresse="{{ $tech->adresse }}"
                                                     data-specialite="{{ $tech->extra_data['specialite'] ?? '' }}"
                                                     data-annee_experience="{{ $tech->extra_data['annee_experience'] ?? '' }}"
-                                                    title="Modifier">
+                                                    title="update">
                                                 <i class="fas fa-edit"></i>
                                             </button>
 
                                             @if ($tech->isActive == 0)
                                                 <button class="btn btn-sm btn-success accept-btn me-2"
                                                         data-id="{{ $tech->id }}"
-                                                        title="Activer">
+                                                        title="Activate">
                                                     <i class="fas fa-toggle-off"></i>
                                                 </button>
                                             @else
                                                 <button class="btn btn-sm btn-secondary refuse-btn"
                                                         data-id="{{ $tech->id }}"
-                                                        title="Désactiver">
+                                                        title="Desactivate">
                                                     <i class="fas fa-toggle-on"></i>
                                                 </button>
                                             @endif
@@ -327,7 +316,7 @@
                     @if($techniciens->hasPages())
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div class="text-muted">
-                            Affichage de {{ $techniciens->firstItem() }} à {{ $techniciens->lastItem() }} sur {{ $techniciens->total() }} techniciens
+                            Display of {{ $techniciens->firstItem() }} à {{ $techniciens->lastItem() }} sur {{ $techniciens->total() }} technicians
                         </div>
                         <nav aria-label="Page navigation">
                             <ul class="pagination mb-0">
@@ -389,7 +378,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-user-plus me-2"></i>Nouveau Technicien
+                        <i class="fas fa-user-plus me-2"></i>New Technician
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -400,11 +389,11 @@
                     <div class="modal-body">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">Nom <span class="text-danger">*</span></label>
+                                <label class="form-label">First Name <span class="text-danger">*</span></label>
                                 <input type="text" name="nom" class="form-control" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Prénom <span class="text-danger">*</span></label>
+                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
                                 <input type="text" name="prenom" class="form-control" required>
                             </div>
                             <div class="col-md-6">
@@ -412,31 +401,31 @@
                                 <input type="email" name="email" class="form-control" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                                <label class="form-label">Phone <span class="text-danger">*</span></label>
                                 <input type="text" name="phone" class="form-control" required>
                             </div>
                             <div class="col-12">
-                                <label class="form-label">Adresse <span class="text-danger">*</span></label>
+                                <label class="form-label">Address <span class="text-danger">*</span></label>
                                 <input type="text" name="adresse" class="form-control" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Spécialité <span class="text-danger">*</span></label>
+                                <label class="form-label">Specialty <span class="text-danger">*</span></label>
                                 <select name="specialite" class="form-select" required>
-                                    <option value="" selected disabled>Choisir une spécialité</option>
+                                    <option value="" selected disabled>chose Specialty</option>
                                     @foreach($specialisations as $specialite)
                                         <option value="{{ $specialite->nom_specialite }}">{{ $specialite->nom_specialite }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Années d'expérience</label>
+                                <label class="form-label">Years of experience</label>
                                 <input type="number" name="annee_experience" class="form-control" min="0">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">cancel</button>
+                        <button type="submit" class="btn btn-primary">save</button>
                     </div>
                 </form>
             </div>
@@ -449,7 +438,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-user-edit me-2"></i>Modifier Technicien
+                        <i class="fas fa-user-edit me-2"></i>Update Technician
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -461,11 +450,11 @@
                     <div class="modal-body">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">Nom <span class="text-danger">*</span></label>
+                                <label class="form-label">First Name <span class="text-danger">*</span></label>
                                 <input type="text" id="edit_nom" name="nom" class="form-control" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Prénom <span class="text-danger">*</span></label>
+                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
                                 <input type="text" id="edit_prenom" name="prenom" class="form-control" required>
                             </div>
                             <div class="col-md-6">
@@ -473,31 +462,31 @@
                                 <input type="email" id="edit_email" name="email" class="form-control" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                                <label class="form-label">Phone <span class="text-danger">*</span></label>
                                 <input type="text" id="edit_phone" name="phone" class="form-control" required>
                             </div>
                             <div class="col-12">
-                                <label class="form-label">Adresse <span class="text-danger">*</span></label>
+                                <label class="form-label">Address <span class="text-danger">*</span></label>
                                 <input type="text" id="edit_adresse" name="adresse" class="form-control" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Spécialité <span class="text-danger">*</span></label>
+                                <label class="form-label">Specialty <span class="text-danger">*</span></label>
                                 <select id="edit_specialite" name="specialite" class="form-select" required>
-                                    <option value="" selected disabled>Choisir une spécialité</option>
+                                    <option value="" selected disabled>chose a Specialty</option>
                                     @foreach($specialisations as $specialite)
                                         <option value="{{ $specialite->nom_specialite }}">{{ $specialite->nom_specialite }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Années d'expérience</label>
+                                <label class="form-label">Years of experience</label>
                                 <input type="number" id="edit_annee_experience" name="annee_experience" class="form-control" min="0">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-warning">Mettre à jour</button>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">cancel</button>
+                        <button type="submit" class="btn btn-warning"> Update</button>
                     </div>
                 </form>
             </div>

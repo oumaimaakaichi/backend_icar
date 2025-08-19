@@ -137,14 +137,14 @@
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0" style="width: 1200px" >
                                 <thead class="table-light">
-                                    <tr>
-                                        <th class="ps-4 py-3 fw-semibold">Ticket</th>
-                                        <th class="py-3 fw-semibold">Type</th>
+                                   <tr>
+    <th class="ps-4 py-3 fw-semibold">Ticket</th>
+    <th class="py-3 fw-semibold">Type</th>
+    <th class="py-3 fw-semibold">Statut</th>
+    <th class="py-3 fw-semibold">Date</th>
+    <th class="pe-4 py-3 fw-semibold text-end">Actions</th>
+</tr>
 
-                                        <th class="py-3 fw-semibold">Status</th>
-                                        <th class="py-3 fw-semibold">Date</th>
-                                        <th class="pe-4 py-3 fw-semibold text-end">Actions</th>
-                                    </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($tickets as $ticket)

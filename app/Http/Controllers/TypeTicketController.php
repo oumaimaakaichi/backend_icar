@@ -77,4 +77,22 @@ class TypeTicketController extends Controller
         // Retourner les tickets au format JSON
         return response()->json($tickets);
     }
+
+
+
+    public function getTicketTypess()
+{
+    // Récupérer tous les types de tickets visibles
+    $types = TypeTickets::where('is_visible', true)->get();
+
+    // Formater la réponse pour correspondre au modèle Flutter
+    $formattedTypes = $types->map(function ($type) {
+        return [
+            'id' => $type->id,
+            'type' => $type->type_ticket // Notez le changement de 'type_ticket' à 'type'
+        ];
+    });
+
+    return response()->json($formattedTypes);
+}
 }

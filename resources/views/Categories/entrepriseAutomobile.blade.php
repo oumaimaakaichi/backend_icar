@@ -202,10 +202,10 @@
                 <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                     <h1 class="text-2xl font-bold flex items-center">
                         <i class="fas fa-car mr-3"></i>
-                        Gestion des Entreprises Automobiles
+                       Automotive Business Management
                     </h1>
                     <a href="categorie" class="bg-white text-indigo-800 px-4 py-2 rounded-full font-medium hover:bg-gray-100 transition whitespace-nowrap" style="color: #5e8899">
-                        <i class="fas fa-arrow-left mr-2" style="color: #5e8899"></i> Retour
+                        <i class="fas fa-arrow-left mr-2" style="color: #5e8899"></i> Back
                     </a>
                 </div>
             </div>
@@ -216,7 +216,7 @@
             <!-- Add Company Button and Search -->
             <div class="flex flex-col md:flex-row justify-between mb-6 gap-4">
                 <div class="relative search-container">
-                    <input type="text" id="searchInput" placeholder="Rechercher une entreprise..."
+                    <input type="text" id="searchInput" placeholder="Search..."
                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                     <button id="clearSearch" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600 hidden">
@@ -224,7 +224,7 @@
                     </button>
                 </div>
                 <button id="openModalBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg transition duration-200 flex items-center justify-center whitespace-nowrap" style="background-color: #5e8899">
-                    <i class="fas fa-plus-circle mr-2"></i> Ajouter une entreprise
+                    <i class="fas fa-plus-circle mr-2"></i>Add a company
                 </button>
             </div>
 
@@ -234,7 +234,7 @@
                     <div class="modal-header">
                         <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                             <i class="fas fa-plus-circle text-indigo-600 mr-2"></i>
-                            Ajouter une nouvelle entreprise
+                          Add a new company
                         </h2>
                         <span class="close-btn">&times;</span>
                     </div>
@@ -242,17 +242,17 @@
                         <form action="{{ route('entrepriseAutomobile.store') }}" method="POST" class="grid grid-cols-1 gap-4" enctype="multipart/form-data">
                             @csrf
                             <div class="md:col-span-1">
-                                <label for="entreprise" class="block text-sm font-medium text-gray-700 mb-1">Nom de l'entreprise*</label>
+                                <label for="entreprise" class="block text-sm font-medium text-gray-700 mb-1">Name of company *</label>
                                 <input type="text" id="entreprise" name="entreprise" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                        placeholder="Entrez le nom de l'entreprise">
                             </div>
 
                             <div class="md:col-span-1 custom-select">
-                                <label for="pays" class="block text-sm font-medium text-gray-700 mb-1">Pays*</label>
+                                <label for="pays" class="block text-sm font-medium text-gray-700 mb-1">Country*</label>
                                 <select id="pays" name="pays" required
                                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option value="" disabled selected>Sélectionnez un pays</option>
+                                    <option value="" disabled selected>Select a country</option>
                                     <option value="France">France</option>
                                     <option value="Allemagne">Allemagne</option>
                                     <option value="Italie">Italie</option>
@@ -270,20 +270,20 @@
                                 <label for="logo" class="block text-sm font-medium text-gray-700 mb-1">Logo</label>
                                 <input type="file" id="logo" name="logo" accept="image/*"
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                <p class="text-xs text-gray-500 mt-1">Formats acceptés: JPG, PNG, SVG (max 2MB)</p>
+                                <p class="text-xs text-gray-500 mt-1">Accepted formats: JPG, PNG, SVG (max 2MB)</p>
 
                                 <div class="mt-2 logo-preview hidden">
                                     <img id="logoPreview" src="#" alt="Aperçu du logo" class="hidden">
-                                    <span class="text-gray-400 text-sm" id="noLogoText">Aucun logo sélectionné</span>
+                                   &nbsp;&nbsp;&nbsp; <span class="text-gray-400 text-sm" id="noLogoText">No logo selected</span>
                                 </div>
                             </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-modal">
-                                    Annuler
+                                    Cancel
                                 </button>
                                 <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
-                                    <i class="fas fa-save mr-2"></i> Enregistrer
+                                    <i class="fas fa-save mr-2"></i> Save
                                 </button>
                             </div>
                         </form>
@@ -297,7 +297,7 @@
                     <div class="modal-header">
                         <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                             <i class="fas fa-edit text-indigo-600 mr-2"></i>
-                            Modifier l'entreprise
+                         Edit company
                         </h2>
                         <span class="close-edit-modal close-btn">&times;</span>
                     </div>
@@ -306,7 +306,7 @@
                             @csrf
                             @method('PUT')
                             <div class="md:col-span-1">
-                                <label for="edit_entreprise" class="block text-sm font-medium text-gray-700 mb-1">Nom de l'entreprise*</label>
+                                <label for="edit_entreprise" class="block text-sm font-medium text-gray-700 mb-1">Company name*</label>
                                 <input type="text" id="edit_entreprise" name="entreprise" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
@@ -315,7 +315,7 @@
                                 <label for="edit_pays" class="block text-sm font-medium text-gray-700 mb-1">Pays*</label>
                                 <select id="edit_pays" name="pays" required
                                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option value="" disabled>Sélectionnez un pays</option>
+                                    <option value="" disabled>Select a country</option>
                                     <option value="France">France</option>
                                     <option value="Allemagne">Allemagne</option>
                                     <option value="Italie">Italie</option>
@@ -333,20 +333,20 @@
                                 <label for="edit_logo" class="block text-sm font-medium text-gray-700 mb-1">Logo</label>
                                 <input type="file" id="edit_logo" name="logo" accept="image/*"
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                <p class="text-xs text-gray-500 mt-1">Laissez vide pour conserver le logo actuel</p>
+                                <p class="text-xs text-gray-500 mt-1">Leave empty to keep the current logo</p>
 
                                 <div class="mt-2 logo-preview">
                                     <img id="edit_logoPreview" src="#" alt="Aperçu du logo" class="hidden">
-                                    <span class="text-gray-400 text-sm" id="edit_noLogoText">Aucun logo disponible</span>
+                                    <span class="text-gray-400 text-sm" id="edit_noLogoText">No logo available</span>
                                 </div>
                             </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-edit-modal">
-                                    Annuler
+                                    Cancel
                                 </button>
                                 <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
-                                    <i class="fas fa-save mr-2"></i> Enregistrer
+                                    <i class="fas fa-save mr-2"></i> Save
                                 </button>
                             </div>
                         </form>
@@ -359,8 +359,8 @@
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                         <i class="fas fa-list-ul text-indigo-600 mr-2" style="color: #5e8899"></i>
-                        Liste des entreprises
-                        <span class="ml-auto text-sm font-normal text-gray-500">{{ $entreprises->total() }} entreprises</span>
+                       List of automotive companies
+                        <span class="ml-auto text-sm font-normal text-gray-500">{{ $entreprises->total() }} Companies</span>
                     </h2>
                 </div>
 
@@ -391,10 +391,10 @@
                                     Logo
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Entreprise
+                                    Company
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Pays
+                                    Country
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Actions
@@ -426,21 +426,21 @@
                                         <!-- View Button -->
                                         <a href="{{ route('entrepriseAutomobile.show', $entreprise->id) }}"
                                             class="action-btn text-blue-600 hover:bg-blue-50"
-                                            title="Voir les détails">
+                                            title="View details">
                                             <i class="fas fa-eye"></i>
                                         </a>
 
                                         <!-- Add Car Button -->
                                         <button onclick="openAddVoitureModal({{ $entreprise->id }})"
                                             class="action-btn text-green-600 hover:bg-green-50"
-                                            title="Ajouter une voiture">
+                                            title="add a car">
                                             <i class="fas fa-plus-circle"></i>
                                         </button>
 
                                         <!-- Edit Button -->
                                         <button onclick="openEditModal({{ $entreprise->id }}, '{{ $entreprise->entreprise }}', '{{ $entreprise->pays }}', '{{ $entreprise->logo_path }}')"
                                             class="action-btn text-yellow-600 hover:bg-yellow-50"
-                                            title="Modifier">
+                                            title="update">
                                             <i class="fas fa-edit"></i>
                                         </button>
 
@@ -450,7 +450,7 @@
                                             @method('DELETE')
                                             <button type="submit"
                                                     class="action-btn text-red-600 hover:bg-red-50"
-                                                    title="Supprimer"
+                                                    title="delete"
                                                     onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette entreprise? Toutes les voitures associées seront également supprimées.')">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
@@ -463,8 +463,8 @@
                                 <td colspan="4" class="px-6 py-4 text-center text-gray-500">
                                     <div class="flex flex-col items-center justify-center py-8">
                                         <i class="fas fa-car text-4xl text-gray-300 mb-4"></i>
-                                        <p class="text-lg">Aucune entreprise enregistrée</p>
-                                        <p class="text-sm text-gray-400 mt-2">Cliquez sur "Ajouter une entreprise" pour commencer</p>
+                                        <p class="text-lg">No ompany saved</p>
+                                        <p class="text-sm text-gray-400 mt-2">Click on 'Add a company' to get started</p>
                                     </div>
                                 </td>
                             </tr>
@@ -488,7 +488,7 @@
                 <div class="modal-header">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                         <i class="fas fa-plus-circle text-indigo-600 mr-2"></i>
-                        Ajouter une nouvelle voiture
+                       Add a new car
                     </h2>
                     <span class="close-btn close-voiture-modal">&times;</span>
                 </div>
@@ -496,13 +496,13 @@
                     @csrf
                     <div class="modal-body">
                         <div class="mb-4">
-                            <label for="nom_voiture" class="block text-sm font-medium text-gray-700 mb-1">Nom de la voiture*</label>
+                            <label for="nom_voiture" class="block text-sm font-medium text-gray-700 mb-1">Car name*</label>
                             <input type="text" id="nom_voiture" name="nom_voiture" required
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                    placeholder="Entrez le nom du modèle">
                         </div>
                         <div class="mb-4">
-                            <label for="annee_voiture" class="block text-sm font-medium text-gray-700 mb-1">Année de sortie</label>
+                            <label for="annee_voiture" class="block text-sm font-medium text-gray-700 mb-1">Release year</label>
                             <input type="number" id="annee_voiture" name="annee_voiture" min="1900" max="{{ date('Y') + 1 }}"
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                    placeholder="Entrez l'année de sortie">
@@ -510,10 +510,10 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-voiture-modal">
-                            Annuler
+                            Cancel
                         </button>
                         <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
-                            <i class="fas fa-save mr-2"></i> Enregistrer
+                            <i class="fas fa-save mr-2"></i> Save
                         </button>
                     </div>
                 </form>
@@ -726,7 +726,7 @@
 
         // Confirmation pour la suppression
         function confirmDelete(event) {
-            if (!confirm('Êtes-vous sûr de vouloir supprimer cette entreprise? Toutes les voitures associées seront également supprimées.')) {
+            if (!confirm('Are you sure you want to delete this company? All associated cars will also be deleted.')) {
                 event.preventDefault();
             }
         }

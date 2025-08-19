@@ -49,7 +49,7 @@ use App\Http\Controllers\CategoryPaneController;
 use App\Http\Controllers\DemandePanneInconnuController;
 use App\Http\Controllers\DemandeFluxInconnuPanneController;
 use App\Http\Controllers\AtelierAvailabilityController;
-
+use App\Http\Controllers\TicketAssistanceController;
 use App\Http\Controllers\RapportMaintenanceController;
 
 Route::prefix('demande-flux')->group(function () {
@@ -82,6 +82,7 @@ Route::get('/demande_maintenanceInconnu', [DemandePanneInconnuController::class,
 // Pour l'API (api.php)
 Route::get('/demandes/statistics', [DemandeController::class, 'getDemandeStatistics']);
 
+// Route pour l'interface admin
 
 // Pour la vue (web.php)
 Route::get('/statistiques/demandes', [DemandeController::class, 'showStatistics'])
@@ -634,3 +635,7 @@ Route::prefix('rapport-maintenance')->group(function () {
 });
 
 Route::get('/rapport-maintenance-inconnu/{id}/download', [RapportMaintenanceInconnuController::class, 'download'])->name('rapportt.downloadd');;
+Route::get('/ticketts', [TicketAssistanceController::class, 'index'])
+     ->name('tickets.index');
+Route::post('/tickets/{id}/reply', [TicketController::class, 'reply']);
+Route::post('/tickets/{id}/close', [TicketAssistanceController::class, 'closeTicket']);

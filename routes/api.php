@@ -18,7 +18,7 @@ use App\Http\Controllers\DemandeAchatPieceController;
 use App\Http\Controllers\ForfaitController;
 use App\Http\Controllers\EntrepriseAutomobileController;
 
-
+use App\Http\Controllers\TicketAssistanceController;
 use App\Http\Controllers\PieceRecommandeeController;
 use App\Http\Controllers\FluxDirectController;
 use App\Http\Controllers\NotificationPrixController;
@@ -38,9 +38,18 @@ use App\Http\Controllers\DemandePanneInconnuController;
 
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\RecusController;
+Route::post('/demandes/{demandeId}/payer', [PaiementController::class, 'payer']);
 Route::get('/atelier/{id}/disponibilite', [AtelierController::class, 'getAvailability']);
 
+ Route::get('/mes-recus/{clientId}', [RecusController::class, 'mesRecus']);
 
+    // Télécharger un reçu spécifique
+    Route::get('/download-recu/{paiementId}', [RecusController::class, 'downloadRecu']);
+
+    // Régénérer un reçu PDF
+    Route::post('/regenerer-recu/{paiementId}', [RecusController::class, 'regenererRecu']);
 Route::get('/reviews/technicien/{technicienId}', [ReviewController::class, 'getReviewsByTechnicien']);
 Route::post('/reviews', [ReviewController::class, 'store']);
 
@@ -214,6 +223,7 @@ Route::get('/catalogues', [CatalogueController::class, 'apiIndex']);
 Route::post('/users/storeM', [UserController::class, 'storeTechnicien']);
 Route::get('/tickets/client/{client_id}', [MaintenanceTicketController::class, 'getByClient']);
 Route::get('/tickets/type', [TypeTicketController::class, 'getAllTickets']);
+Route::get('/tickets/typess', [TypeTicketController::class, 'getTicketTypess']);
 Route::post('/tickets', [MaintenanceTicketController::class, 'storee']);
 Route::post('/send-code', [UserController::class, 'sendCode']);
 Route::post('/register-client', [UserController::class, 'registerClient']);
@@ -264,13 +274,19 @@ Route::prefix('notificationsT')->group(function () {
     Route::delete('/nettoyer-anciennes', [NotificationTechnicienController::class, 'nettoyerAnciennes']);
 });
 
+
+Route::post('/tickets/store', [TicketAssistanceController::class, 'store']);
+Route::get('/tickets/user/{userId}', [TicketAssistanceController::class, 'getUserTickets']);
+
+Route::get('/tickets/{id}', [TicketAssistanceController::class, 'show']);
+Route::post('/tickets/{id}/reply', [TicketAssistanceController::class, 'reply']);
 Route::middleware('auth:api')->post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
 Route::get('/demandes', [DemandeController::class, 'getAllDemande']);
 Route::get('/demandes-iconnu', [DemandePanneInconnuController::class, 'getAllDemande']);
 Route::post('/flux-direct', [FluxDirectController::class, 'store']);
 Route::get('/demandes/client/{userId}', [DemandePanneInconnuController::class, 'getAllDemandeByUser']);
 Route::get('/demandes/{demande}/pieces-choisies', [DemandePanneInconnuController::class, 'getPiecesChoisies']);
-Route::post('/demandes/{demande}/save-selections', [DemandePanneInconnuController::class, 'saveSelections']);
+Route::put('/demandes/{demande}/save-selections', [DemandePanneInconnuController::class, 'saveSelections']);
 Route::prefix('ateliers')->group(function () {
     // Récupérer les disponibilités d'un atelier
     Route::get('/{id}/availability', [AtelierController::class, 'getAvailability']);
@@ -309,3 +325,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/notificationsPrix/{id}', [NotificationPrixController::class, 'destroy']);
 
 });
+Route::post('/profil-technicien', [UserController::class, 'updateProfilTechnicien']);
+Route::put('/clients/{id}', [UserController::class, 'updateClient']);

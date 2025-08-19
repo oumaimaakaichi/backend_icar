@@ -237,28 +237,28 @@
 <body>
 
 @include('Sidebar.sidebarExpert')
- <div class="container py-5" style="margin-top: 0px">
-        <div class=" p-4 d-flex justify-content-between align-items-center mb-4" style="background-color: transparent">
-        <h1 class="page-title">Liste des Demandes Inconnu</h1>
+<div class="container py-5" style="margin-top: 0px">
+    <div class="p-4 d-flex justify-content-between align-items-center mb-4" style="background-color: transparent">
+         <h2 class="page-title">Unknown Issue Requests</h2>
         <div>
-            <span class="me-3 text-muted small"><span class="status-indicator indicator-new"></span> Nouvelle</span>
-            <span class="me-3 text-muted small"><span class="status-indicator indicator-assigned"></span> Assignée</span>
-            <span class="text-muted small"><span class="status-indicator indicator-offer"></span> Offre</span>
+            <span class="me-3 text-muted small"><span class="status-indicator indicator-new"></span> New</span>
+            <span class="me-3 text-muted small"><span class="status-indicator indicator-assigned"></span> Assigned</span>
+            <span class="text-muted small"><span class="status-indicator indicator-offer"></span> Offer</span>
         </div>
     </div>
 
-    <!-- Filtres -->
+    <!-- Filters -->
     <div class="filter-card">
         <div class="row g-3">
             <div class="col-md-4">
-                <label for="statusFilter" class="form-label small text-muted mb-1">Statut</label>
+                <label for="statusFilter" class="form-label small text-muted mb-1">Status</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-filter"></i></span>
                     <select id="statusFilter" class="form-select">
-                        <option value="">Tous les statuts</option>
-                        <option value="Nouvelle_demande">Nouvelle demande</option>
-                        <option value="Assignée">Assignée</option>
-                        <option value="Une_offre_a_été_faite">Offre faite</option>
+                        <option value="">All Statuses</option>
+                        <option value="Nouvelle_demande">New Request</option>
+                        <option value="Assignée">Assigned</option>
+                        <option value="Une_offre_a_été_faite">Offer Made</option>
                     </select>
                 </div>
             </div>
@@ -270,10 +270,10 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <label for="clientSearch" class="form-label small text-muted mb-1">Recherche</label>
+                <label for="clientSearch" class="form-label small text-muted mb-1">Search</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    <input type="text" id="clientSearch" class="form-control" placeholder="Client, voiture...">
+                    <input type="text" id="clientSearch" class="form-control" placeholder="Client, car...">
                 </div>
             </div>
         </div>
@@ -285,14 +285,12 @@
             <thead>
                 <tr>
                     <th>Client</th>
-                    <th>Voiture</th>
+                    <th>Car</th>
 
-                    <th>Catégorie</th>
                     <th>Description</th>
                     <th>Type</th>
                     <th>Date</th>
-
-                    <th>Statut</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -306,44 +304,35 @@
                             </div>
                             <div>
                                 <div class="fw-semibold">{{ $demande['client_prenom'] }} {{ $demande['client_nom'] }}</div>
-
                             </div>
                         </div>
                     </td>
                     <td>
                         <div class="fw-semibold">{{ $demande['voiture_model'] }}</div>
-
                     </td>
 
                     <td>
-                        <span class="badge bg-light text-dark">{{ $demande['categorie_titre'] }}</span>
-                    </td>
-<td>
                         <span class="badge bg-light text-dark">{{ $demande['description_probleme'] }}</span>
                     </td>
                     <td>
-
-                            <span class="badge bg-info bg-opacity-10 text-info"><i class="fas fa-home me-1"></i> {{$demande['type_emplacement']}}</span>
-
+                        <span class="badge bg-info bg-opacity-10 text-info"><i class="fas fa-home me-1"></i> {{$demande['type_emplacement']}}</span>
                     </td>
                     <td>
                         @if($demande['date_maintenance'])
                             <div class="fw-semibold">{{ \Carbon\Carbon::parse($demande['date_maintenance'])->format('d/m/Y') }}</div>
-
                         @else
-                            <span class="text-muted">À planifier</span>
+                            <span class="text-muted">To Schedule</span>
                         @endif
                     </td>
-
                     <td>
                         @if($demande['status'] == 'Nouvelle_demande')
-                            <span class="badge-status badge-new"><i class="fas fa-clock me-1"></i> Nouvelle</span>
+                            <span class="badge-status badge-new"><i class="fas fa-clock me-1"></i> New</span>
                         @elseif($demande['status'] == 'Assignée')
-                            <span class="badge-status badge-assigned"><i class="fas fa-user-check me-1"></i> Assignée</span>
+                            <span class="badge-status badge-assigned"><i class="fas fa-user-check me-1"></i> Assigned</span>
                         @elseif($demande['status'] == 'Une_offre_a_été_faite')
-                            <span class="badge-status badge-offer"><i class="fas fa-file-invoice me-1"></i> Offre</span>
+                            <span class="badge-status badge-offer"><i class="fas fa-file-invoice me-1"></i> Offer Made</span>
                         @elseif($demande['status'] == 'completed')
-                            <span class="badge-status badge-completed"><i class="fas fa-check-circle me-1"></i> Terminée</span>
+                            <span class="badge-status badge-completed"><i class="fas fa-check-circle me-1"></i> Completed</span>
                         @else
                             <span class="badge bg-secondary">{{ $demande['status'] }}</span>
                         @endif
@@ -351,9 +340,8 @@
                     <td>
                         <div class="d-flex gap-2">
                             <a href="{{ route('expert.show2', $demande['id']) }}" class="btn-action btn-details">
-                                <i class="fas fa-eye me-1"></i> Détails
+                                <i class="fas fa-eye me-1"></i> Details
                             </a>
-
                         </div>
                     </td>
                 </tr>
@@ -363,10 +351,10 @@
         @else
         <div class="empty-state">
             <i class="fas fa-clipboard-list empty-icon"></i>
-            <h4 class="mb-2">Aucune demande trouvée</h4>
-            <p class="text-muted mb-4">Aucune demande ne correspond à vos critères de recherche</p>
+            <h4 class="mb-2">No requests found</h4>
+            <p class="text-muted mb-4">No requests match your search criteria</p>
             <button class="btn btn-primary" onclick="resetFilters()">
-                <i class="fas fa-sync-alt me-2"></i> Réinitialiser les filtres
+                <i class="fas fa-sync-alt me-2"></i> Reset Filters
             </button>
         </div>
         @endif
@@ -376,7 +364,7 @@
     @if(count($demandes) > 0)
     <div class="d-flex justify-content-between align-items-center mt-4">
         <div class="text-muted small">
-            Affichage de <span class="fw-semibold">{{ $demandes->firstItem() }}</span> à <span class="fw-semibold">{{ $demandes->lastItem() }}</span> sur <span class="fw-semibold">{{ $demandes->total() }}</span> demandes
+            Showing <span class="fw-semibold">{{ $demandes->firstItem() }}</span> to <span class="fw-semibold">{{ $demandes->lastItem() }}</span> of <span class="fw-semibold">{{ $demandes->total() }}</span> requests
         </div>
         <div>
             {{ $demandes->links('pagination::bootstrap-5') }}
@@ -384,6 +372,7 @@
     </div>
     @endif
 </div>
+
 
 <!-- Contact Modal -->
 <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">

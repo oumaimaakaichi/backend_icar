@@ -292,11 +292,12 @@
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold mb-1">Ajouter Pièces Recommandées</h2>
+            <h2 class="fw-bold mb-1">Add Recommended Parts
+</h2>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('reponsable_piece.demandesInconnu') }}" class="text-decoration-none">Demandes</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Demande {{ $demande->id }}</li>
+                    <li class="breadcrumb-item"><a href="{{ route('reponsable_piece.demandesInconnu') }}" class="text-decoration-none">Requests</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Request {{ $demande->id }}</li>
                 </ol>
             </nav>
         </div>
@@ -331,23 +332,23 @@
 
                 <div class="divider"></div>
 
-                <h6 class="section-title mb-3">Véhicule</h6>
+                <h6 class="section-title mb-3">Car</h6>
 
                 <div class="row">
                     <div class="col-6 mb-3">
-                        <div class="info-label">Modèle</div>
+                        <div class="info-label">Model</div>
                         <div class="info-value">{{ $demande->voiture->model }}</div>
                     </div>
                     <div class="col-6 mb-3">
-                        <div class="info-label">Série</div>
+                        <div class="info-label">Serie</div>
                         <div class="info-value">{{ $demande->voiture->serie ?? '-' }}</div>
                     </div>
                     <div class="col-6">
-                        <div class="info-label">Année</div>
+                        <div class="info-label">Year</div>
                         <div class="info-value">{{ $demande->voiture->date_fabrication ?? '-' }}</div>
                     </div>
                     <div class="col-6">
-                        <div class="info-label">Couleur</div>
+                        <div class="info-label">Color</div>
                         <div class="info-value">{{ $demande->voiture->couleur ?? '-' }}</div>
                     </div>
                 </div>
@@ -359,17 +360,19 @@
             <!-- Pièces déjà ajoutées -->
             @if(count($pieces) > 0)
                 <div class="glass-card p-4 mb-4">
-                    <h6 class="section-title">Pièces de rechange </h6>
+                    <h6 class="section-title">Spare parts
+ </h6>
 
                     <div class="table-responsive">
                         <table class="piece-table">
                             <thead>
                                 <tr>
-                                    <th>Pièce</th>
-                                    <th>Référence</th>
-                                    <th>Type véhicule</th>
-                                    <th>Actions</th>
-                                </tr>
+    <th>Part</th>
+    <th>Reference</th>
+    <th>Vehicle Type</th>
+    <th>Actions</th>
+</tr>
+
                             </thead>
                             <tbody>
                                 @foreach($pieces as $piece)
@@ -445,8 +448,9 @@
 </script>
 <script>
 // Attendre que le DOM soit chargé
+// Wait for the DOM to load
 document.addEventListener('DOMContentLoaded', function() {
-    // Vérifier que les boutons existent avant d'ajouter les event listeners
+    // Check that the buttons exist before adding event listeners
     const addPieceButtons = document.querySelectorAll('.add-piece');
 
     if (addPieceButtons.length > 0) {
@@ -460,47 +464,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 const pieceName = pieceRow.querySelector('td:first-child')?.textContent || '';
 
                 Swal.fire({
-                    title: '<strong>Ajouter Disponibilité</strong>',
+                    title: `<strong>Add Availability - ${pieceName}</strong>`,
                     icon: 'question',
                     width: 700,
                     padding: '2em',
                     background: '#f0f4ff',
                     html: `
                         <div style="text-align: left;">
-                            <h5 class="mb-3">Pièce Originale</h5>
+                            <h5 class="mb-3">Original Part</h5>
 
-                            <label for="disponibiliteOriginal" class="form-label">Disponible ?</label>
+                            <label for="disponibiliteOriginal" class="form-label">Available?</label>
                             <select id="disponibiliteOriginal" class="form-select mb-3">
-                                <option value="1">Oui</option>
-                                <option value="0">Non</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
                             </select>
 
-                            <label for="prixOriginal" class="form-label">Prix Original (DH)</label>
+                            <label for="prixOriginal" class="form-label">Original Price (DH)</label>
                             <input type="number" id="prixOriginal" class="form-control mb-3" min="0" step="0.01">
 
-                            <label for="dateDisponibiliteOriginale" class="form-label">Date disponibilité</label>
+                            <label for="dateDisponibiliteOriginale" class="form-label">Availability Date</label>
                             <input type="date" id="dateDisponibiliteOriginale" class="form-control mb-4">
 
                             <hr class="my-4">
 
-                            <h5 class="mb-3">Pièce Commerciale</h5>
+                            <h5 class="mb-3">Commercial Part</h5>
 
-                            <label for="disponibiliteCommercial" class="form-label">Disponible ?</label>
+                            <label for="disponibiliteCommercial" class="form-label">Available?</label>
                             <select id="disponibiliteCommercial" class="form-select mb-3">
-                                <option value="1">Oui</option>
-                                <option value="0">Non</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
                             </select>
 
-                            <label for="prixCommercial" class="form-label">Prix Commercial (DH)</label>
+                            <label for="prixCommercial" class="form-label">Commercial Price (DH)</label>
                             <input type="number" id="prixCommercial" class="form-control mb-3" min="0" step="0.01">
 
-                            <label for="dateDisponibiliteComercial" class="form-label">Date disponibilité</label>
+                            <label for="dateDisponibiliteComercial" class="form-label">Availability Date</label>
                             <input type="date" id="dateDisponibiliteComercial" class="form-control mb-3">
                         </div>
                     `,
                     showCancelButton: true,
-                    confirmButtonText: 'Enregistrer',
-                    cancelButtonText: 'Annuler',
+                    confirmButtonText: 'Save',
+                    cancelButtonText: 'Cancel',
                     confirmButtonColor: '#3f37c9',
                     cancelButtonColor: '#f44336',
                     focusConfirm: false,
@@ -537,7 +541,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         })
                         .then(res => {
                             if (!res.ok) {
-                                throw new Error('Network response was not ok');
+                                throw new Error('Invalid server response');
                             }
                             return res.json();
                         })
@@ -545,7 +549,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (response.success) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Succès',
+                                    title: 'Success',
                                     text: response.message,
                                     timer: 2000,
                                     showConfirmButton: false
@@ -553,14 +557,14 @@ document.addEventListener('DOMContentLoaded', function() {
                                     window.location.reload();
                                 });
                             } else {
-                                throw new Error(response.message || 'Erreur inconnue');
+                                throw new Error(response.message || 'Unknown error');
                             }
                         })
                         .catch(error => {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Erreur',
-                                text: error.message || 'Une erreur est survenue lors de l\'enregistrement.',
+                                title: 'Error',
+                                text: error.message || 'An error occurred while saving.',
                             });
                         });
                     }
@@ -568,9 +572,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     } else {
-        console.warn('Aucun bouton .add-piece trouvé dans le document');
+        console.warn('No ".add-piece" button found in the document');
     }
 });
+
 </script>
 
 

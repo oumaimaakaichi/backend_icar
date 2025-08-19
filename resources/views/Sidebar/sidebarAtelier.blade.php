@@ -106,12 +106,12 @@
         .toggle-sidebar {
             position: absolute;
             right: -12px;
-            top: 10%;
+            top: 20%;
             transform: translateY(-50%);
             background: white;
             border: 2px solid #eee;
-            width: 24px;
-            height: 24px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -308,7 +308,7 @@
         .user-info {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 5px;
             cursor: pointer;
         }
 

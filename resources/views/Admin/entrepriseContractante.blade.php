@@ -11,7 +11,7 @@
 
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #71aeca 0%, #71aeca 100%);
+            --primary-gradient: linear-gradient(135deg, #4361ee 0%, #4361ee 100%);
             --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             --success-gradient: linear-gradient(135deg, #4facfe 0%, #4facfe 100%);
             --warning-gradient: linear-gradient(135deg, #63a270 0%, #63a270 100%);
@@ -43,7 +43,7 @@
         }
 
         .header-section {
-            background: var(--primary-gradient);
+            background-color: white;
             padding: 40px 30px;
             text-align: center;
             position: relative;
@@ -78,16 +78,16 @@
         }
 
         .header-title h2 {
-            color: white;
+            color: rgb(50, 21, 100);
             font-size: 2.5rem;
             font-weight: 700;
             margin: 0;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
             letter-spacing: -0.5px;
         }
 
         .header-subtitle {
-            color: rgba(255, 255, 255, 0.9);
+            color: rgb(94, 91, 91);
             font-size: 1.1rem;
             margin-top: 10px;
             font-weight: 300;
@@ -186,7 +186,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-size: 0.85rem;
-            padding: 20px 15px;
+            padding: 10px 10px;
             border: none;
             text-align: center;
             position: relative;
@@ -194,7 +194,7 @@
 
         .table tbody tr {
             transition: all 0.3s ease;
-            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         .table tbody tr:hover {
@@ -433,9 +433,10 @@
         <div class="main-container animate-fade-in" style="margin-top: 80px;">
             <!-- Header Section -->
             <div class="header-section">
-                <div class="header-title">
-                    <h2><i class="fas fa-building"></i> Companies Management</h2>
-                    <p class="header-subtitle">Gérez et supervisez toutes vos entreprises contractantes</p>
+                  <div class="header-title">
+                    <h2 style="color: rgb(73, 115, 145);"><i class="fas fa-building" style="color: rgb(73, 115, 145);"></i> Companies Management</h2>
+              <p class="header-subtitle">Manage and oversee all your contracting companies</p>
+
                 </div>
             </div>
 
@@ -444,24 +445,18 @@
                 <!-- Statistics Cards -->
                 <div class="stats-container">
                     <div class="stat-card total">
-                        <div class="stat-icon">
-                            <i class="fas fa-building"></i>
-                        </div>
+
                         <div class="stat-number" id="totalCompanies">0</div>
                         <div class="stat-label">Total Companies</div>
                     </div>
                     <div class="stat-card pending">
-                        <div class="stat-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
+
                         <div class="stat-number" id="pendingCompanies">0</div>
                         <div class="stat-label">Pending</div>
                     </div>
 
                     <div class="stat-card active">
-                        <div class="stat-icon">
-                            <i class="fas fa-power-off"></i>
-                        </div>
+
                         <div class="stat-number" id="activeCompanies">0</div>
                         <div class="stat-label">Active</div>
                     </div>
@@ -526,8 +521,8 @@
                                                         <button type="submit" class="btn btn-modern btn-accept"
                                                                 data-bs-toggle="tooltip"
                                                                 data-bs-placement="top"
-                                                                title="Accept Request">
-                                                            <i class="fa-solid fa-check"></i>
+                                                                title="Accept Request" >
+                                                            <i class="fa-solid fa-check" style="color: white"></i>
                                                         </button>
                                                     </form>
 
@@ -539,7 +534,7 @@
                                                                 data-bs-toggle="tooltip"
                                                                 data-bs-placement="top"
                                                                 title="Reject Request">
-                                                            <i class="fa-solid fa-times"></i>
+                                                            <i class="fa-solid fa-times" style="color: white"></i>
                                                         </button>
                                                     </form>
                                                 @endif
@@ -553,7 +548,7 @@
                                                                 data-bs-toggle="tooltip"
                                                                 data-bs-placement="top"
                                                                 title="Deactivate Company">
-                                                            <i class="fa-solid fa-power-off"></i>
+                                                            <i class="fa-solid fa-power-off" style="color: white"></i>
                                                         </button>
                                                     </form>
                                                 @else
@@ -565,7 +560,7 @@
                                                                 data-bs-toggle="tooltip"
                                                                 data-bs-placement="top"
                                                                 title="Activate Company">
-                                                            <i class="fa-solid fa-power-off"></i>
+                                                            <i class="fa-solid fa-power-off" style="color: white"></i>
                                                         </button>
                                                     </form>
                                                 @endif

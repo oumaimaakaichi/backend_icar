@@ -19,11 +19,11 @@
                 <!-- Header -->
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-800">Tableau de Bord</h1>
-                        <p class="text-gray-500 mt-2">Statistiques globales du personnel</p>
+                        <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+                        <p class="text-gray-500 mt-2">Overall staff statistics</p>
                     </div>
                     <div class="mt-4 md:mt-0 flex items-center space-x-2">
-                        <span class="text-sm text-gray-500">Dernière mise à jour:</span>
+                        <span class="text-sm text-gray-500">Last update:</span>
                         <span class="text-sm font-medium text-gray-700">{{ now()->format('d/m/Y H:i') }}</span>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                         <div class="p-6">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Techniciens</p>
+                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Technicians</p>
                                     <h3 class="mt-2 text-3xl font-semibold text-gray-900">{{ $stats['techniciens']['total'] }}</h3>
                                 </div>
                                 <div class="p-3 rounded-lg bg-blue-50 text-blue-600">
@@ -50,7 +50,7 @@
                                         <svg class="-ml-0.5 mr-1 h-3 w-3 text-green-500" fill="currentColor" viewBox="0 0 8 8">
                                             <circle cx="4" cy="4" r="3" />
                                         </svg>
-                                        {{ $stats['techniciens']['actifs'] }} Actifs
+                                        {{ $stats['techniciens']['actifs'] }} Active
                                     </span>
                                 </div>
                                 <div class="text-center">
@@ -58,7 +58,7 @@
                                         <svg class="-ml-0.5 mr-1 h-3 w-3 text-red-500" fill="currentColor" viewBox="0 0 8 8">
                                             <circle cx="4" cy="4" r="3" />
                                         </svg>
-                                        {{ $stats['techniciens']['inactifs'] }} Inactifs
+                                        {{ $stats['techniciens']['inactifs'] }} Inactive
                                     </span>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                         <div class="p-6">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Clients</p>
+                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Customers</p>
                                     <h3 class="mt-2 text-3xl font-semibold text-gray-900">{{ $stats['employes']['total'] }}</h3>
                                 </div>
                                 <div class="p-3 rounded-lg bg-green-50 text-green-600">
@@ -85,7 +85,7 @@
                                         <svg class="-ml-0.5 mr-1 h-3 w-3 text-green-500" fill="currentColor" viewBox="0 0 8 8">
                                             <circle cx="4" cy="4" r="3" />
                                         </svg>
-                                        {{ $stats['employes']['actifs'] }} Actifs
+                                        {{ $stats['employes']['actifs'] }} Active
                                     </span>
                                 </div>
                                 <div class="text-center">
@@ -93,7 +93,7 @@
                                         <svg class="-ml-0.5 mr-1 h-3 w-3 text-red-500" fill="currentColor" viewBox="0 0 8 8">
                                             <circle cx="4" cy="4" r="3" />
                                         </svg>
-                                        {{ $stats['employes']['inactifs'] }} Inactifs
+                                        {{ $stats['employes']['inactifs'] }} Inactive
                                     </span>
                                 </div>
                             </div>
@@ -105,7 +105,7 @@
                         <div class="p-6">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Personnel Total</p>
+                                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Staff</p>
                                     <h3 class="mt-2 text-3xl font-semibold text-gray-900">{{ $stats['total_personnel'] }}</h3>
                                 </div>
                                 <div class="p-3 rounded-lg bg-purple-50 text-purple-600">
@@ -121,14 +121,14 @@
                                     $percentEmp = round(($stats['employes']['total'] / $total) * 100);
                                 @endphp
                                 <div class="flex items-center justify-between text-sm text-gray-500 mb-1">
-                                    <span>Techniciens</span>
+                                    <span>Technicians</span>
                                     <span>{{ $percentTech }}%</span>
                                 </div>
                                 <div class="w-full bg-gray-200 rounded-full h-2">
                                     <div class="bg-gradient-to-r from-blue-500 to-blue-400 h-2 rounded-full" style="width: {{ $percentTech }}%"></div>
                                 </div>
                                 <div class="flex items-center justify-between text-sm text-gray-500 mt-3 mb-1">
-                                    <span>Clients</span>
+                                    <span>Customers</span>
                                     <span>{{ $percentEmp }}%</span>
                                 </div>
                                 <div class="w-full bg-gray-200 rounded-full h-2">
@@ -144,8 +144,8 @@
                     <!-- Pie Chart Card -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                         <div class="p-6 border-b border-gray-100">
-                            <h2 class="text-lg font-semibold text-gray-800">Répartition du Personnel</h2>
-                            <p class="text-sm text-gray-500">Proportion entre techniciens et Clients</p>
+                           <h2 class="text-lg font-semibold text-gray-800">Staff Distribution</h2>
+<p class="text-sm text-gray-500">Proportion between Technicians and Clients</p>
                         </div>
                         <div class="p-4">
                             <canvas id="personnelChart" class="w-full h-72"></canvas>
@@ -155,8 +155,8 @@
                     <!-- Bar Chart Card -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                         <div class="p-6 border-b border-gray-100">
-                            <h2 class="text-lg font-semibold text-gray-800">Statut Actif/Inactif</h2>
-                            <p class="text-sm text-gray-500">Comparaison entre les différents statuts</p>
+                            <h2 class="text-lg font-semibold text-gray-800">Active/Inactive Status</h2>
+<p class="text-sm text-gray-500">Comparison between different statuses</p>
                         </div>
                         <div class="p-4">
                             <canvas id="statusChart" class="w-full h-72"></canvas>
@@ -167,8 +167,8 @@
                 <!-- Recent Activity Section -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-10">
                     <div class="p-6 border-b border-gray-100">
-                        <h2 class="text-lg font-semibold text-gray-800">Activité Récente</h2>
-                        <p class="text-sm text-gray-500">Dernières modifications dans le système</p>
+                        <h2 class="text-lg font-semibold text-gray-800">Recent Activity</h2>
+<p class="text-sm text-gray-500">Latest changes in the system</p>
                     </div>
                     <div class="divide-y divide-gray-100">
                         <!-- Sample Activity Items - Replace with dynamic content -->
@@ -181,8 +181,8 @@
                                 </div>
                             </div>
                             <div class="ml-3 flex-1">
-                                <p class="text-sm font-medium text-gray-900">Nouveau technicien ajouté</p>
-                                <p class="text-sm text-gray-500">Jean Dupont a été ajouté au système</p>
+                               <p class="text-sm font-medium text-gray-900">New technician added</p>
+<p class="text-sm text-gray-500">Jean Dupont was added to the system</p>
                                 <p class="text-xs text-gray-400 mt-1">Il y a 2 heures</p>
                             </div>
                         </div>
@@ -195,8 +195,8 @@
                                 </div>
                             </div>
                             <div class="ml-3 flex-1">
-                                <p class="text-sm font-medium text-gray-900">Statut modifié</p>
-                                <p class="text-sm text-gray-500">Marie Martin marquée comme inactive</p>
+                              <p class="text-sm font-medium text-gray-900">Status changed</p>
+<p class="text-sm text-gray-500">Marie Martin marked as inactive</p>
                                 <p class="text-xs text-gray-400 mt-1">Il y a 5 heures</p>
                             </div>
                         </div>
@@ -209,15 +209,14 @@
                                 </div>
                             </div>
                             <div class="ml-3 flex-1">
-                                <p class="text-sm font-medium text-gray-900">Mise à jour du profil</p>
-                                <p class="text-sm text-gray-500">Pierre Bernard a mis à jour ses informations</p>
+                               <p class="text-sm font-medium text-gray-900">Profile updated</p>
+<p class="text-sm text-gray-500">Pierre Bernard updated his information</p>
                                 <p class="text-xs text-gray-400 mt-1">Il y a 1 jour</p>
                             </div>
                         </div>
                     </div>
                     <div class="p-4 border-t border-gray-100 text-center">
-                        <a href="#" class="text-sm font-medium text-blue-600 hover:text-blue-500">Voir toute l'activité</a>
-                    </div>
+                       <a href="#" class="text-sm font-medium text-blue-600 hover:text-blue-500">View all activity</a>  </div>
                 </div>
             </div>
         </div>

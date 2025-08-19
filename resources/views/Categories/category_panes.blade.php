@@ -99,10 +99,10 @@
                 <div class="flex justify-between items-center">
                     <h1 class="text-2xl font-bold flex items-center">
                         <i class="fas fa-tools mr-2"></i>
-                        Gestion des Catégories de Panne
+                        Fault Category Management
                     </h1>
                     <a href="{{ url()->previous() }}" class="bg-white text-indigo-800 px-4 py-2 rounded-full font-medium hover:bg-gray-100 transition" style="color: #5e8899">
-                        <i class="fas fa-arrow-left mr-2" style="color: #5e8899"></i> Retour
+                        <i class="fas fa-arrow-left mr-2" style="color: #5e8899"></i> Back
                     </a>
                 </div>
             </div>
@@ -113,14 +113,14 @@
             <!-- Add Category Button -->
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div class="relative w-1/3">
-                    <input type="text" id="searchInput" placeholder="Rechercher par nom..."
+                    <input type="text" id="searchInput" placeholder="Search by name..."
                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     <div class="absolute left-3 top-2.5 text-gray-400">
                         <i class="fas fa-search"></i>
                     </div>
                 </div>
                 <button id="openModalBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg transition duration-200 flex items-center" style="background-color: #5e8899">
-                    <i class="fas fa-plus-circle mr-2"></i> Ajouter une catégorie
+                    <i class="fas fa-plus-circle mr-2"></i> Add a Category
                 </button>
             </div>
 
@@ -130,7 +130,7 @@
                     <div class="modal-header">
                         <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                             <i class="fas fa-plus-circle text-indigo-600 mr-2"></i>
-                            Ajouter une nouvelle catégorie
+                            Add a New Category
                         </h2>
                         <span class="close-btn">&times;</span>
                     </div>
@@ -138,7 +138,7 @@
                         <form action="{{ route('category-panes.store') }}" method="POST" class="grid grid-cols-1 gap-4">
                             @csrf
                             <div class="md:col-span-1">
-                                <label for="titre" class="block text-sm font-medium text-gray-700 mb-1">Titre de la catégorie</label>
+                                <label for="titre" class="block text-sm font-medium text-gray-700 mb-1">Category Title</label>
                                 <input type="text" id="titre" name="titre" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
@@ -149,10 +149,10 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-modal">
-                                    Annuler
+                                    Cancel
                                 </button>
                                 <button type="submit" id="submit-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
-                                    <i class="fas fa-save mr-2"></i> Enregistrer
+                                    <i class="fas fa-save mr-2"></i> Save
                                 </button>
                             </div>
                         </form>
@@ -166,7 +166,7 @@
                     <div class="modal-header">
                         <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                             <i class="fas fa-edit text-indigo-600 mr-2"></i>
-                            Modifier la catégorie
+                            Edit Category
                         </h2>
                         <span class="close-edit-modal close-btn">&times;</span>
                     </div>
@@ -175,7 +175,7 @@
                             @csrf
                             @method('PUT')
                             <div class="md:col-span-1">
-                                <label for="edit_titre" class="block text-sm font-medium text-gray-700 mb-1">Titre de la catégorie</label>
+                                <label for="edit_titre" class="block text-sm font-medium text-gray-700 mb-1">Category Title</label>
                                 <input type="text" id="edit_titre" name="titre" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
@@ -186,10 +186,10 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-edit-modal">
-                                    Annuler
+                                    Cancel
                                 </button>
                                 <button type="submit" id="edit-submit-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
-                                    <i class="fas fa-save mr-2"></i> Enregistrer
+                                    <i class="fas fa-save mr-2"></i> Save
                                 </button>
                             </div>
                         </form>
@@ -202,7 +202,7 @@
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                         <i class="fas fa-list-ul text-indigo-600 mr-2" style="color: #5e8899"></i>
-                        Liste des catégories
+                        Category List
                     </h2>
                 </div>
 
@@ -221,13 +221,13 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Titre
+                                    Title
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Description
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Statut
+                                    Status
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Actions
@@ -259,7 +259,7 @@
                                                 </span>
                                             @else
                                                 <span class="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full flex items-center">
-                                                    <i class="fas fa-eye-slash mr-1"></i> Masquée
+                                                    <i class="fas fa-eye-slash mr-1"></i> Hidden
                                                 </span>
                                             @endif
                                         </button>
@@ -270,14 +270,14 @@
                                         <!-- View Button -->
                                         <a href="{{ route('category-panes.show', $category->id) }}"
                                            class="text-blue-600 hover:text-blue-900 mr-3"
-                                           title="Voir détails">
+                                           title="View Details">
                                             <i class="fas fa-eye"></i>
                                         </a>
 
                                         <!-- Edit Button -->
                                         <button onclick="openEditModal({{ $category->id }}, '{{ $category->titre }}', `{{ $category->description }}`)"
                                                 class="text-yellow-600 hover:text-yellow-900 mr-3"
-                                                title="Modifier">
+                                                title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
 
@@ -287,8 +287,8 @@
                                             @method('DELETE')
                                             <button type="submit"
                                                     class="text-red-600 hover:text-red-900"
-                                                    title="Supprimer"
-                                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie?')">
+                                                    title="Delete"
+                                                    onclick="return confirm('Are you sure you want to delete this category?')">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </form>
@@ -298,7 +298,7 @@
                             @empty
                             <tr>
                                 <td colspan="4" class="px-6 py-4 text-center text-gray-500">
-                                    Aucune catégorie de panne enregistrée pour le moment.
+                                    No fault categories registered yet.
                                 </td>
                             </tr>
                             @endforelse
@@ -358,29 +358,29 @@
             }
         });
 
-        // Fonction pour ouvrir le modal d'édition
+        // Function to open edit modal
         function openEditModal(id, titre, description) {
             const modal = document.getElementById('editCategoryModal');
 
-            // Pré-remplir le formulaire
+            // Pre-fill the form
             document.getElementById('edit_titre').value = titre;
             document.getElementById('edit_description').value = description;
 
-            // Mettre à jour l'action du formulaire
+            // Update form action
             document.getElementById('editCategoryForm').action = `/category-panes/${id}`;
 
-            // Afficher le modal
+            // Show the modal
             modal.style.display = 'flex';
         }
 
-        // Fermer le modal d'édition
+        // Close edit modal
         document.querySelectorAll('.close-edit-modal').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.getElementById('editCategoryModal').style.display = 'none';
             });
         });
 
-        // Fonction de recherche
+        // Search function
         document.getElementById('searchInput').addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
             const rows = document.querySelectorAll('tbody tr');
@@ -396,4 +396,5 @@
         });
     </script>
 </body>
+
 </html>

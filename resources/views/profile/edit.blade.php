@@ -197,111 +197,120 @@
 <body>
 @include('Sidebar.sidebarExpert')
 
-    <div class="container py-5" style="margin-top: 50px">
-        <div class="card shadow p-4">
-    <div class="profile-card">
-        <div class="profile-header">
-            <h1 class="profile-title">Profil Expert</h1>
-            <p class="profile-subtitle">Mettez à jour vos informations personnelles et professionnelles</p>
-        </div>
+   <div class="container py-5" style="margin-top: 50px">
+    <div class="card shadow p-4">
+        <div class="profile-card">
+            <div class="profile-header">
+                <h1 class="profile-title">Expert Profile</h1>
+                <p class="profile-subtitle">Update your personal and professional information</p>
+            </div>
 
-        <div class="avatar-container">
-            <div class="avatar">
-                <b>ES</b>
+            <div class="avatar-container">
+                <div class="avatar">
+                    @auth('web')
+                        <b>
+                            {{ strtoupper(substr(Auth::guard('web')->user()->nom, 0, 1)) }}
+                            {{ strtoupper(substr(Auth::guard('web')->user()->prenom, 0, 1)) }}
+                        </b>
+                    @else
+                        ES
+                    @endauth
+                </div>
+            </div>
+
+            <div class="form-section">
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('profile.update') }}">
+                    @csrf
+                    @method('PUT')
+
+                    <h3 class="section-title">Personal Information</h3>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="nom" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="nom" name="nom" value="{{ old('nom', $user->nom) }}" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="prenom" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="prenom" name="prenom" value="{{ old('prenom', $user->prenom) }}" required>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone', $user->phone) }}" required>
+                        </div>
+                    </div>
+
+                    <h3 class="section-title mt-5">Professional Information</h3>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="specialite" class="form-label">Specialty</label>
+                            <input type="text" class="form-control" id="specialite" name="specialite"
+                                   value="{{ old('specialite', $user->extra_data['specialite'] ?? '') }}" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="annee_experience" class="form-label">Years of Experience</label>
+                            <input type="number" class="form-control" id="annee_experience" name="annee_experience"
+                                   value="{{ old('annee_experience', $user->extra_data['annee_experience'] ?? '') }}" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="qualifications" class="form-label">Qualifications</label>
+                        <textarea class="form-control" id="qualifications" name="qualifications" rows="4">{{ old('qualifications', $user->extra_data['qualifications'] ?? '') }}</textarea>
+                    </div>
+
+                    <h3 class="section-title mt-5">Security</h3>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6 position-relative">
+                            <label for="password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                            <span class="password-toggle" onclick="togglePassword('password')">
+                                <i class="fas fa-eye" style="margin-top: 35px"></i>
+                            </span>
+                        </div>
+
+                        <div class="col-md-6 position-relative">
+                            <label for="password_confirmation" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+                            <span class="password-toggle" onclick="togglePassword('password_confirmation')">
+                                <i class="fas fa-eye" style="margin-top: 35px"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-5">
+                        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Back
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-
-        <div class="form-section">
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('profile.update') }}">
-                @csrf
-                @method('PUT')
-
-                <h3 class="section-title">Informations personnelles</h3>
-
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <label for="nom" class="form-label">Nom</label>
-                        <input type="text" class="form-control" id="nom" name="nom" value="{{ old('nom', $user->nom) }}" required>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="prenom" class="form-label">Prénom</label>
-                        <input type="text" class="form-control" id="prenom" name="prenom" value="{{ old('prenom', $user->prenom) }}" required>
-                    </div>
-                </div>
-
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <label for="email" class="form-label">Adresse Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}" required>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="phone" class="form-label">Téléphone</label>
-                        <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone', $user->phone) }}" required>
-                    </div>
-                </div>
-
-                <h3 class="section-title mt-5">Informations professionnelles</h3>
-
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <label for="specialite" class="form-label">Spécialité</label>
-                        <input type="text" class="form-control" id="specialite" name="specialite"
-                               value="{{ old('specialite', $user->extra_data['specialite'] ?? '') }}" required>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="annee_experience" class="form-label">Années d'expérience</label>
-                        <input type="number" class="form-control" id="annee_experience" name="annee_experience"
-                               value="{{ old('annee_experience', $user->extra_data['annee_experience'] ?? '') }}" required>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label for="qualifications" class="form-label">Qualifications</label>
-                    <textarea class="form-control" id="qualifications" name="qualifications" rows="4">{{ old('qualifications', $user->extra_data['qualifications'] ?? '') }}</textarea>
-                </div>
-
-                <h3 class="section-title mt-5">Sécurité</h3>
-
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6 position-relative">
-                        <label for="password" class="form-label">Nouveau mot de passe</label>
-                        <input type="password" class="form-control" id="password" name="password">
-                        <span class="password-toggle" onclick="togglePassword('password')">
-                            <i class="fas fa-eye" style="margin-top: 35px"></i>
-                        </span>
-                    </div>
-
-                    <div class="col-md-6 position-relative">
-                        <label for="password_confirmation" class="form-label">Confirmation</label>
-                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
-                        <span class="password-toggle" onclick="togglePassword('password_confirmation')">
-                            <i class="fas fa-eye" style="margin-top: 35px"></i>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-between align-items-center mt-5">
-                    <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-2"></i> Retour
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i> Enregistrer les modifications
-                    </button>
-                </div>
-            </form>
-        </div>
     </div>
-        </div>
+</div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

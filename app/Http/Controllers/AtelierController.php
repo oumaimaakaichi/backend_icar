@@ -20,8 +20,8 @@ public function availabilityView()
 
     $atelier = Auth::guard('atelier')->user();
 
-    // Récupérer les disponibilités ou initialiser un tableau vide si null
-    $availability = $atelier->availability ?? [
+    // Formatage initial des données
+    $availability = $this->formatAvailabilityForView($atelier->availability ?? [
         'lundi' => [],
         'mardi' => [],
         'mercredi' => [],
@@ -29,26 +29,11 @@ public function availabilityView()
         'vendredi' => [],
         'samedi' => [],
         'dimanche' => []
-    ];
-
-    // Convertir les disponibilités en format plus facile à utiliser dans la vue
-    $formattedAvailability = [];
-    foreach ($availability as $day => $slots) {
-        $formattedAvailability[$day] = [];
-        foreach ($slots as $slot) {
-            if (is_string($slot) && strpos($slot, '-') !== false) {
-                list($start, $end) = explode('-', $slot);
-                $formattedAvailability[$day][] = [
-                    'start' => $start,
-                    'end' => $end
-                ];
-            }
-        }
-    }
+    ]);
 
     return view('ateliers.availability', [
         'atelier' => $atelier,
-        'availability' => $formattedAvailability
+        'availability' => $availability
     ]);
 }
 public function showAvailabilityForm()
@@ -84,32 +69,57 @@ public function getAvailability($id)
 }
 public function updateAvailability(Request $request)
 {
+    $atelier = Auth::guard('atelier')->user();
+
     // Validation des données
     $validated = $request->validate([
-        'availability' => 'required|array',
-        'availability.*' => 'array',
-        'availability.*.*' => 'array',
+        'lundi' => 'nullable|array',
+        'mardi' => 'nullable|array',
+        'mercredi' => 'nullable|array',
+        'jeudi' => 'nullable|array',
+        'vendredi' => 'nullable|array',
+        'samedi' => 'nullable|array',
+        'dimanche' => 'nullable|array',
+        'lundi.*.start' => 'required_with:lundi|date_format:H:i',
+        'lundi.*.end' => 'required_with:lundi|date_format:H:i|after:lundi.*.start',
+        // Répéter pour les autres jours...
     ]);
 
-    // Formatage des données
+    // Formatage des données pour la base
     $formattedAvailability = [];
-    foreach ($request->availability as $day => $slots) {
+    foreach ($validated as $day => $slots) {
         $formattedAvailability[$day] = [];
         foreach ($slots as $slot) {
-            if (!empty($slot['start']) && !empty($slot['end'])) {
-                $formattedAvailability[$day][] = $slot['start'].'-'.$slot['end'];
-            }
+            $formattedAvailability[$day][] = $slot['start'].'-'.$slot['end'];
         }
     }
 
     // Mise à jour de l'atelier
-    $atelier = Auth::guard('atelier')->user();
     $atelier->availability = $formattedAvailability;
     $atelier->save();
 
-    return redirect()->back()->with('success', 'Disponibilités mises à jour avec succès!');
+    return response()->json([
+        'success' => true,
+        'message' => 'Disponibilités mises à jour avec succès',
+        'availability' => $this->formatAvailabilityForView($formattedAvailability)
+    ]);
 }
-     public function index(Request $request)
+
+// Nouvelle méthode helper pour formater les données pour la vue
+private function formatAvailabilityForView($availability)
+{
+    $formatted = [];
+    foreach ($availability as $day => $slots) {
+        $formatted[$day] = [];
+        foreach ($slots as $slot) {
+            if (is_string($slot)) {
+                list($start, $end) = explode('-', $slot);
+                $formatted[$day][] = ['start' => $start, 'end' => $end];
+            }
+        }
+    }
+    return $formatted;
+}   public function index(Request $request)
      {
          $query = Atelier::query();
 
@@ -150,7 +160,7 @@ public function updateAvailability(Request $request)
             'num_contact' => 'required|numeric',
             'specialisation_centre' => 'required|string',
             'type_entreprise' => 'required|integer',
-            'document' => 'nullable|file', // Si c'est un fichier
+            'document' => 'nullable|file|max:8000', // Si c'est un fichier
             'photos_centre' => 'nullable|image', // Si c'est une image
             'nbr_techniciens' => 'required|integer|min:0',
             'techniciens' => 'nullable|string', // Tableau JSON
@@ -208,7 +218,8 @@ public function desactivateAtelier($id)
 
 public function getAllAteliers(Request $request)
 {
-    $query = Atelier::select('id', 'nom_commercial', 'ville',);
+    $query = Atelier::select('id', 'nom_commercial', 'ville')
+        ->where('is_active', true); // Filtrer uniquement les ateliers actifs
 
     // Recherche par ville si le paramètre est fourni
     if ($request->has('ville') && !empty($request->ville)) {
@@ -232,6 +243,7 @@ public function getAllAteliers(Request $request)
         'has_more_pages' => $ateliers->hasMorePages()
     ]);
 }
+
 
 
 

@@ -528,14 +528,14 @@
     <div class="main-container" >
         <div class="content-wrapper">
             <!-- Header Section -->
-            <div class="header-section">
-                <div class="header-badge">
-                    <i class="fas fa-tools"></i>
-                    Service Maintenance
-                </div>
-                <h3 class="main-title">Choisissez votre Service</h3>
+          <div class="header-section">
+    <div class="header-badge">
+        <i class="fas fa-tools"></i>
+        Maintenance Service
+    </div>
+    <h3 class="main-title">Choose Your Service</h3>
+</div>
 
-            </div>
 
             <!-- Cards Section -->
             <div class="cards-container">
@@ -545,35 +545,39 @@
                         <div class="card-icon-wrapper">
                             <i class="fas fa-check-circle card-icon"></i>
                         </div>
-                        <div class="card-content">
-                            <h2 class="card-title">Panne Connu</h2>
-                            <span class="card-label">Intervention Directe</span>
-                        </div>
+                       <div class="card-content">
+    <h2 class="card-title">Known Issue</h2>
+    <span class="card-label">Direct Intervention</span>
+</div>
+
                     </div>
 
-                    <p class="card-description">
-                        Vous connaissez déjà la nature exacte du problème ? Accédez directement à notre service de maintenance ciblé pour une résolution rapide et efficace.
-                    </p>
+                   <p class="card-description">
+    Do you already know the exact nature of the problem? Access our targeted maintenance service directly for a fast and efficient resolution.
+</p>
 
-                    <div class="card-features">
-                        <div class="feature-item">
-                            <i class="fas fa-bolt feature-icon"></i>
-                            <span>Intervention immédiate</span>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-clock feature-icon"></i>
-                            <span>Gain de temps considérable</span>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-target feature-icon"></i>
-                            <span>Solution précise et adaptée</span>
-                        </div>
-                    </div>
+
+                  <div class="card-features">
+    <div class="feature-item">
+        <i class="fas fa-bolt feature-icon"></i>
+        <span>Immediate intervention</span>
+    </div>
+    <div class="feature-item">
+        <i class="fas fa-clock feature-icon"></i>
+        <span>Significant time savings</span>
+    </div>
+    <div class="feature-item">
+        <i class="fas fa-target feature-icon"></i>
+        <span>Precise and tailored solution</span>
+    </div>
+</div>
+
 
                     <button class="cta-button">
-                        <span>Continuer</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
+    <span>Continue</span>
+    <i class="fas fa-arrow-right"></i>
+</button>
+
                 </div>
 
                 <!-- Unknown Fault Card -->
@@ -583,58 +587,63 @@
                             <i class="fas fa-search-plus card-icon"></i>
                         </div>
                         <div class="card-content">
-                            <h2 class="card-title">Panne Inconnu</h2>
-                            <span class="card-label">Analyse Complète</span>
-                        </div>
+    <h2 class="card-title">Unknown Issue</h2>
+    <span class="card-label">Full Analysis</span>
+</div>
+
                     </div>
 
-                    <p class="card-description">
-                        Problème non identifié ? Notre système de diagnostic avancé vous accompagne étape par étape pour identifier précisément la panne et proposer la solution optimale.
-                    </p>
+                 <p class="card-description">
+    Unidentified issue? Our advanced diagnostic system guides you step by step to accurately identify the problem and provide the optimal solution.
+</p>
 
-                    <div class="card-features">
-                        <div class="feature-item">
-                            <i class="fas fa-brain feature-icon"></i>
-                            <span>Diagnostic intelligent</span>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-route feature-icon"></i>
-                            <span>Guidance étape par étape</span>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-lightbulb feature-icon"></i>
-                            <span>Solution personnalisée</span>
-                        </div>
-                    </div>
 
-                    <button class="cta-button">
-                        <span>Lancer le diagnostic</span>
-                        <i class="fas fa-microscope"></i>
-                    </button>
+                  <div class="card-features">
+    <div class="feature-item">
+        <i class="fas fa-brain feature-icon"></i>
+        <span>Smart Diagnostics</span>
+    </div>
+    <div class="feature-item">
+        <i class="fas fa-route feature-icon"></i>
+        <span>Step-by-Step Guidance</span>
+    </div>
+    <div class="feature-item">
+        <i class="fas fa-lightbulb feature-icon"></i>
+        <span>Personalized Solution</span>
+    </div>
+</div>
+
+
+                   <button class="cta-button">
+    <span>Start Diagnostic</span>
+    <i class="fas fa-microscope"></i>
+</button>
+
                 </div>
             </div>
 
             <!-- Stats Section -->
-            <div class="stats-section">
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-number">98%</div>
-                        <div class="stat-label">Taux de satisfaction</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">24h</div>
-                        <div class="stat-label">Délai moyen d'intervention</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">1500+</div>
-                        <div class="stat-label">Interventions réalisées</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">5★</div>
-                        <div class="stat-label">Note moyenne clients</div>
-                    </div>
-                </div>
-            </div>
+         <div class="stats-section">
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Satisfaction Rate</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">24h</div>
+            <div class="stat-label">Average Response Time</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">1500+</div>
+            <div class="stat-label">Completed Interventions</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">5★</div>
+            <div class="stat-label">Average Customer Rating</div>
+        </div>
+    </div>
+</div>
+
         </div>
     </div>
 

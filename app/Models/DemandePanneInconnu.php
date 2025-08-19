@@ -101,6 +101,20 @@ class DemandePanneInconnu extends Model
     {
         return $this->hasMany(RapportMaintenance::class, 'id_demande');
     }
+
+
+
+    public function getPiecesSelectionnees()
+    {
+        return $this->pieces_selectionnees ?? [];
+    }
+
+    // Mutateur pour définir les pièces sélectionnées (optionnel)
+    public function setPiecesSelectionnees(array $pieces)
+    {
+        $this->pieces_selectionnees = $pieces;
+    }
+
 public function getDisponibilitePiecesAttribute($value)
 {
     if (is_array($value)) {

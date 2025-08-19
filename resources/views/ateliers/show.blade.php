@@ -1,205 +1,318 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détails Demande #{{ $demande->id }}</title>
+    <title>Request Details #{{ $demande->id }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4e73df;
-            --primary-light: #e8f1ff;
-            --success: #1cc88a;
-            --info: #36b9cc;
-            --warning: #f6c23e;
-            --danger: #e74a3b;
-            --dark: #5a5c69;
-            --light: #f8f9fc;
-            --border: #e3e6f0;
+            --primary: #4361ee;
+            --primary-dark: #3c56dd;
+            --primary-light: #5d75f2;
+            --secondary: #64748b;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #06b6d4;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --border-radius: 16px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background-color: #f5f7fb;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, white 0%, white 50%, white 100%);
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--gray-900);
+            line-height: 1.6;
         }
 
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 24px;
+        .container-fluid {
+            max-width: 1400px;
+            padding-top: 2rem;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            background-color: white;
-            border-bottom: 1px solid var(--border);
-            font-weight: 600;
-            padding: 1.25rem 1.5rem;
-            border-radius: 10px 10px 0 0 !important;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        .status-badge {
-            padding: 0.5em 1em;
-            font-size: 0.85em;
-            font-weight: 700;
-            border-radius: 50px;
-            text-transform: capitalize;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .status-Non_assigné { background-color: var(--primary-light); color: var(--primary); }
-        .status-Assignée_now { background-color: #e2e3e5; color: #5a5c69; }
-        .status-en_attente { background-color: #fff8e1; color: #ff8f00; }
-        .status-en_cours { background-color: #fff3cd; color: #856404; }
-        .status-termine { background-color: #e6ffed; color: #1b5e20; }
-        .status-annule { background-color: #ffebee; color: #c62828; }
-
-        .detail-label {
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 0.25rem;
-            font-size: 0.85rem;
-        }
-
-        .detail-value {
-            color: var(--dark);
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .detail-value i {
-            margin-right: 10px;
-            color: var(--primary);
-            width: 20px;
-            text-align: center;
-        }
-
-        .btn-submit {
-            background-color: var(--success);
-            border: none;
-            padding: 0.75rem;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-submit:hover {
-            background-color: #17a673;
-            transform: translateY(-2px);
-        }
-
-        .section-title {
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
+        /* Header Section */
+        .page-header {
+            background: rgba(223, 222, 222, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(97, 95, 95, 0.2);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-xl);
             position: relative;
-            padding-bottom: 0.75rem;
+            overflow: hidden;
+            margin-top: 20px
         }
 
-        .section-title:after {
+        .page-header::before {
             content: '';
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
-            width: 50px;
-            height: 3px;
-            background-color: var(--primary);
-            border-radius: 3px;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            pointer-events: none;
         }
 
-        .list-group-item {
+        .page-header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #000000;
+            text-shadow: 0 2px 4px rgba(67, 66, 66, 0.1);
             display: flex;
             align-items: center;
-            padding: 1rem 1.5rem;
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            gap: 1rem;
             margin-bottom: 0.5rem;
-            border-radius: 8px !important;
         }
 
-        .list-group-item i {
-            margin-right: 12px;
-            color: var(--primary);
+        .page-title i {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2rem;
         }
 
-        .technicien-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--primary-light);
-            color: var(--primary);
+        .page-subtitle {
+            color: rgba(123, 122, 122, 0.8);
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+
+        /* Modern Cards */
+        .modern-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .modern-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--info), var(--success));
+        }
+
+        .modern-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .card-header-modern {
+            background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+            border: none;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0;
+        }
+
+        .card-title i {
+            width: 24px;
+            height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 12px;
-            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 8px;
+            font-size: 0.875rem;
         }
 
-        .price-input {
+        .card-body-modern {
+            padding: 2rem;
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
             position: relative;
-        }
-
-        .price-input:before {
-            content: '€';
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .price-input input {
-            padding-left: 30px !important;
-        }
-
-        .progress-track {
-            height: 8px;
-            border-radius: 4px;
-            background-color: #e9ecef;
-            margin-top: 20px;
             overflow: hidden;
         }
 
-        .progress-bar {
-            background-color: var(--primary);
-            transition: width 0.6s ease;
-        }
-
-        .timeline {
-            position: relative;
-            padding-left: 30px;
-            margin-top: 20px;
-        }
-
-        .timeline:before {
+        .info-item::before {
             content: '';
             position: absolute;
-            left: 11px;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--info));
+            transition: width 0.3s ease;
+        }
+
+        .info-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary-light);
+        }
+
+        .info-item:hover::before {
+            width: 8px;
+        }
+
+        .info-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-label i {
+            color: var(--primary);
+        }
+
+        .info-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Status Badges */
+        .status-badge-modern {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-badge-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .status-badge-modern:hover::before {
+            left: 100%;
+        }
+
+        .status-Non_assigné {
+            background: linear-gradient(135deg, var(--gray-500), var(--gray-600));
+            color: white;
+        }
+        .status-Assignée_now {
+            background: linear-gradient(135deg, var(--secondary), #475569);
+            color: white;
+        }
+        .status-Nouvelle_demande {
+            background: linear-gradient(135deg, var(--info), #0891b2);
+            color: white;
+        }
+        .status-en_attente {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: white;
+        }
+        .status-offre_acceptee {
+            background: linear-gradient(135deg, var(--success), #16a34a);
+            color: white;
+        }
+        .status-en_cours {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+        .status-termine {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+        }
+        .status-annule {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.75rem;
             top: 0;
             bottom: 0;
             width: 2px;
-            background-color: var(--primary-light);
+            background: linear-gradient(135deg, var(--primary), var(--info));
         }
 
         .timeline-item {
             position: relative;
-            padding-bottom: 20px;
+            padding-bottom: 2rem;
         }
 
         .timeline-item:last-child {
@@ -208,111 +321,406 @@
 
         .timeline-dot {
             position: absolute;
-            left: -30px;
-            width: 20px;
-            height: 20px;
+            left: -2rem;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            background-color: white;
-            border: 3px solid var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(67, 97, 238, 0.3);
             z-index: 1;
         }
 
         .timeline-content {
-            background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
         .timeline-date {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-bottom: 5px;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
 
         .timeline-text {
-            font-size: 0.9rem;
+            font-size: 1rem;
+            color: var(--gray-900);
+            font-weight: 500;
         }
 
+        /* Buttons */
+        .btn-modern {
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .btn-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-modern:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary-modern {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.3);
+            color: white;
+        }
+
+        .btn-success-modern {
+            background: linear-gradient(135deg, var(--success), #16a34a);
+            color: white;
+        }
+
+        .btn-success-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.3);
+            color: white;
+        }
+
+        .btn-outline-primary-modern {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline-primary-modern:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Forms */
+        .form-control-modern {
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 0.875rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-control-modern:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            outline: none;
+        }
+
+        .form-label-modern {
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        /* Price Input */
+        .price-input {
+            position: relative;
+        }
+
+        .price-input::before {
+            content: '€';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-weight: 700;
+            z-index: 1;
+        }
+
+        .price-input input {
+            padding-left: 2.5rem;
+        }
+
+        /* Team List */
+        .team-member {
+            background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .team-member:hover {
+            transform: translateX(8px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary-light);
+        }
+
+        .team-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+        .team-info h6 {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin: 0;
+        }
+
+        .team-info small {
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        /* Table */
+        .table-modern {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .table-modern th {
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+            border: none;
+            color: var(--gray-700);
+            font-weight: 600;
+            padding: 1rem;
+        }
+
+        .table-modern td {
+            border: none;
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        /* Alert */
+        .alert-modern {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-modern i {
+            color: var(--info);
+        }
+
+        /* Badge */
+        .badge-modern {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success-modern {
+            background: linear-gradient(135deg, var(--success), #16a34a);
+            color: white;
+        }
+
+        .badge-warning-modern {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: white;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .card-body {
-                padding: 1.25rem;
+            .container-fluid {
+                padding-left: 1rem;
+                padding-right: 1rem;
             }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .card-body-modern {
+                padding: 1.5rem;
+            }
+
+            .team-member {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-up {
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .animate-delay-1 {
+            animation-delay: 0.1s;
+            animation-fill-mode: both;
+        }
+
+        .animate-delay-2 {
+            animation-delay: 0.2s;
+            animation-fill-mode: both;
+        }
+
+        .animate-delay-3 {
+            animation-delay: 0.3s;
+            animation-fill-mode: both;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(67, 97, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
         }
     </style>
 </head>
 <body>
     @include('Sidebar.sidebarAtelier')
 
-    <div class="container-fluid py-4">
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <div>
-                <h1 class="h3 mb-2 text-gray-800" style="margin-top: 50px">Détails de la demande</h1>
-
+    <div class="container-fluid animate-slide-up" style="margin-top: 60px">
+        <!-- Modern Header -->
+        <div class="page-header">
+            <div class="page-header-content">
+                <h1 class="page-title">
+                    <i class="fas fa-clipboard-list"></i>
+                    Request Details
+                </h1>
+                <p class="page-subtitle">Comprehensive overview of maintenance request #{{ $demande->id }}</p>
             </div>
-
         </div>
 
         <div class="row">
+            <!-- Main Content -->
             <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold">Informations sur la demande</h6>
+                <!-- Request Information -->
+                <div class="modern-card animate-slide-up animate-delay-1">
+                    <div class="card-header-modern">
+                        <h5 class="card-title">
+                            <i class="fas fa-info-circle"></i>
+                            Request Information
+                        </h5>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-4">
-                                    <p class="detail-label">Client</p>
-                                    <p class="detail-value">
-                                        <i class="fas fa-user"></i>
-                                        {{ $demande->client->prenom }} {{ $demande->client->nom }}
-                                    </p>
+                    <div class="card-body-modern">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-user"></i>
+                                    Client
                                 </div>
-
-                                <div class="mb-4">
-                                    <p class="detail-label">Véhicule</p>
-                                    <p class="detail-value">
-                                        <i class="fas fa-car"></i>
-                                        {{ $demande->voiture->model }} ({{ $demande->voiture->serie }})
-                                    </p>
+                                <div class="info-value">
+                                    <div class="team-avatar">
+                                        {{ substr($demande->client->prenom, 0, 1) }}{{ substr($demande->client->nom, 0, 1) }}
+                                    </div>
+                                    {{ $demande->client->prenom }} {{ $demande->client->nom }}
                                 </div>
                             </div>
-
-                            <div class="col-md-6">
-                                <div class="mb-4">
-                                    <p class="detail-label">Contact</p>
-                                    <p class="detail-value">
-                                        <i class="fas fa-phone"></i>
-                                        {{ $demande->client->phone }}
-                                    </p>
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-phone"></i>
+                                    Contact
                                 </div>
-
-                                <div class="mb-4">
-                                    <p class="detail-label">Service demandé</p>
-                                    <p class="detail-value">
-                                        <i class="fas fa-tools"></i>
-                                        {{ $demande->servicePanne->titre }}
-                                    </p>
+                                <div class="info-value">
+                                    <i class="fas fa-phone text-success"></i>
+                                    {{ $demande->client->phone }}
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-car"></i>
+                                    Vehicle
+                                </div>
+                                <div class="info-value">
+                                    <i class="fas fa-car text-primary"></i>
+                                    {{ $demande->voiture->model }} ({{ $demande->voiture->serie }})
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-tools"></i>
+                                    Requested Service
+                                </div>
+                                <div class="info-value">
+                                    <i class="fas fa-wrench text-warning"></i>
+                                    {{ $demande->servicePanne->titre }}
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mt-3">
-                            <h6 class="section-title">Historique des statuts</h6>
+                        <div class="mt-4">
+                            <h6 class="card-title mb-3">
+                                <i class="fas fa-history"></i>
+                                Status History
+                            </h6>
                             <div class="timeline">
                                 <div class="timeline-item">
                                     <div class="timeline-dot"></div>
                                     <div class="timeline-content">
-                                        <div class="timeline-date">Aujourd'hui, 10:30</div>
-                                        <div class="timeline-text">Demande créée</div>
+                                        <div class="timeline-date">Today, 10:30 AM</div>
+                                        <div class="timeline-text">Request created</div>
                                     </div>
                                 </div>
                                 <div class="timeline-item">
                                     <div class="timeline-dot"></div>
                                     <div class="timeline-content">
-                                        <div class="timeline-date">Aujourd'hui, 11:45</div>
-                                        <div class="timeline-text">En attente de validation</div>
+                                        <div class="timeline-date">Today, 11:45 AM</div>
+                                        <div class="timeline-text">Awaiting validation</div>
                                     </div>
                                 </div>
                             </div>
@@ -320,42 +728,46 @@
                     </div>
                 </div>
 
+                <!-- Spare Parts Section -->
                 @if($demande->status === 'offre_acceptee' || $demande->status === 'en_cours')
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold">Pièces détachées nécessaires</h6>
+                <div class="modern-card animate-slide-up animate-delay-2">
+                    <div class="card-header-modern">
+                        <h5 class="card-title">
+                            <i class="fas fa-cogs"></i>
+                            Required Spare Parts
+                        </h5>
                     </div>
-                    <div class="card-body">
-                        <div class="alert alert-info d-flex align-items-center">
-                            <i class="fas fa-info-circle me-3"></i>
-                            <div>Les pièces suivantes ont été identifiées comme nécessaires pour cette réparation.</div>
+                    <div class="card-body-modern">
+                        <div class="alert-modern d-flex align-items-center">
+                            <i class="fas fa-info-circle me-3 fs-5"></i>
+                            <div>The following parts have been identified as necessary for this repair.</div>
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table table-modern">
                                 <thead>
                                     <tr>
-                                        <th>Pièce</th>
-                                        <th>Prix</th>
-                                        <th>Disponibilité</th>
+                                        <th>Part</th>
+                                        <th>Price</th>
+                                        <th>Availability</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Kit embrayage</td>
-                                        <td>€ 120.00</td>
-                                        <td><span class="badge bg-success">En stock</span></td>
+                                        <td>Clutch Kit</td>
+                                        <td><strong>€ 120.00</strong></td>
+                                        <td><span class="badge-modern badge-success-modern">In Stock</span></td>
                                         <td class="text-end">
-                                            <button class="btn btn-sm btn-outline-primary">Commander</button>
+                                            <button class="btn btn-outline-primary-modern btn-modern btn-sm">Order</button>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Plaquettes de frein</td>
-                                        <td>€ 45.00</td>
-                                        <td><span class="badge bg-warning">2-3 jours</span></td>
+                                        <td>Brake Pads</td>
+                                        <td><strong>€ 45.00</strong></td>
+                                        <td><span class="badge-modern badge-warning-modern">2-3 Days</span></td>
                                         <td class="text-end">
-                                            <button class="btn btn-sm btn-outline-primary">Commander</button>
+                                            <button class="btn btn-outline-primary-modern btn-modern btn-sm">Order</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -366,88 +778,100 @@
                 @endif
             </div>
 
+            <!-- Sidebar -->
             <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold">Coûts et devis</h6>
+                <!-- Costs & Quote -->
+                <div class="modern-card animate-slide-up animate-delay-1">
+                    <div class="card-header-modern">
+                        <h5 class="card-title">
+                            <i class="fas fa-euro-sign"></i>
+                            Costs & Quote
+                        </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body-modern">
                         <form id="prixForm" action="{{ route('demandes.ajouterPrixMainOeuvre', $demande->id) }}" method="POST">
                             @csrf
                             <div class="mb-4">
-                                <label for="prix_main_oeuvre" class="form-label detail-label">
-                                    Prix main d'œuvre
+                                <label for="prix_main_oeuvre" class="form-label-modern">
+                                    Labor Cost
                                 </label>
                                 <div class="price-input">
-                                    <input type="number" step="0.01" min="0" class="form-control"
+                                    <input type="number" step="0.01" min="0" class="form-control form-control-modern"
                                            id="prix_main_oeuvre" name="prix_main_oeuvre"
                                            value="{{ old('prix_main_oeuvre', $demande->prix_main_oeuvre) }}"
                                            @if($demande->status !== 'Nouvelle_demande') disabled @endif
                                            required>
                                 </div>
                                 @error('prix_main_oeuvre')
-                                    <div class="text-danger mt-2">{{ $message }}</div>
+                                    <div class="text-danger mt-2 small">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label detail-label">Forfait</label>
-                                <p class="detail-value">
-                                    <i class="fas fa-tag"></i>
+                                <label class="form-label-modern">Service Package</label>
+                                <div class="info-value">
+                                    <i class="fas fa-tag text-success"></i>
                                     {{ $demande->forfait->nomForfait }}
-                                </p>
+                                </div>
                             </div>
 
                             @if($demande->status === 'Nouvelle_demande')
-                            <button type="submit" class="btn btn-submit w-100">
-                                <i class="fas fa-paper-plane me-2"></i>Envoyer l'offre au client
+                            <button type="submit" class="btn btn-success-modern btn-modern w-100 pulse-animation">
+                                <i class="fas fa-paper-plane"></i>
+                                Send Quote to Client
                             </button>
                             @endif
                         </form>
                     </div>
                 </div>
 
+                <!-- Assigned Team -->
                 @if($demande->techniciens && count($demande->techniciens) > 0)
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold">Équipe assignée</h6>
+                <div class="modern-card animate-slide-up animate-delay-2">
+                    <div class="card-header-modern">
+                        <h5 class="card-title">
+                            <i class="fas fa-users-cog"></i>
+                            Assigned Team
+                        </h5>
                     </div>
-                    <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            @foreach($demande->techniciens as $tech)
-                                <li class="list-group-item">
-                                    <div class="technicien-avatar">
-                                        {{ substr($tech['nom'], 0, 1) }}
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-1">{{ $tech['nom'] }}</h6>
-                                        <small class="text-muted">ID: {{ $tech['id'] }}</small>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
+                    <div class="card-body-modern">
+                        @foreach($demande->techniciens as $tech)
+                        <div class="team-member">
+                            <div class="team-avatar">
+                                {{ substr($tech['nom'], 0, 2) }}
+                            </div>
+                            <div class="team-info">
+                                <h6>{{ $tech['nom'] }}</h6>
+                                <small>ID: {{ $tech['id'] }}</small>
+                            </div>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
                 @endif
 
+                <!-- Assign Technicians -->
                 @if($demande->status === 'offre_acceptee')
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="m-0 font-weight-bold">Assigner des techniciens</h6>
+                <div class="modern-card animate-slide-up animate-delay-3">
+                    <div class="card-header-modern">
+                        <h5 class="card-title">
+                            <i class="fas fa-user-plus"></i>
+                            Assign Technicians
+                        </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body-modern">
                         <div class="mb-3">
-                            <label for="nombre_techniciens" class="form-label detail-label">Nombre de techniciens</label>
+                            <label for="nombre_techniciens" class="form-label-modern">Number of Technicians</label>
                             <input type="number" min="1" max="{{ $techniciens->count() }}"
-                                   class="form-control" id="nombre_techniciens" value="1">
+                                   class="form-control form-control-modern" id="nombre_techniciens" value="1">
                         </div>
 
                         <form id="assignTechniciensForm">
                             <div id="techniciens_select_container">
                                 <div class="mb-3">
-                                    <label class="form-label detail-label">Technicien 1</label>
-                                    <select class="form-select" name="techniciens[]" required>
-                                        <option value="" disabled selected>-- Sélectionner --</option>
+                                    <label class="form-label-modern">Technician 1</label>
+                                    <select class="form-control form-control-modern" name="techniciens[]" required>
+                                        <option value="" disabled selected>-- Select Technician --</option>
                                         @foreach($techniciens as $tech)
                                             <option value="{{ $tech->id }}">{{ $tech->prenom ?? '' }} {{ $tech->nom ?? $tech->name }}</option>
                                         @endforeach
@@ -455,8 +879,9 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="fas fa-user-plus me-2"></i>Assigner l'équipe
+                            <button type="submit" class="btn btn-primary-modern btn-modern w-100">
+                                <i class="fas fa-user-plus" style="color: white"></i>
+                                <b style="color: white"> Assign Team</b>
                             </button>
                         </form>
                     </div>
@@ -466,148 +891,265 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Gestion des techniciens
+        // Animation d'entrée progressive
+        const cards = document.querySelectorAll('.modern-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // Gestion du nombre de techniciens
         const nombreInput = document.getElementById('nombre_techniciens');
         const container = document.getElementById('techniciens_select_container');
-        const techniciens = @json($techniciens);
+        const techniciens = @json($techniciens ?? []);
 
-        function createSelect(index) {
-            const div = document.createElement('div');
-            div.classList.add('mb-3');
+        if (nombreInput && container) {
+            function createSelect(index) {
+                const div = document.createElement('div');
+                div.classList.add('mb-3');
 
-            const label = document.createElement('label');
-            label.classList.add('form-label', 'detail-label');
-            label.textContent = `Technicien ${index + 1}`;
+                const label = document.createElement('label');
+                label.classList.add('form-label-modern');
+                label.textContent = `Technician ${index + 1}`;
 
-            const select = document.createElement('select');
-            select.classList.add('form-select');
-            select.name = 'techniciens[]';
-            select.required = true;
+                const select = document.createElement('select');
+                select.classList.add('form-control', 'form-control-modern');
+                select.name = 'techniciens[]';
+                select.required = true;
 
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.disabled = true;
-            defaultOption.selected = true;
-            defaultOption.textContent = '-- Sélectionner --';
-            select.appendChild(defaultOption);
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                defaultOption.textContent = '-- Select Technician --';
+                select.appendChild(defaultOption);
 
-            techniciens.forEach(t => {
-                const option = document.createElement('option');
-                option.value = t.id;
-                option.textContent = (t.prenom ?? '') + ' ' + (t.nom ?? t.name);
-                select.appendChild(option);
+                techniciens.forEach(t => {
+                    const option = document.createElement('option');
+                    option.value = t.id;
+                    option.textContent = (t.prenom ?? '') + ' ' + (t.nom ?? t.name);
+                    select.appendChild(option);
+                });
+
+                div.appendChild(label);
+                div.appendChild(select);
+
+                return div;
+            }
+
+            nombreInput.addEventListener('input', () => {
+                let count = parseInt(nombreInput.value) || 1;
+                if(count < 1) count = 1;
+                if(count > techniciens.length) count = techniciens.length;
+
+                container.innerHTML = '';
+                for(let i = 0; i < count; i++) {
+                    container.appendChild(createSelect(i));
+                }
             });
-
-            div.appendChild(label);
-            div.appendChild(select);
-
-            return div;
         }
 
-        nombreInput.addEventListener('input', () => {
-            let count = parseInt(nombreInput.value) || 1;
-            if(count < 1) count = 1;
-            if(count > techniciens.length) count = techniciens.length;
+        // Gestion de l'assignation des techniciens
+        const assignForm = document.getElementById('assignTechniciensForm');
+        if (assignForm) {
+            assignForm.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-            container.innerHTML = '';
-            for(let i = 0; i < count; i++) {
-                container.appendChild(createSelect(i));
-            }
-        });
+                const selects = this.querySelectorAll('select[name="techniciens[]"]');
+                const techniciensData = Array.from(selects).map(select => {
+                    return {
+                        id_technicien: parseInt(select.value),
+                        nom: select.options[select.selectedIndex].text
+                    };
+                });
 
-        // Gestion du submit
-        document.getElementById('assignTechniciensForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const selects = this.querySelectorAll('select[name="techniciens[]"]');
-            const techniciensData = Array.from(selects).map(select => {
-                return {
-                    id_technicien: parseInt(select.value),
-                    nom: select.options[select.selectedIndex].text
-                };
-            });
-
-            fetch("{{ route('demandes.updateTechniciens', $demande->id) }}", {
-                method: 'put',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ techniciens: techniciensData }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Succès',
-                        text: data.message,
-                        confirmButtonColor: '#4e73df',
-                    }).then(() => window.location.reload());
-                } else {
+                fetch("{{ route('demandes.updateTechniciens', $demande->id) }}", {
+                    method: 'put',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ techniciens: techniciensData }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: data.message,
+                            confirmButtonColor: '#4361ee',
+                        }).then(() => window.location.reload());
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.message || 'An error occurred',
+                            confirmButtonColor: '#4361ee',
+                        });
+                    }
+                })
+                .catch(error => {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Erreur',
-                        text: data.message || 'Une erreur est survenue',
-                        confirmButtonColor: '#e74a3b',
+                        title: 'Network Error',
+                        text: 'Unable to contact the server',
+                        confirmButtonColor: '#4361ee',
                     });
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erreur réseau',
-                    text: 'Impossible de contacter le serveur',
-                    confirmButtonColor: '#e74a3b',
                 });
             });
-        });
+        }
 
         // Gestion du formulaire de prix
-        document.getElementById('prixForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        const prixForm = document.getElementById('prixForm');
+        if (prixForm) {
+            prixForm.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-            const form = this;
-            const formData = new FormData(form);
+                const form = this;
+                const formData = new FormData(form);
 
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: "Quote sent successfully, awaiting client acceptance.",
+                            confirmButtonColor: '#4361ee',
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: "Quote sent successfully, awaiting client acceptance.",
+                            confirmButtonColor: '#4361ee',
+                        })
+                    }
+                })
+                .catch(error => {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Succès!',
-                        text: "L'offre a été envoyée, en attente d'acceptation du client.",
-                        confirmButtonColor: '#4e73df',
-                    }).then(() => {
-                        window.location.reload();
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: data.message || "Une erreur est survenue lors de l'envoi de l'offre",
-                        confirmButtonColor: '#e74a3b',
-                    });
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erreur',
-                    text: "Une erreur réseau est survenue",
-                    confirmButtonColor: '#e74a3b',
+                        title: 'Success!',
+                        text: "Quote sent successfully, awaiting client acceptance.",
+                        confirmButtonColor: '#4361ee',
+                    })
                 });
             });
+        }
+
+        // Effets de survol pour les cartes
+        document.querySelectorAll('.modern-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Animation des info-items
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = Math.random() * 0.3 + 's';
+                    entry.target.classList.add('animate-slide-up');
+                }
+            });
+        });
+
+        document.querySelectorAll('.info-item, .team-member').forEach(item => {
+            observer.observe(item);
+        });
+
+        // Smooth scroll pour les ancres
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Loading states pour les boutons
+        document.querySelectorAll('.btn-modern').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (this.type === 'submit') {
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                    this.disabled = true;
+
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.disabled = false;
+                    }, 3000);
+                }
+            });
+        });
+
+        // Tooltips pour une meilleure UX
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Auto-resize pour les textareas
+        document.querySelectorAll('textarea').forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        });
+
+        // Validation en temps réel pour les formulaires
+        document.querySelectorAll('.form-control-modern').forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.checkValidity()) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    this.classList.remove('is-valid');
+                    this.classList.add('is-invalid');
+                }
+            });
+        });
+
+        // Shortcuts clavier
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + S pour sauvegarder
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                const submitBtn = document.querySelector('button[type="submit"]');
+                if (submitBtn && !submitBtn.disabled) {
+                    submitBtn.click();
+                }
+            }
+
+            // Escape pour fermer les modals
+            if (e.key === 'Escape') {
+                const activeModal = document.querySelector('.modal.show');
+                if (activeModal) {
+                    bootstrap.Modal.getInstance(activeModal).hide();
+                }
+            }
         });
     </script>
 </body>

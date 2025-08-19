@@ -70,72 +70,73 @@
     </style>
 </head>
 <body>
-    <div style="margin-left: 20px ; margin-top:20px">
-        <div>
-            @include('Sidebar.responsablePiece')
-        </div>
+ <div style="margin-left: 20px ; margin-top:20px">
+    <div>
+        @include('Sidebar.responsablePiece')
+    </div>
 
-        <div class="main-content flex-grow-1">
-            <div class="container-fluid">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Liste des Demandes</h1>
-                </div>
+    <div class="main-content flex-grow-1">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Requests List</h1>
+            </div>
 
-                <!-- Section Filtres -->
-                <div class="filter-section mb-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Rechercher..." id="searchInput">
-                                <button class="btn btn-outline-secondary" type="button">
-                                    <i class="bi bi-search"></i>
-                                </button>
-                            </div>
+            <!-- Filters Section -->
+            <div class="filter-section mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search..." id="searchInput">
+                            <button class="btn btn-outline-secondary" type="button">
+                                <i class="bi bi-search"></i>
+                            </button>
                         </div>
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <label class="input-group-text" for="statusFilter">Statut</label>
-                                <select class="form-select" id="statusFilter">
-                                    <option value="all">Tous les statuts</option>
-                                    <option value="pending">En attente</option>
-                                    <option value="completed">Complété</option>
-                                </select>
-                            </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <label class="input-group-text" for="statusFilter">Status</label>
+                            <select class="form-select" id="statusFilter">
+                                <option value="all">All statuses</option>
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                            </select>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="table-container">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Client</th>
-                                    <th>Téléphone</th>
-                                    <th>Service</th>
-                                    <th>Catégorie</th>
-                                    <th>Voiture</th>
-                                    <th>Forfait</th>
-                                    <th>Date</th>
-                                    <th>Statut</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="demandes-table">
-                                <!-- Les données seront chargées ici via JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center" id="pagination">
-                            <!-- La pagination sera générée ici -->
-                        </ul>
-                    </nav>
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Client</th>
+                                <th>Phone</th>
+                                <th>Service</th>
+                                <th>Category</th>
+                                <th>Car</th>
+                                <th>Package</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="demandes-table">
+                            <!-- Data will be loaded here via JavaScript -->
+                        </tbody>
+                    </table>
                 </div>
+
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <!-- Pagination will be generated here -->
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
+</div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>

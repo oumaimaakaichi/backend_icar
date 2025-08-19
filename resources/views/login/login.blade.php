@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion | Plateforme</title>
+    <title>Login | Platform</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
@@ -133,15 +133,15 @@
                 </div>
             </div>
 
-            <h1 class="text-3xl font-bold text-center mb-2 text-gray-800 animate__animated animate__fadeIn">Bienvenue</h1>
-            <p class="text-center text-gray-500 mb-6 animate__animated animate__fadeIn animate__delay-1s">Connectez-vous pour accéder à votre compte</p>
+            <h1 class="text-3xl font-bold text-center mb-2 text-gray-800 animate__animated animate__fadeIn">Welcome</h1>
+            <p class="text-center text-gray-500 mb-6 animate__animated animate__fadeIn animate__delay-1s">Sign in to access your account</p>
 
             <!-- Error messages -->
             @if(session('error'))
                 <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg animate__animated animate__shakeX flex items-start">
                     <i class="fas fa-exclamation-circle mt-1 mr-3 flex-shrink-0"></i>
                     <div>
-                        <span class="font-medium">Erreur :</span> {{ session('error') }}
+                        <span class="font-medium">Error:</span> {{ session('error') }}
                     </div>
                 </div>
             @endif
@@ -159,7 +159,7 @@
                 </button>
             </div>
 
-            <div class="divider text-sm mb-6 animate__animated animate__fadeIn animate__delay-1s">OU</div>
+            <div class="divider text-sm mb-6 animate__animated animate__fadeIn animate__delay-1s">OR</div>
 
             <!-- Login form -->
             <form action="{{ route('login') }}" method="POST" class="space-y-5">
@@ -176,7 +176,7 @@
                             name="email"
                             id="email"
                             class="input-field w-full pl-10 pr-3 py-3 rounded-lg focus:outline-none placeholder-gray-400"
-                            placeholder="Adresse email"
+                            placeholder="Email address"
                             required
                             autofocus
                         >
@@ -194,7 +194,7 @@
                             name="password"
                             id="password"
                             class="input-field w-full pl-10 pr-10 py-3 rounded-lg focus:outline-none placeholder-gray-400"
-                            placeholder="Mot de passe"
+                            placeholder="Password"
                             required
                         >
                         <button
@@ -208,9 +208,9 @@
                     <div class="mt-2 flex justify-between items-center">
                         <label class="inline-flex items-center">
                             <input type="checkbox" class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out rounded border-gray-300">
-                            <span class="ml-2 text-sm text-gray-600">Se souvenir de moi</span>
+                            <span class="ml-2 text-sm text-gray-600">Remember me</span>
                         </label>
-                        <a href="#" class="text-sm text-indigo-600 hover:underline">Mot de passe oublié ?</a>
+                        <a href="#" class="text-sm text-indigo-600 hover:underline">Forgot password?</a>
                     </div>
                 </div>
 
@@ -219,15 +219,15 @@
                     type="submit"
                     class="btn-login w-full text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 animate__animated animate__fadeIn animate__delay-3s flex items-center justify-center"
                 >
-                    <i class="fas fa-sign-in-alt mr-2"></i> Connexion
+                    <i class="fas fa-sign-in-alt mr-2"></i> Sign In
                 </button>
             </form>
 
             <!-- Registration link -->
             <div class="text-center mt-6 animate__animated animate__fadeIn animate__delay-4s">
                 <p class="text-gray-600 text-sm">
-                    Nouveau sur notre plateforme ?
-                    <a href="{{ route('registreOption') }}" class="font-semibold text-indigo-600 hover:underline ml-1">Créer un compte</a>
+                    New to our platform?
+                    <a href="{{ route('registreOption') }}" class="font-semibold text-indigo-600 hover:underline ml-1">Create an account</a>
                 </p>
             </div>
         </div>

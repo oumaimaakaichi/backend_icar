@@ -20,19 +20,20 @@ class AuthController extends Controller
 
     // Connexion API pour mobile
     public function loginUser(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
+{
+    $credentials = $request->only('email', 'password');
 
-        if (!$token = Auth::guard('api')->attempt($credentials)) {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
-        }
-
-        return response()->json([
-            'success' => true,
-            'token' => $token,
-            'user' => Auth::guard('api')->user(),
-        ]);
+    if (!$token = Auth::guard('api')->attempt($credentials)) {
+        return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
     }
+
+    return response()->json([
+        'success' => true,
+        'token' => $token,
+        'user' => Auth::guard('api')->user(),
+    ]);
+}
+
 
     // Traitement de la connexion
     public function login(Request $request)
