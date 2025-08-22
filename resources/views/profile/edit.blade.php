@@ -197,7 +197,7 @@
 <body>
 @include('Sidebar.sidebarExpert')
 
-   <div class="container py-5" style="margin-top: 50px">
+   <div class="container py-5" style="margin-top: 50px ; margin-right:50px">
     <div class="card shadow p-4">
         <div class="profile-card">
             <div class="profile-header">

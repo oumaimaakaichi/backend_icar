@@ -395,7 +395,7 @@
 <!-- Sidebar inclusion (assurez-vous que le fichier sidebar.blade.php existe) -->
 @include('Sidebar.sidebar')
 
-<div class="container-fluid" style="margin-top: 60px ; margin-right:80px">
+<div class="container-fluid" style="margin-top: 80px ; margin-right:80px">
     <div class="main-container animate-fade-in">
         <!-- Header Section -->
         <div class="header-section">

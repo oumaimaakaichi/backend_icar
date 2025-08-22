@@ -33,7 +33,7 @@
         .container {
             padding: 2rem;
             margin-top: 90px;
-            margin-left: 90px;
+            margin-left: 0px;
         }
 
         .header {
@@ -364,7 +364,7 @@
 <body>
     @include('Sidebar.sidebarAtelier')
 
-    <div class="container">
+    <div class="container" style="margin-top: 80px ; margin-right:120px">
         <!-- Header -->
         <div class="header">
             <h3 class="header-title">Maintenance Requests</h3>

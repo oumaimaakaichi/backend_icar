@@ -251,8 +251,8 @@
 <body>
     @include('Sidebar.sidebarAtelier')
 
-    <div class="container-fluid py-4" style="margin-top: 50px">
-        <div class="main-card">
+    <div class="container-fluid py-4" style="margin-top: 80px ; margin-right:100px">
+        <div class="main-card" style="margin-right: 80px">
             <div class="header">
                 <h2><i class="fas fa-clock"></i> Availability Management</h2>
 <p>Set up your time slots for each day of the week</p>

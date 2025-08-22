@@ -52,7 +52,7 @@
             bottom: 0;
             width: 60px;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--success));
+           
             border-radius: 2px;
         }
 
@@ -243,15 +243,11 @@
 
 @include('Sidebar.sidebarExpert')
 
-<div class="container-main">
+<div class="container-main" style="margin-top: 50px">
     <div class="d-flex justify-content-between align-items-center mb-4">
-       <h1 class="page-title">Request List</h1>
+       <h1 class="page-title" style="font-size: 25px">Request List</h1>
 
-        <div>
-            <span class="me-3 text-muted small"><span class="status-indicator indicator-new"></span> New</span>
-<span class="me-3 text-muted small"><span class="status-indicator indicator-assigned"></span> Assigned</span>
-<span class="text-muted small"><span class="status-indicator indicator-offer"></span> Offer</span>
-  </div>
+
     </div>
 
     <!-- Filtres -->

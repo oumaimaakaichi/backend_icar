@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
         :root {
-            --primary-color: #4361ee; /* Cadet blue */
+            --primary-color:  #567288; /* Cadet blue */
             --secondary-color: #6c757d;
             --success-color: #28a745;
             --info-color: #17a2b8;
@@ -35,6 +35,7 @@
         .container {
             padding-top: 20px;
             padding-bottom: 50px;
+            margin-right: 20px
         }
 
         .page-header {
@@ -50,7 +51,7 @@
             border-radius: 10px;
             padding: 25px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            width: 1200px;
+            width: 1300px;
         }
 
         #tableCamions {
@@ -60,7 +61,7 @@
         }
 
         #tableCamions thead th {
-            background-color: var(--primary-color);
+            background-color:  #567288;
             color: white;
             padding: 15px;
             text-align: center;
@@ -217,7 +218,7 @@
             <div class="page-header">
                 <div class="d-flex justify-content-between align-items-center">
                     <h2><i class="fas fa-truck"></i> Truck Management</h2>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterCamionModal">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ajouterCamionModal" style="background-color: #567288">
                         <i class="fas fa-plus me-2"></i>Add Truck
                     </button>
                 </div>

@@ -7,15 +7,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #6bb5ce 0%, #6bb5ce 100%);
-            --secondary-gradient:  linear-gradient(135deg, #6bb5ce 0%, #6bb5ce 100%);
-            --success-gradient:linear-gradient(135deg, #6bb5ce 0%, #6bb5ce 100%);
-            --warning-gradient:linear-gradient(135deg, #6bb5ce 0%, #6bb5ce 100%);
-            --info-gradient:linear-gradient(135deg, #6bb5ce 0%, #6bb5ce 100%);
-            --dark-gradient:linear-gradient(135deg, #6bb5ce 0%, #6bb5ce 100%);
-            --purple-gradient: linear-gradient(135deg, #6bb5ce 0%, #6bb5ce 100%);
-            --orange-gradient: linear-gradient(135deg, #6bb5ce 0%, #6bb5ce 100%);
-            --green-gradient:linear-gradient(135deg, #6bb5ce 0%, #6bb5ce 100%);
+            --primary-gradient: linear-gradient(135deg, #77acbe 0%, #77acbe 100%);
+            --secondary-gradient:  linear-gradient(135deg, #77acbe 0%, #77acbe 100%);
+            --success-gradient:linear-gradient(135deg, #77acbe 0%, #77acbe 100%);
+            --warning-gradient:linear-gradient(135deg, #77acbe 0%, #77acbe 100%);
+            --info-gradient:linear-gradient(135deg, #77acbe 0%, #77acbe 100%);
+            --dark-gradient:linear-gradient(135deg, #77acbe 0%, #77acbe 100%);
+            --purple-gradient: linear-gradient(135deg, #77acbe 0%, #77acbe 100%);
+            --orange-gradient: linear-gradient(135deg, #77acbe 0%, #77acbe 100%);
+            --green-gradient:linear-gradient(135deg, #77acbe 0%, #77acbe 100%);
 
             --bg-primary: #f7f7f7;
             --bg-secondary: #6bb5ce;

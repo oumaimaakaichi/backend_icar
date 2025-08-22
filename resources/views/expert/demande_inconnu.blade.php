@@ -42,6 +42,7 @@
             position: relative;
             padding-bottom: 0.75rem;
             margin-top: 1rem;
+            font-size: 2rem;
         }
 
         .page-title::after {
@@ -51,8 +52,7 @@
             bottom: 0;
             width: 60px;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--success));
-            border-radius: 2px;
+           border-radius: 2px;
         }
 
         .filter-card {
@@ -237,14 +237,10 @@
 <body>
 
 @include('Sidebar.sidebarExpert')
-<div class="container py-5" style="margin-top: 0px">
+<div class="container py-5" style="margin-top: 50px ; margin-right:50px">
     <div class="p-4 d-flex justify-content-between align-items-center mb-4" style="background-color: transparent">
-         <h2 class="page-title">Unknown Issue Requests</h2>
-        <div>
-            <span class="me-3 text-muted small"><span class="status-indicator indicator-new"></span> New</span>
-            <span class="me-3 text-muted small"><span class="status-indicator indicator-assigned"></span> Assigned</span>
-            <span class="text-muted small"><span class="status-indicator indicator-offer"></span> Offer</span>
-        </div>
+         <h2 class="page-title"  style="font-size: 26px">Unknown Issue Requests</h2>
+
     </div>
 
     <!-- Filters -->

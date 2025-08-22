@@ -27,6 +27,7 @@
             margin-top: 20px;
             padding: 2rem;
             transition: all 0.3s;
+            width: 100%
         }
 
         @media (max-width: 992px) {
@@ -42,6 +43,7 @@
             position: relative;
             padding-bottom: 0.75rem;
             margin-top: 1.5rem;
+            font-size: 3.5rem
         }
 
         .page-title::after {
@@ -238,14 +240,10 @@
 
 @include('Sidebar.sidebarExpert')
 
-<div class="container-main" style="margin-right: 80px">
+<div class="container-main" style="margin-top:60px;margin-right: 80px">
     <div class="d-flex justify-content-between align-items-center mb-4">
-       <h1 class="page-title">known Issue Requests list</h1>
-        <div>
-            <span class="me-3 text-muted small"><span class="status-indicator indicator-new"></span> New</span>
-            <span class="me-3 text-muted small"><span class="status-indicator indicator-assigned"></span> Assigned</span>
-            <span class="text-muted small"><span class="status-indicator indicator-offer"></span> Offer</span>
-        </div>
+       <h1 class="page-title"  style="font-size: 26px">known Issue Requests list</h1>
+
     </div>
 
     <!-- Filters -->

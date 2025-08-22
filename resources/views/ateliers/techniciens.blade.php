@@ -10,7 +10,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         :root {
-            --primary: #4361ee;
+            --primary: #3b71a7;
             --primary-light: #e0e7ff;
             --primary-dark: #309ad3;
             --secondary: #06b6d4;
@@ -37,6 +37,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             transition: all 0.3s ease;
+            width: 1300px
         }
 
         .card:hover {
@@ -47,7 +48,7 @@
         .card-header {
             background-color: white;
             border-bottom: 1px solid var(--border);
-            padding: 1.25rem 1.5rem;
+            padding: 0rem 1rem;
             border-radius: 12px 12px 0 0 !important;
         }
 
@@ -57,7 +58,7 @@
         }
 
         .table thead th {
-            background-color: var(--primary);
+            background-color: #3b71a7;
             color: white;
             font-weight: 600;
             vertical-align: middle;
@@ -220,7 +221,7 @@
 <body class="bg-light">
     @include('Sidebar.sidebarAtelier')
 
-    <div class="container py-4" style="margin-top: 60px ; margin-right:60px">
+    <div class="container py-5" style="margin-top: 80px ; margin-right:120px">
         <!-- Header avec bouton d'ajout -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
@@ -230,7 +231,7 @@
 
 
             </div>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTechnicienModal">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTechnicienModal" style="background-color: #3b71a7">
                 <i class="fas fa-plus me-2"></i>New Technician
             </button>
         </div>

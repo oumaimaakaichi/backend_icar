@@ -43,7 +43,7 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #4f6184 100%);
             color: white;
             padding: 30px 40px;
             position: relative;
@@ -230,7 +230,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #667eea 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -397,7 +397,7 @@
 <body>
     @include('Sidebar.sidebarExpert')
 
-   <div class="container py-5" style="margin-top: 50px">
+   <div class="container py-5" style="margin-top: 50px ; margin-right:50px">
     <div class="header">
         <div class="header-content">
             <div>

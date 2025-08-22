@@ -177,7 +177,7 @@ Route::get('/flux-par-demande/{demandeId}', [FluxDirectController::class, 'getFl
 
 Route::post('/flux-par-demandeInconnu', [FluxDirectInconnuPanneController::class, 'store']);
 Route::get('/flux-par-demande_inconnu/{demandeId}', [FluxDirectInconnuPanneController::class, 'getFluxParDemande']);
-
+Route::post('/tickets/{id}/generate-ai-response', [TicketAssistanceController::class, 'generateAIResponse'])->name('tickets.generate-ai-response');
 Route::get('/flux-par-demande_inconnu-entretient/{demandeId}', [FluxDirectInconnuPanneController::class, 'getFluxParDemandeEntretient']);
 Route::get('/flux-direct/{demandeId}/{technicienId}', [FluxDirectInconnuPanneController::class, 'getOrCreate']);
 Route::get('/flux-direct-inconnu/{demandeId}/{technicienId}', [FluxDirectController::class, 'getOrCreate']);

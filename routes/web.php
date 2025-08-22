@@ -615,7 +615,7 @@ Route::middleware(['auth:entreprise'])->group(function () {
     })->name('entreprise.employeeEntreprise');
 
     });
-
+Route::post('/tickets/{id}/generate-ai-response', [TicketAssistanceController::class, 'generateAIResponse'])->name('tickets.generate-ai-response');
 Route::post('/techniciens', [UserController::class, 'storee'])->name('techniciens.storee');
 Route::post('/techniciensStore', [UserController::class, 'storeTech'])->name('techniciens.storeTech');
 Route::post('/expertStore', [UserController::class, 'storeExpert'])->name('expert.storeExpert');

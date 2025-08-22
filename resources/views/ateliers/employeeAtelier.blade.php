@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #4361ee 0%, #4361ee 100%);
+            --primary-gradient: linear-gradient(135deg, #3b71a7 0%, #3b71a7 100%);
             --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
@@ -37,6 +37,7 @@
             min-height: 100vh;
             color: var(--text-primary);
             overflow-x: hidden;
+            margin-right: 50px
         }
 
         /* Animated background particles */
@@ -100,7 +101,7 @@
         }
 
         .page-title {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
             font-weight: 700;
             background: linear-gradient(135deg, #000000, #764ba2);
             -webkit-background-clip: text;
@@ -239,9 +240,9 @@
         }
 
         .status-active {
-            background: var(--success-gradient);
+            background: #3b71a7;
             color: white;
-            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+            box-shadow: 0 4px 15px rgba(110, 145, 175, 0.3);
         }
 
         .status-inactive {
@@ -421,7 +422,7 @@
     <!-- Background particles -->
 
 
-    <div class="container-fluid py-4" style="margin-top: 50px">
+    <div class="container-fluid py-4" style="margin-top: 50px ; margin-right:50px">
         <!-- Page Header -->
         <div class="page-header animate-fade-in">
            <h1 class="page-title">
@@ -510,7 +511,7 @@
             @if($employees->count())
             <div class="d-flex justify-content-between align-items-center mt-4 animate-fade-in animate-delay-3">
                 <div class="text-muted">
-                    <strong>Affichage {{ $employees->firstItem() }} à {{ $employees->lastItem() }} sur {{ $employees->total() }} entrées</strong>
+                    <strong>Showing {{ $employees->firstItem() }} to {{ $employees->lastItem() }} of {{ $employees->total() }} entries</strong>
                 </div>
                 <nav>
                     <ul class="pagination pagination-modern mb-0">

@@ -518,14 +518,14 @@
     </div>
 
     <!-- Loading overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-overlay" id="loadingOverlay" style="margin-right: 50px">
         <div class="loading-content">
             <div class="spinner"></div>
             <p>Redirection en cours...</p>
         </div>
     </div>
 
-    <div class="main-container" >
+    <div class="main-container" style="margin-right: 50px">
         <div class="content-wrapper">
             <!-- Header Section -->
           <div class="header-section">
@@ -623,27 +623,26 @@
             </div>
 
             <!-- Stats Section -->
-         <div class="stats-section">
-    <div class="stats-grid">
-        <div class="stat-item">
-            <div class="stat-number">98%</div>
-            <div class="stat-label">Satisfaction Rate</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">24h</div>
-            <div class="stat-label">Average Response Time</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">1500+</div>
-            <div class="stat-label">Completed Interventions</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">5★</div>
-            <div class="stat-label">Average Customer Rating</div>
-        </div>
-    </div>
-</div>
-
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">Taux de satisfaction</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24h</div>
+                        <div class="stat-label">Délai moyen d'intervention</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1500+</div>
+                        <div class="stat-label">Interventions réalisées</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">5★</div>
+                        <div class="stat-label">Note moyenne clients</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -63,7 +63,7 @@
         .sidebar-nav a:hover,
         .sidebar-nav a.active {
             background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
+            color: #567288;
             border-right: 3px solid #667eea;
         }
 
@@ -129,11 +129,11 @@
         }
 
         .stat-card.pending::before {
-            background: linear-gradient(90deg, #ffc107, #fd7e14);
+            background: linear-gradient(90deg, #959fca, #444a62);
         }
 
         .stat-card.resolved::before {
-            background: linear-gradient(90deg, #28a745, #20c997);
+            background: linear-gradient(90deg, #4a5d4e, #4a5d4e);
         }
 
         .stat-card.total::before {
@@ -188,7 +188,7 @@
         }
 
         .modern-table thead th {
-            background: #4361ee;
+            background: #567288;
             border: none;
             padding: 0.75rem 2rem;
             font-weight: 600;
@@ -324,7 +324,7 @@
         }
 
         .modal-header {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #4f6184, #4f6184);
             color: white;
             border: none;
             border-radius: 20px 20px 0 0;
@@ -619,7 +619,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-modern btn-primary-modern" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-modern btn-primary-modern" data-bs-dismiss="modal" style="background-color: #4f6184 ; color:white">
                     <i class="fas fa-times me-2"></i>Close
                 </button>
             </div>
@@ -881,6 +881,7 @@
                 }
             }
         `).appendTo('head');
+        
     });
     </script>
 </body>

@@ -446,7 +446,7 @@
 
 @include('Sidebar.sidebarExpert')
 
-<div class="container py-4" style="margin-top: 60px">
+<div class="container py-4" style="margin-top: 60px ; margin-right:50px">
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>

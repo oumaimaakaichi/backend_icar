@@ -78,7 +78,7 @@ class TicketAssistanceController extends Controller
 public function closeTicket($id)
 {
     $ticket = TicketAssistance::findOrFail($id);
-
+    
     $ticket->update([
         'statut' => 'ferme',
         'reponse' => $ticket->reponse ?? 'Ticket fermé sans réponse'

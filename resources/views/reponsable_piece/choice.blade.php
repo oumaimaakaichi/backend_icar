@@ -117,6 +117,7 @@
             justify-content: center;
             padding: 2rem;
             margin-top: 70px;
+            margin-right: 60px
         }
 
         .content-wrapper {

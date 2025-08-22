@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Expert sidebar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
@@ -85,7 +85,7 @@
         }
 
         .sidebar-header {
-            padding: 25px 20px;
+            padding: 25px 30px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             flex-direction: column;
@@ -296,6 +296,61 @@
             left: var(--sidebar-collapsed-width);
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .toggle-sidebar {
+            font-size: 20px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 10px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-sidebar:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 0;
+            letter-spacing: -0.5px;
+            margin-top: 0px
+        }
+
+        .page-breadcrumb {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        .breadcrumb-item {
+            color: var(--text-light);
+        }
+
+        .breadcrumb-item.active {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .breadcrumb-separator {
+            margin: 0 8px;
+            color: var(--text-light);
+        }
+
         .header-right {
             display: flex;
             align-items: center;
@@ -308,7 +363,6 @@
             color: var(--text-light);
             font-size: 1.2rem;
             transition: var(--transition);
-            margin-left: 1120px;
         }
 
         .notification-icon:hover {
@@ -335,7 +389,6 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            margin-left: 0px;
         }
 
         .user-avatar {
@@ -350,7 +403,6 @@
             font-weight: 600;
             font-size: 14px;
             transition: var(--transition);
-            margin-right: 15px;
         }
 
         .user-info:hover .user-avatar {
@@ -508,9 +560,7 @@
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <button class="sidebar-toggle" id="sidebar-toggle">
-            <i class="fas fa-chevron-left"></i>
-        </button>
+       
 
        <div class="sidebar-header">
     <div class="sidebar-logo">
@@ -527,19 +577,15 @@
         <div class="sidebar-menu">
             <div class="menu-section">
                 <div class="menu-section-title">Main</div>
-                <a href="{{ route('demandes.statistics') }}" class="menu-link">
+                <a href="{{ route('demandes.statistics') }}" class="menu-link" data-page="Dashboard" data-breadcrumb="Home > Dashboard">
                     <i class="fas fa-chart-pie"></i>
                     <span>Dashboard</span>
                 </a>
-               <!--<a href="{{ route('expert.demande_maintenance') }}" class="menu-link">
-                    <i class="fas fa-tools"></i>
-                    <span>Requests</span>
-                </a>-->
-                <a href="{{ route('expert.request_choice') }}" class="menu-link">
+                <a href="{{ route('expert.request_choice') }}" class="menu-link" data-page="Requests" data-breadcrumb="Home > Requests">
                     <i class="fas fa-tools"></i>
                     <span>Requests</span>
                 </a>
-                <a href="{{ route('expert.demande_autorisation') }}" class="menu-link">
+                <a href="{{ route('expert.demande_autorisation') }}" class="menu-link" data-page="Authorization" data-breadcrumb="Home > Authorization">
                     <i class="fas fa-key"></i>
                     <span>Authorization</span>
                 </a>
@@ -547,11 +593,11 @@
 
             <div class="menu-section">
                 <div class="menu-section-title">Management</div>
-                <a  href="{{ route('expert.techniciens') }}" class="menu-link">
+                <a  href="{{ route('expert.techniciens') }}" class="menu-link" data-page="Technician" data-breadcrumb="Home > Management > Technician">
                     <i class="fas fa-users"></i>
                     <span>Technician</span>
                 </a>
-                <a href="{{ route('profile.edit') }}" class="menu-link">
+                <a href="{{ route('profile.edit') }}" class="menu-link" data-page="Settings" data-breadcrumb="Home > Management > Settings">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </a>
@@ -571,9 +617,18 @@
 
     <!-- Header Section -->
     <header class="main-header">
-        <button class="btn btn-sm btn-outline-secondary d-lg-none" id="mobile-toggle">
+        <button class="toggle-sidebar" id="toggle-sidebar">
             <i class="fas fa-bars"></i>
         </button>
+
+        <div class="header-left" style="margin-right: 700px">
+            <h1 class="page-title" id="page-title">Dashboard</h1>
+            <div class="page-breadcrumb" id="page-breadcrumb">
+                <span class="breadcrumb-item">Home</span>
+                <span class="breadcrumb-separator">></span>
+                <span class="breadcrumb-item active">Dashboard</span>
+            </div>
+        </div>
 
         <div class="header-right">
             <div class="notification-icon">
@@ -582,43 +637,47 @@
             </div>
 
             <div class="user-info" id="user-info-trigger">
-           <div class="user-avatar">
-  <i class="fas fa-user" style="font-size: 20px;color:rgb(105, 104, 104)"></i>
-</div>
-
-
+                <div class="user-avatar">
+                    <i class="fas fa-user" style="font-size: 20px;color:rgb(105, 104, 104)"></i>
+                </div>
+                <div class="user-name">
+                    @auth('web')
+                        {{ Auth::guard('web')->user()->nom }}
+                    @else
+                        Guest
+                    @endauth
+                </div>
             </div>
+        </div>
+
+        <!-- User Popup -->
+        <div class="user-popup" id="user-popup">
+            <div class="user-popup-info">
+                <div class="popup-user-avatar">
+                    <i class="fas fa-user" style="font-size: 20px;color:gray"></i>
+                </div>
+                @auth('web')
+                <div class="popup-user-name">
+                    {{ Auth::guard('web')->user()->nom }} {{ Auth::guard('web')->user()->prenom }}
+                </div>
+                <div class="popup-user-email">
+                    {{ Auth::guard('web')->user()->email }}
+                </div>
+                @else
+                <div class="popup-user-name">Guest</div>
+                @endauth
+            </div>
+            <ul class="user-popup-menu">
+               <li><a href="{{ route('profile.edit') }}"><i class="fas fa-user"></i> Profile</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="#" id="popup-logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
         </div>
     </header>
 
-    <!-- User Popup -->
-    <div class="user-popup" id="user-popup">
-        <div class="user-popup-info">
-            <div class="popup-user-avatar">
-  <i class="fas fa-user" style="font-size: 20px;color:gray"></i>
-            </div>
-            @auth('web')
-            <div class="popup-user-name">
-                {{ Auth::guard('web')->user()->nom }} {{ Auth::guard('web')->user()->prenom }}
-            </div>
-            <div class="popup-user-email">
-                {{ Auth::guard('web')->user()->email }}
-            </div>
-            @else
-            <div class="popup-user-name">Guest</div>
-            @endauth
-        </div>
-        <ul class="user-popup-menu">
-           <li><a href="{{ route('profile.edit') }}"><i class="fas fa-user"></i> Profile</a></li>
-            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-            <li><a href="#" id="popup-logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
-    </div>
-
     <!-- Main Content -->
     <div class="main-content">
-
-        </div>
+        <!-- Votre contenu principal ici -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -627,7 +686,7 @@
             // Sidebar toggle functionality
             const sidebar = document.getElementById('sidebar');
             const sidebarToggle = document.getElementById('sidebar-toggle');
-            const mobileToggle = document.getElementById('mobile-toggle');
+            const toggleSidebarBtn = document.getElementById('toggle-sidebar');
 
             if (sidebarToggle) {
                 sidebarToggle.addEventListener('click', function() {
@@ -643,24 +702,131 @@
                 });
             }
 
-            if (mobileToggle) {
-                mobileToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('show');
+            if (toggleSidebarBtn) {
+                toggleSidebarBtn.addEventListener('click', function() {
+                    sidebar.classList.toggle('collapsed');
+                    const icon = this.querySelector('i');
+                    if (sidebar.classList.contains('collapsed')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-indent');
+                    } else {
+                        icon.classList.remove('fa-indent');
+                        icon.classList.add('fa-bars');
+                    }
                 });
             }
+
+            // Function to update page title and breadcrumb based on current URL
+            function updatePageInfo() {
+                const currentPath = window.location.pathname;
+                const pageTitle = document.getElementById('page-title');
+                const pageBreadcrumb = document.getElementById('page-breadcrumb');
+                const menuLinks = document.querySelectorAll('.menu-link');
+
+                // Define route mappings
+                const routeMappings = {
+                    '/statistiques/demandes': { title: 'Dashboard', breadcrumb: 'Home > Dashboard' },
+                    '/request-choice': { title: 'Requests', breadcrumb: 'Home > Requests' },
+                    '/demande_autorisation': { title: 'Authorization', breadcrumb: 'Home > Authorization' },
+                    '/exper/technicien': { title: 'Technician', breadcrumb: 'Home > Management > Technician' },
+                    '/profile': { title: 'Settings', breadcrumb: 'Home > Management > Settings' },
+                     '/demande_maintenance': { title: 'known fault', breadcrumb: 'Home > Management > known fault' },
+                      '/demande_maintenanceInconnu': { title: 'Unknown fault', breadcrumb: 'Home > Management > Unknown fault' }
+              
+                };
+
+                // Find matching route
+                let matchedRoute = null;
+                for (const [route, info] of Object.entries(routeMappings)) {
+                    if (currentPath.includes(route)) {
+                        matchedRoute = info;
+                        break;
+                    }
+                }
+
+                // Update page title and breadcrumb
+                if (matchedRoute) {
+                    pageTitle.textContent = matchedRoute.title;
+
+                    const breadcrumbParts = matchedRoute.breadcrumb.split(' > ');
+                    let breadcrumbHTML = '';
+
+                    breadcrumbParts.forEach((part, index) => {
+                        if (index === breadcrumbParts.length - 1) {
+                            breadcrumbHTML += `<span class="breadcrumb-item active">${part}</span>`;
+                        } else {
+                            breadcrumbHTML += `<span class="breadcrumb-item">${part}</span>`;
+                            if (index < breadcrumbParts.length - 1) {
+                                breadcrumbHTML += `<span class="breadcrumb-separator">></span>`;
+                            }
+                        }
+                    });
+
+                    pageBreadcrumb.innerHTML = breadcrumbHTML;
+
+                    // Update active menu item
+                    menuLinks.forEach(link => {
+                        link.classList.remove('active');
+                        const linkHref = link.getAttribute('href');
+
+                        if (linkHref === currentPath || 
+                            (linkHref && currentPath.includes(linkHref.replace(window.location.origin, '')))) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            }
+
+            // Call on page load
+            updatePageInfo();
 
             // Active menu item
             const menuLinks = document.querySelectorAll(".menu-link");
             const currentURL = window.location.pathname;
+            const pageTitle = document.getElementById('page-title');
+            const pageBreadcrumb = document.getElementById('page-breadcrumb');
 
             menuLinks.forEach(link => {
-                if (link.getAttribute("href") === currentURL) {
+                if (link.getAttribute("href") === currentURL || 
+                    (link.getAttribute("href") && currentURL.includes(link.getAttribute("href").replace(window.location.origin, '')))) {
                     link.classList.add("active");
                 }
 
-                link.addEventListener('click', function() {
+                link.addEventListener('click', function(e) {
+                    // Only prevent default for links that don't navigate
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                    }
+
+                    // Update active menu item
                     menuLinks.forEach(l => l.classList.remove('active'));
                     this.classList.add('active');
+
+                    // Update page title and breadcrumb
+                    const pageNameAttr = this.getAttribute('data-page');
+                    const breadcrumbAttr = this.getAttribute('data-breadcrumb');
+
+                    if (pageNameAttr) {
+                        pageTitle.textContent = pageNameAttr;
+                    }
+
+                    if (breadcrumbAttr) {
+                        const breadcrumbParts = breadcrumbAttr.split(' > ');
+                        let breadcrumbHTML = '';
+
+                        breadcrumbParts.forEach((part, index) => {
+                            if (index === breadcrumbParts.length - 1) {
+                                breadcrumbHTML += `<span class="breadcrumb-item active">${part}</span>`;
+                            } else {
+                                breadcrumbHTML += `<span class="breadcrumb-item">${part}</span>`;
+                                if (index < breadcrumbParts.length - 1) {
+                                    breadcrumbHTML += `<span class="breadcrumb-separator">></span>`;
+                                }
+                            }
+                        });
+
+                        pageBreadcrumb.innerHTML = breadcrumbHTML;
+                    }
 
                     // Close sidebar on mobile after clicking a link
                     if (window.innerWidth < 992) {

@@ -11,7 +11,7 @@
 
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #4361ee 0%, #4361ee 100%);
+            --primary-gradient: linear-gradient(135deg, #567288 0%,  #567288 100%);
             --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             --success-gradient: linear-gradient(135deg, #4facfe 0%, #4facfe 100%);
             --warning-gradient: linear-gradient(135deg, #63a270 0%, #63a270 100%);
@@ -146,7 +146,7 @@
         .stat-card.pending .stat-number { color: #f5576c; }
         .stat-card.accepted .stat-number { color: #4facfe; }
         .stat-card.refused .stat-number { color: #ff9a9e; }
-        .stat-card.active .stat-number { color: #43e97b; }
+        .stat-card.active .stat-number { color: #525f56; }
 
         .stat-label {
             color: var(--text-light);
@@ -429,8 +429,8 @@
 <body>
     @include('Sidebar.sidebar')
 
-    <div class="container-fluid" style="margin-top: 40px">
-        <div class="main-container animate-fade-in" style="margin-top: 80px;">
+    <div class="container-fluid" style="margin-top: 40px;margin-right:80px">
+        <div class="main-container animate-fade-in" style="margin-top: 80px">
             <!-- Header Section -->
             <div class="header-section">
                   <div class="header-title">

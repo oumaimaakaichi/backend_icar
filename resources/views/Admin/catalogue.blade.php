@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4361ee;
+            --primary-color:  #567288;
             --secondary-color: #3f37c9;
             --accent-color: #4cc9f0;
             --dark-color: #2b2d42;
@@ -46,7 +46,7 @@
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transition: transform 0.3s, box-shadow 0.3s;
-            width: 1200px;
+            width: 1300px;
         }
 
         .card:hover {
@@ -61,11 +61,11 @@
 
         .table {
             margin-bottom: 0;
-
+width:100%
         }
 
         .table thead th {
-            background-color: var(--primary-color);
+            background-color: #567288;
             color: white;
             border: none;
             font-weight: 500;
@@ -80,7 +80,7 @@
         }
 
         .btn-primary {
-            background-color: var(--primary-color);
+            background-color: #567288;
             border: none;
             padding: 8px 16px;
             border-radius: 6px;
@@ -201,7 +201,7 @@
             left: 0;
             width: 50px;
             height: 4px;
-            background: var(--accent-color);
+         
             border-radius: 2px;
         }
 
@@ -228,7 +228,7 @@
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4" style="margin-top: 40px">
                     <h3 class="page-title" >Parts Catalog Management</h3>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCatalogueModal">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCatalogueModal" style="background-color:  #567288">
                         <i class="fas fa-plus me-2"></i>Add Part
                     </button>
                 </div>

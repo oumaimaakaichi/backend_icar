@@ -50,15 +50,15 @@
         .header {
             background: white;
             border-radius: var(--border-radius);
-            padding: 2rem;
-            margin-bottom: 2rem;
+            padding: 1rem;
+
             box-shadow: var(--box-shadow);
             border-left: 5px solid var(--primary-color);
             animation: fadeIn 0.6s ease-out;
         }
 
         .header h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--primary-color);
             margin-bottom: 0.5rem;
@@ -124,8 +124,8 @@
         .filters-section {
             background: white;
             border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
             box-shadow: var(--box-shadow);
         }
 
@@ -208,14 +208,15 @@
         }
 
         .table th {
-            padding: 1.2rem 1rem;
+            padding: 1.4rem;
             text-align: left;
             font-weight: 600;
-            color: 4361ee;
-            font-size: 0.85rem;
+            color: #4361ee;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border: none;
+            margin-left: 50px
         }
 
         .table th:first-child {
@@ -227,7 +228,7 @@
         }
 
         .table td {
-            padding: 1.2rem 1rem;
+            padding: 1.2rem ;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             vertical-align: middle;
             transition: var(--transition);
@@ -486,7 +487,7 @@
                         <th><i class="fas fa-phone"></i> Phone</th>
                         <th><i class="fas fa-car"></i> car</th>
                         <th><i class="fas fa-calendar-day"></i> Date</th>
-                        <th><i class="fas fa-cogs"></i> Actions</th>
+                        <th style="margin-left: 100px"><i class="fas fa-cogs" ></i>      Actions</th>
                     </tr>
                 </thead>
                 <tbody id="demandes-table" style="padding: 20px">
@@ -553,24 +554,7 @@
                     </tr>
                 `;
 
-                document.getElementById('stats-grid').innerHTML = `
-                    <div class="stat-card">
-                        <div class="stat-number">--</div>
-                        <div class="stat-label">Total Demandes</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">--</div>
-                        <div class="stat-label">En Attente</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">--</div>
-                        <div class="stat-label">Complétées</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">--%</div>
-                        <div class="stat-label">Taux de complétion</div>
-                    </div>
-                `;
+
             }
 
             function updateStats() {
@@ -579,25 +563,7 @@
                 const completedRequests = allData.filter(item => item.status === 'completed').length;
                 const completionRate = totalRequests > 0 ? Math.round((completedRequests / totalRequests) * 100) : 0;
 
-                const statsGrid = document.getElementById('stats-grid');
-                statsGrid.innerHTML = `
-                    <div class="stat-card">
-                        <div class="stat-number">${totalRequests}</div>
-                        <div class="stat-label">Total Demandes</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">${pendingRequests}</div>
-                        <div class="stat-label">En Attente</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">${completedRequests}</div>
-                        <div class="stat-label">Complétées</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">${completionRate}%</div>
-                        <div class="stat-label">Taux de complétion</div>
-                    </div>
-                `;
+
             }
 
             function applyFilters() {
@@ -653,14 +619,15 @@
                     });
 
                     const actionButton = demande.status === 'pending' ? `
-                        <button class="action-btn btn-primary" onclick="addPieces(${demande.id})">
+                        <button class="action-btn btn-outline" onclick="addPieces(${demande.id})">
+                            <i class="fas fa-eye"></i> View spare part
+                        </button>
+                    ` : `
+                     <button class="action-btn btn-primary" onclick="addPieces(${demande.id})">
                             <i class="fas fa-plus-circle"></i> Add spare part
 
                         </button>
-                    ` : `
-                        <button class="action-btn btn-outline" onclick="viewPieces(${demande.id})">
-                            <i class="fas fa-eye"></i> View spare part
-                        </button>
+                       
                     `;
 
                     row.innerHTML = `

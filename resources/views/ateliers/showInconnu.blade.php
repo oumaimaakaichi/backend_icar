@@ -9,18 +9,33 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
-            --primary: #667eea;
-            --primary-light: #f0f3ff;
-            --secondary: #764ba2;
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --secondary: #7b68ee;
             --accent: #4facfe;
-            --success: #00d4aa;
-            --info: #36b9cc;
-            --warning: #f6c23e;
-            --danger: #e74a3b;
-            --dark: #2c3e50;
+            --success: #10b981;
+            --info: #3b82f6;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
             --light: #ffffff;
-            --border: #e2e8f0;
-            --shadow: rgba(0, 0, 0, 0.08);
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --border: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius: 12px;
+            --radius-lg: 16px;
         }
 
         * {
@@ -30,9 +45,9 @@
         }
 
         body {
-            background-color: #ffffff;
+            background-color: var(--gray-50);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            color: var(--dark);
+            color: var(--gray-800);
             line-height: 1.6;
         }
 
@@ -43,55 +58,62 @@
         }
 
         .page-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            border-radius: 20px;
-            padding: 2rem;
+            background: var(--light);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem 2rem;
             margin-bottom: 2rem;
             margin-top: 60px;
-            box-shadow: 0 10px 30px var(--shadow);
+            box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
-        }
-
-        .page-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            transform: translate(50px, -50px);
+            border-left: 4px solid var(--primary);
         }
 
         .page-title {
-            color: white;
-            font-weight: 800;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 2;
+            color: var(--gray-800);
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-title::before {
+            content: '';
+            display: block;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3Cpolyline points='10 9 9 9 8 9'/%3E%3C/svg%3E");
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3Cpolyline points='10 9 9 9 8 9'/%3E%3C/svg%3E");
+            mask-repeat: no-repeat;
+            -webkit-mask-repeat: no-repeat;
+            background-color: var(--primary);
         }
 
         .page-subtitle {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            font-weight: 500;
-            position: relative;
-            z-index: 2;
+            color: var(--gray-600);
+            font-size: 1rem;
+            margin-left: 2.5rem;
+        }
+
+        .request-id {
+            color: var(--primary);
+            font-weight: 600;
         }
 
         .modern-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px var(--shadow);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            margin-bottom: 2rem;
+            background: var(--light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
             overflow: hidden;
-            border: 1px solid rgba(102, 126, 234, 0.1);
-            animation: fadeInUp 0.8s ease-out forwards;
+            border: 1px solid var(--gray-200);
+            animation: fadeInUp 0.6s ease-out forwards;
             opacity: 0;
+            padding: 100px
         }
 
         .modern-card:nth-child(1) { animation-delay: 0.1s; }
@@ -99,144 +121,135 @@
         .modern-card:nth-child(3) { animation-delay: 0.3s; }
 
         .modern-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
-            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
         }
 
         .card-header {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.05));
+            background: var(--gray-50);
             border-bottom: 1px solid var(--border);
-            padding: 1.5rem 2rem;
+            padding: 1.25rem 1.5rem;
             position: relative;
         }
 
         .card-title {
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 1rem;
+            color: var(--gray-700);
+            font-weight: 600;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
             margin: 0;
+            gap: 0.75rem;
+            margin-top: 20px
         }
 
         .card-title i {
-            margin-right: 12px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 1.4rem;
-            margin-top: 10px;
-            margin-left: 10px
+            color: var(--primary);
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
         }
 
         .card-body {
-            padding: 2rem;
+            padding: 1.5rem;
             position: relative;
         }
 
         .status-badge {
-            padding: 0.75rem 1.5rem;
-            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
             font-weight: 600;
             border-radius: 50px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             display: inline-flex;
             align-items: center;
-            background: linear-gradient(135deg, var(--success), var(--accent));
+            gap: 0.5rem;
             color: white;
-            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
         }
 
-        .status-Non_assigné {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        .status-badge i {
+            font-size: 0.9rem;
         }
-        .status-Assignée_now {
-            background: linear-gradient(135deg, #6c757d, #5a6268);
-            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+
+        .status-Nouvelle_demande {
+            background: var(--primary);
+            box-shadow: 0 2px 4px rgba(67, 97, 238, 0.3);
+        }
+        .status-Assignée{
+            background: var(--info);
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
         }
         .status-en_attente {
-            background: linear-gradient(135deg, var(--warning), #ff8f00);
-            box-shadow: 0 4px 15px rgba(246, 194, 62, 0.3);
+            background: var(--warning);
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
         }
         .status-en_cours {
-            background: linear-gradient(135px, var(--info), var(--accent));
-            box-shadow: 0 4px 15px rgba(54, 185, 204, 0.3);
+            background: var(--accent);
+            box-shadow: 0 2px 4px rgba(79, 172, 254, 0.3);
         }
         .status-termine {
-            background: linear-gradient(135deg, var(--success), #00a693);
-            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+            background: var(--success);
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
         }
         .status-annule {
-            background: linear-gradient(135deg, var(--danger), #dc3545);
-            box-shadow: 0 4px 15px rgba(231, 74, 59, 0.3);
+            background: var(--danger);
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
         }
 
-        .detail-group {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.03), rgba(255, 255, 255, 0.8));
-            border-radius: 15px;
-            border: 1px solid rgba(102, 126, 234, 0.1);
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            background: var(--gray-50);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            border-left: 3px solid var(--primary);
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
 
-        .detail-group::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--primary), var(--accent));
-            border-radius: 0 4px 4px 0;
-        }
-
-        .detail-group:hover {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(255, 255, 255, 0.9));
-            transform: translateX(5px);
-            border-color: var(--primary);
+        .detail-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
 
         .detail-label {
-            font-weight: 600;
-            color: var(--primary);
+            font-weight: 500;
+            color: var(--gray-600);
             margin-bottom: 0.5rem;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-label i {
+            color: var(--primary);
+            font-size: 0.9rem;
+            width: 16px;
         }
 
         .detail-value {
-            color: var(--dark);
-            font-size: 1.1rem;
+            color: var(--gray-800);
+            font-size: 1.05rem;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-        }
-
-        .detail-value i {
-            margin-right: 12px;
-            width: 24px;
-            text-align: center;
-            color: var(--primary);
-            font-size: 1.2rem;
         }
 
         .section-title {
-            color: var(--primary);
-            font-weight: 700;
+            color: var(--gray-700);
+            font-weight: 600;
             font-size: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             position: relative;
-            padding-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
             display: flex;
             align-items: center;
+            gap: 0.75rem;
         }
 
         .section-title::after {
@@ -244,189 +257,227 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 3px;
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
         }
 
         .section-title i {
-            margin-right: 12px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary);
         }
 
         .timeline {
             position: relative;
-            padding-left: 40px;
+            padding-left: 30px;
         }
 
         .timeline::before {
             content: '';
             position: absolute;
-            left: 15px;
+            left: 11px;
             top: 0;
             bottom: 0;
-            width: 3px;
-            background: linear-gradient(180deg, var(--primary), var(--accent));
-            border-radius: 3px;
+            width: 2px;
+            background: var(--gray-300);
+            border-radius: 2px;
         }
 
         .timeline-item {
             position: relative;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .timeline-dot {
             position: absolute;
-            left: -32px;
-            top: 8px;
-            width: 16px;
-            height: 16px;
+            left: -30px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            box-shadow: 0 0 0 4px white, 0 0 0 6px rgba(102, 126, 234, 0.2);
+            background: var(--primary);
+            border: 2px solid var(--light);
+            box-shadow: 0 0 0 2px var(--primary);
         }
 
         .timeline-content {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 15px var(--shadow);
+            background: var(--light);
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
             transition: all 0.3s ease;
         }
 
         .timeline-content:hover {
             border-color: var(--primary);
-            transform: translateX(10px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            box-shadow: var(--shadow);
         }
 
         .timeline-date {
             color: var(--primary);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .timeline-text {
-            color: var(--dark);
+            color: var(--gray-700);
             font-weight: 500;
+            font-size: 0.95rem;
         }
 
         .team-member {
             display: flex;
             align-items: center;
-            padding: 1.25rem;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.03), rgba(255, 255, 255, 0.8));
-            border-radius: 15px;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(102, 126, 234, 0.1);
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--gray-200);
             transition: all 0.3s ease;
         }
 
         .team-member:hover {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(255, 255, 255, 0.9));
-            transform: translateX(5px);
+            background: var(--gray-100);
+            transform: translateX(3px);
             border-color: var(--primary);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
         }
 
         .team-avatar {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 1rem;
-            font-weight: 700;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: var(--shadow-sm);
         }
 
         .team-info h6 {
-            color: var(--dark);
+            color: var(--gray-800);
             font-weight: 600;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.1rem;
+            font-size: 0.95rem;
         }
 
         .team-info small {
-            color: #6c757d;
+            color: var(--gray-600);
+            font-size: 0.8rem;
         }
 
         .form-control, .form-select {
             background: white;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            color: var(--dark);
-            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            color: var(--gray-800);
+            padding: 0.6rem 0.875rem;
+            font-size: 0.95rem;
             transition: all 0.3s ease;
         }
 
         .form-control:focus, .form-select:focus {
             background: white;
             border-color: var(--primary);
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
-            color: var(--dark);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+            color: var(--gray-800);
         }
 
         .form-control::placeholder {
-            color: #6c757d;
+            color: var(--gray-500);
         }
 
         .form-label {
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.85rem;
+            color: var(--gray-700);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background: var(--primary);
             border: none;
-            padding: 0.875rem 2rem;
+            padding: 0.75rem 1.5rem;
             font-weight: 600;
-            border-radius: 12px;
+            border-radius: 8px;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-primary:hover {
+            background: var(--secondary);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: var(--shadow-md);
         }
 
-        .btn-primary:hover::before {
-            left: 100%;
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            border: 1px solid var(--gray-300);
+            background: white;
+            color: var(--gray-700);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-print {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-print:hover {
+            background: var(--gray-200);
+            color: var(--gray-900);
+        }
+
+        .btn-edit {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        .btn-edit:hover {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-delete {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
+            color: white;
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -436,19 +487,33 @@
 
         @media (max-width: 768px) {
             .page-title {
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
 
             .card-body {
-                padding: 1.5rem;
+                padding: 1.25rem;
             }
 
             .timeline {
-                padding-left: 30px;
+                padding-left: 25px;
             }
 
             .main-content {
                 padding: 1rem 0;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .action-btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -456,9 +521,9 @@
 <body>
     @include('Sidebar.sidebarAtelier')
 
-  <div class="container-fluid animate-slide-up" style="margin-top: 60px">
+    <div class="container-fluid animate-slide-up" style="margin-top: 60px">
         <div class="page-header">
-            <h1 class="page-title">Request Details</h1>
+            <h1 class="page-title">Request Details <span class="request-id">#{{ $demande->id }}</span></h1>
             <p class="page-subtitle">Manage and track maintenance requests with advanced tools</p>
         </div>
 
@@ -466,47 +531,76 @@
             <div class="col-lg-8">
                 <div class="modern-card">
                     <div class="card-header">
-                        <h6 class="card-title">
+                        <h6 class="card-title" >
                             <i class="fas fa-info-circle"></i>
                             Request Information
                         </h6>
+                        <span class="status-badge status-{{ $demande->status }}" style="margin-top: 30px">
+                            <i class="fas fa-circle"></i>
+                            {{ $demande->status }}
+                        </span>
+                        <hr/>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="detail-group">
-                                    <p class="detail-label">Client</p>
-                                    <p class="detail-value">
-                                        <i class="fas fa-user"></i>
-                                        {{ $demande->client->prenom }} {{ $demande->client->nom }}
-                                    </p>
-                                </div>
-
-                                <div class="detail-group">
-                                    <p class="detail-label">Vehicle</p>
-                                    <p class="detail-value">
-                                        <i class="fas fa-car"></i>
-                                        {{ $demande->voiture->model }} ({{ $demande->voiture->serie }})
-                                    </p>
-                                </div>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <p class="detail-label">
+                                    <i class="fas fa-user"></i>
+                                    Client
+                                </p>
+                                <p class="detail-value">
+                                    {{ $demande->client->prenom }} {{ $demande->client->nom }}
+                                </p>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="detail-group">
-                                    <p class="detail-label">Contact</p>
-                                    <p class="detail-value">
-                                        <i class="fas fa-phone"></i>
-                                        {{ $demande->client->phone }}
-                                    </p>
-                                </div>
+                            <div class="detail-item">
+                                <p class="detail-label">
+                                    <i class="fas fa-car"></i>
+                                    Vehicle
+                                </p>
+                                <p class="detail-value">
+                                    {{ $demande->voiture->model }} ({{ $demande->voiture->serie }})
+                                </p>
+                            </div>
 
-                                <div class="detail-group">
-                                    <p class="detail-label">Maintenance Date & Time</p>
-                                    <p class="detail-value">
-                                        <i class="fas fa-tools"></i>
-                                        {{ $demande->date_maintenance}} {{ $demande->heure_maintenance }}
-                                    </p>
-                                </div>
+                            <div class="detail-item">
+                                <p class="detail-label">
+                                    <i class="fas fa-phone"></i>
+                                    Contact
+                                </p>
+                                <p class="detail-value">
+                                    {{ $demande->client->phone }}
+                                </p>
+                            </div>
+
+                            <div class="detail-item">
+                                <p class="detail-label">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Maintenance Date
+                                </p>
+                                <p class="detail-value">
+                                    {{ $demande->date_maintenance}}
+                                </p>
+                            </div>
+
+                            <div class="detail-item">
+                                <p class="detail-label">
+                                    <i class="fas fa-clock"></i>
+                                    Time
+                                </p>
+                                <p class="detail-value">
+                                    {{ $demande->heure_maintenance }}
+                                </p>
+                            </div>
+
+                            <div class="detail-item">
+                                <p class="detail-label">
+                                    <i class="fas fa-sticky-note"></i>
+                                    Notes
+                                </p>
+                                <p class="detail-value">
+                                    {{ $demande->notes ?? 'No notes provided' }}
+                                </p>
                             </div>
                         </div>
 
@@ -532,6 +626,18 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="action-buttons">
+                            <button class="action-btn btn-print">
+                                <i class="fas fa-print"></i> Print Details
+                            </button>
+                            <button class="action-btn btn-edit">
+                                <i class="fas fa-edit"></i> Edit Request
+                            </button>
+                            <button class="action-btn btn-delete">
+                                <i class="fas fa-trash-alt"></i> Delete Request
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -541,7 +647,7 @@
                 <div class="modern-card">
                     <div class="card-header">
                         <h6 class="card-title">
-                            <i class="fas fa-users" style="margin-top:10px"></i>
+                            <i class="fas fa-users"></i>
                             Assigned Team
                         </h6>
                     </div>
@@ -549,10 +655,10 @@
                         @foreach($demande->techniciens as $tech)
                             <div class="team-member">
                                 <div class="team-avatar">
-                                    {{ substr($tech['nom'], 0, 1) }}
+                                    {{ substr($tech['nom'], 0, 1) }}{{ substr($tech['prenom'] ?? '', 0, 1) }}
                                 </div>
                                 <div class="team-info">
-                                    <h6>{{ $tech['nom'] }}</h6>
+                                    <h6>{{ $tech['nom'] }} {{ $tech['prenom'] ?? '' }}</h6>
                                     <small>ID: {{ $tech['id'] }}</small>
                                 </div>
                             </div>
@@ -678,14 +784,14 @@
                         icon: 'success',
                         title: 'Success',
                         text: data.message,
-                        confirmButtonColor: '#667eea',
+                        confirmButtonColor: '#4361ee',
                     }).then(() => window.location.reload());
                 } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
                         text: data.message || 'An error occurred',
-                        confirmButtonColor: '#e74a3b',
+                        confirmButtonColor: '#ef4444',
                     });
                 }
             })
@@ -694,8 +800,44 @@
                     icon: 'error',
                     title: 'Network Error',
                     text: 'Unable to contact the server',
-                    confirmButtonColor: '#e74a3b',
+                    confirmButtonColor: '#ef4444',
                 });
+            });
+        });
+
+        // Action buttons functionality
+        document.querySelector('.btn-print').addEventListener('click', function() {
+            window.print();
+        });
+
+        document.querySelector('.btn-edit').addEventListener('click', function() {
+            // Add edit functionality here
+            Swal.fire({
+                title: 'Edit Request',
+                text: 'This functionality will be implemented soon.',
+                icon: 'info',
+                confirmButtonColor: '#4361ee'
+            });
+        });
+
+        document.querySelector('.btn-delete').addEventListener('click', function() {
+            // Add delete functionality here
+            Swal.fire({
+                title: 'Delete Request?',
+                text: 'Are you sure you want to delete this request? This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Deleted!',
+                        'The request has been deleted.',
+                        'success'
+                    );
+                }
             });
         });
     </script>

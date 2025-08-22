@@ -40,7 +40,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, white 0%, white 50%, white 100%);
+            background: linear-gradient(135deg, rgb(252, 253, 253) 0%, rgb(252, 253, 253) 50%, rgb(252, 253, 253) 100%);
             min-height: 100vh;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             color: var(--gray-900);
@@ -92,6 +92,8 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            margin-bottom: 50px;
+            margin-top: 30px
         }
 
         .page-title i {
@@ -575,25 +577,16 @@
 <body>
     @include('Sidebar.sidebarExpert')
 
-  <div class="container animate-slide-up" style="margin-top: 60px">
+  <div class="container animate-slide-up" style="margin-top: 60px ; margin-right:50px">
     <!-- Modern Header -->
-    <div class="page-header">
+
         <div class="page-header-content">
             <h3 class="page-title">
                 <i class="fas fa-clipboard-list"></i>
                 Request Details
             </h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('expert.demande_maintenance') }}" class="text-decoration-none">
-                            <i class="fas fa-home me-1"></i>Requests
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">#{{ $demande->id }}</li>
-                </ol>
-            </nav>
-        </div>
+
+<br/>
     </div>
 
     <div class="row">
