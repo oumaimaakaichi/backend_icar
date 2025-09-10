@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -38,6 +39,7 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
+            transition: background-color 0.3s ease;
         }
 
         /* Sidebar Styles */
@@ -570,8 +572,6 @@
             padding: 0px;
             flex: 1;
             transition: var(--transition);
-
-          
             padding-right: 50px
         }
 
@@ -637,6 +637,55 @@
             font-size: 14px;
         }
 
+        /* Styles pour le sélecteur de couleur */
+        .color-picker-container {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            margin-bottom: 5px
+        }
+
+        .color-picker-label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .color-option {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .color-option:hover {
+            transform: scale(1.2);
+        }
+
+        .color-option.active {
+            border-color: white;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+
+        .sidebar.collapsed .color-picker-container {
+            display: none;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -661,12 +710,10 @@
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-      
-         <div class="sidebar-logo-container">
+        <div class="sidebar-logo-container">
             <img src="{{ asset('images/avatar.png') }}" alt="Logo" class="sidebar-logo">
             <span class="sidebar-logo-text">AdminPro</span>
         </div>
-    
 
         <div class="sidebar-menu">
             <div class="menu-section">
@@ -680,27 +727,27 @@
 
             <div class="menu-section">
                 <div class="menu-section-title">Management</div>
-                <a href="technicien" class="menu-link" data-page="Techniciens" data-breadcrumb="Home > Gestion > Techniciens">
+                <a href="technicien" class="menu-link" data-page="Techniciens" data-breadcrumb="Home > Management > Techniciens">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
                     <span class="menu-link-text">Technicians</span>
                     <span class="tooltip">Technicians</span>
                 </a>
-                <a href="employee" class="menu-link" data-page="Customers" data-breadcrumb="Home > Gestion > Customers">
+                <a href="employee" class="menu-link" data-page="Customers" data-breadcrumb="Home > Management > Customers">
                     <i class="fa-solid fa-users"></i>
                     <span class="menu-link-text">Customers</span>
                     <span class="tooltip">Customers</span>
                 </a>
-                <a href="experts" class="menu-link" data-page="Experts" data-breadcrumb="Home > Gestion > Experts">
+                <a href="experts" class="menu-link" data-page="Experts" data-breadcrumb="Home > Management > Experts">
                     <i class="fa-solid fa-user-tie"></i>
                     <span class="menu-link-text">Experts</span>
                     <span class="tooltip">Experts</span>
                 </a>
-                <a href="entrepriseContractante" class="menu-link" data-page="Companies" data-breadcrumb="Home > Gestion > Companies">
+                <a href="entrepriseContractante" class="menu-link" data-page="Companies" data-breadcrumb="Home > Management > Companies">
                     <i class="fa-solid fa-building"></i>
                     <span class="menu-link-text">Companies</span>
                     <span class="tooltip">Companies</span>
                 </a>
-                <a href="atelier" class="menu-link" data-page="Workshop" data-breadcrumb="Home > Gestion > Workshop">
+                <a href="atelier" class="menu-link" data-page="Workshop" data-breadcrumb="Home > Management > Workshop">
                     <i class="fa-solid fa-tools"></i>
                     <span class="menu-link-text">Workshop</span>
                     <span class="tooltip">Workshop</span>
@@ -742,20 +789,26 @@
         </div>
 
         <div class="sidebar-footer">
+            <!-- Sélecteur de couleur -->
+            <div class="color-picker-container">
+                <span class="color-picker-label">Theme Color</span>
+                <div class="color-picker">
+                    <div class="color-option active" data-color="#f7fafc" style="background-color: #f7fafc;" title="Light Default"></div>
+                    <div class="color-option" data-color="#e6fffa" style="background-color: #e6fffa;" title="Mint Green"></div>
+                    <div class="color-option" data-color="#ebf4ff" style="background-color: #ebf4ff;" title="Light Blue"></div>
+                    <div class="color-option" data-color="#faf5ff" style="background-color: #faf5ff;" title="Light Purple"></div>
+                    <div class="color-option" data-color="#fff5f5" style="background-color: #fff5f5;" title="Light Pink"></div>
+                    <div class="color-option" data-color="#2d3748" style="background-color: #2d3748;" title="Dark Gray"></div>
+                </div>
+            </div>
+
             <div class="user-profile" id="sidebar-user-profile">
                 <div class="user-profile-avatar">
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="user-profile-info">
-                    @auth('web')
-                    <div class="user-profile-name">
-                        {{ Auth::guard('web')->user()->nom }} {{ Auth::guard('web')->user()->prenom }}
-                    </div>
+                    <div class="user-profile-name">Admin User</div>
                     <div class="user-profile-role">Administrator</div>
-                    @else
-                    <div class="user-profile-name">Invité</div>
-                    <div class="user-profile-role">Guest</div>
-                    @endauth
                 </div>
                 <div class="user-profile-dropdown">
                     <i class="fas fa-chevron-down"></i>
@@ -804,34 +857,21 @@
                     <div class="popup-user-avatar">
                         <i class="fas fa-user"></i>
                     </div>
-                    @auth('web')
-                    <div class="popup-user-name">
-                        {{ Auth::guard('web')->user()->nom }} {{ Auth::guard('web')->user()->prenom }}
-                    </div>
-                    <div class="popup-user-email">
-                        {{ Auth::guard('web')->user()->email }}
-                    </div>
-                    @else
-                    <div class="popup-user-name">Invité</div>
-                    <div class="popup-user-email">guest@example.com</div>
-                    @endauth
+                    <div class="popup-user-name">Admin User</div>
+                    <div class="popup-user-email">admin@example.com</div>
                 </div>
                 <ul class="user-popup-menu">
                     <li><a href="{{ route('profile.editAdmin') }}"><i class="fas fa-user-cog"></i> Profile</a></li>
-                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-                    <li><a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    <li><a href="{{ route('profile.editAdmin') }}"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="{{ route('login') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 </ul>
-
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="main-content">
-        
+
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -847,15 +887,16 @@
                 // Define route mappings
                 const routeMappings = {
                     '/': { title: 'Dashboard', breadcrumb: 'Home > Dashboard' },
-                    '/technicien': { title: 'Technicians', breadcrumb: 'Home > Gestion > Technicians' },
-                    '/employee': { title: 'Customers', breadcrumb: 'Home > Gestion > Customers' },
-                    '/experts': { title: 'Experts', breadcrumb: 'Home > Gestion > Experts' },
-                    '/entrepriseContractante': { title: 'Companies', breadcrumb: 'Home > Gestion > Companies' },
-                    '/atelier': { title: 'Workshop', breadcrumb: 'Home > Gestion > Workshop' },
+                    '/technicien': { title: 'Technicians', breadcrumb: 'Home > Management > Technicians' },
+                    '/employee': { title: 'Customers', breadcrumb: 'Home > Management > Customers' },
+                    '/experts': { title: 'Experts', breadcrumb: 'Home > Management > Experts' },
+                    '/entrepriseContractante': { title: 'Companies', breadcrumb: 'Home > Management > Companies' },
+                    '/atelier': { title: 'Workshop', breadcrumb: 'Home > Management > Workshop' },
                     '/catalogues': { title: 'Catalogs', breadcrumb: 'Home > Inventory > Catalogs' },
                     '/categorie': { title: 'Categories', breadcrumb: 'Home > Inventory > Categories' },
                     '/camions': { title: 'Vehicles', breadcrumb: 'Home > Inventory > Vehicles' },
-                    '/statistiques': { title: 'Statistics', breadcrumb: 'Home > Operations > Statistics' }
+                    '/statistiques': { title: 'Statistics', breadcrumb: 'Home > Operations > Statistics' },
+                    '/ticketts' : {title: 'Assistance', breadcrumb: 'Home > Operations > Assistance'}
                 };
 
                 // Handle tickets route (could be different format)
@@ -993,12 +1034,40 @@
                 e.stopPropagation();
             });
 
-            // Logout functionality
-            document.getElementById("logout-button").addEventListener("click", function(event) {
-                event.preventDefault();
-                document.getElementById("logout-form").submit();
+            // Gestion du sélecteur de couleur
+            const colorOptions = document.querySelectorAll('.color-option');
+
+            colorOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Retirer la classe active de toutes les options
+                    colorOptions.forEach(opt => opt.classList.remove('active'));
+
+                    // Ajouter la classe active à l'option sélectionnée
+                    this.classList.add('active');
+
+                    // Changer la couleur de fond du body
+                    const color = this.getAttribute('data-color');
+                    document.body.style.backgroundColor = color;
+
+                    // Stocker la préférence dans le localStorage
+                    localStorage.setItem('preferred-bg-color', color);
+                });
             });
 
+            // Charger la couleur sauvegardée si elle existe
+            const savedColor = localStorage.getItem('preferred-bg-color');
+            if (savedColor) {
+                document.body.style.backgroundColor = savedColor;
+
+                // Activer l'option correspondante
+                colorOptions.forEach(option => {
+                    if (option.getAttribute('data-color') === savedColor) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+            }
             // Mobile responsive
             function handleResize() {
                 if (window.innerWidth <= 768) {

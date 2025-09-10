@@ -330,7 +330,14 @@
             letter-spacing: -0.5px;
             margin-top: 0px
         }
-
+  .page-titlee {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 0;
+            letter-spacing: -0.5px;
+            margin-top: 0px
+        }
         .page-breadcrumb {
             font-size: 14px;
             color: var(--text-light);
@@ -560,7 +567,7 @@
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-       
+
 
        <div class="sidebar-header">
     <div class="sidebar-logo">
@@ -621,14 +628,6 @@
             <i class="fas fa-bars"></i>
         </button>
 
-        <div class="header-left" style="margin-right: 700px">
-            <h1 class="page-title" id="page-title">Dashboard</h1>
-            <div class="page-breadcrumb" id="page-breadcrumb">
-                <span class="breadcrumb-item">Home</span>
-                <span class="breadcrumb-separator">></span>
-                <span class="breadcrumb-item active">Dashboard</span>
-            </div>
-        </div>
 
         <div class="header-right">
             <div class="notification-icon">
@@ -725,14 +724,12 @@
 
                 // Define route mappings
                 const routeMappings = {
-                    '/statistiques/demandes': { title: 'Dashboard', breadcrumb: 'Home > Dashboard' },
-                    '/request-choice': { title: 'Requests', breadcrumb: 'Home > Requests' },
-                    '/demande_autorisation': { title: 'Authorization', breadcrumb: 'Home > Authorization' },
-                    '/exper/technicien': { title: 'Technician', breadcrumb: 'Home > Management > Technician' },
-                    '/profile': { title: 'Settings', breadcrumb: 'Home > Management > Settings' },
-                     '/demande_maintenance': { title: 'known fault', breadcrumb: 'Home > Management > known fault' },
-                      '/demande_maintenanceInconnu': { title: 'Unknown fault', breadcrumb: 'Home > Management > Unknown fault' }
-              
+                    '/statistiques/demandes': {  breadcrumb: 'Main > Dashboard' },
+                    '/request-choice': {  breadcrumb: 'Main > Requests' },
+                    '/demande_autorisation': {  breadcrumb: 'Main > Authorization' },
+                    '/exper/technicien': {  breadcrumb: 'Management > Technician' },
+                    '/profile': {breadcrumb: 'Management > Settings' },
+
                 };
 
                 // Find matching route
@@ -769,7 +766,7 @@
                         link.classList.remove('active');
                         const linkHref = link.getAttribute('href');
 
-                        if (linkHref === currentPath || 
+                        if (linkHref === currentPath ||
                             (linkHref && currentPath.includes(linkHref.replace(window.location.origin, '')))) {
                             link.classList.add('active');
                         }
@@ -787,7 +784,7 @@
             const pageBreadcrumb = document.getElementById('page-breadcrumb');
 
             menuLinks.forEach(link => {
-                if (link.getAttribute("href") === currentURL || 
+                if (link.getAttribute("href") === currentURL ||
                     (link.getAttribute("href") && currentURL.includes(link.getAttribute("href").replace(window.location.origin, '')))) {
                     link.classList.add("active");
                 }

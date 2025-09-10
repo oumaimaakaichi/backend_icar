@@ -8,20 +8,28 @@ class Paiement extends Model
 {
     protected $fillable = [
         'demande_id',
+        'demande_connu_id',  // ✅ Nouvel attribut
         'client_id',
-        'montant',        // Correction: utiliser 'montant' au lieu de 'prix_total'
+        'montant',
         'methode',
         'date_paiement',
     ];
 
     protected $casts = [
         'date_paiement' => 'datetime',
-        'montant' => 'decimal:2',  // Assurer le cast en decimal
+        'montant' => 'decimal:2',
     ];
 
+    // Relation avec Demande Panne Inconnue
     public function demande()
     {
         return $this->belongsTo(DemandePanneInconnu::class, 'demande_id');
+    }
+
+    // Relation avec Demande Panne Connue
+    public function demandeConnu()
+    {
+        return $this->belongsTo(Demande::class, 'demande_connu_id');
     }
 
     public function client()

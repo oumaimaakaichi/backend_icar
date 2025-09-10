@@ -22,35 +22,69 @@ class CatalogueController extends Controller
     }
 
     // Enregistrer un nouveau catalogue
-    public function store(Request $request)
-    {
-        $request->validate([
-            'entreprise' => 'required|string',
-            'type_voiture' => 'required|string',
-            'nom_piece' => 'required|string',
-            'num_piece' => 'required|integer',
-            'paye_fabrication' => 'required|string',
-            'photo_piece' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validation pour l'image
-        ]);
+  // Enregistrer un nouveau catalogue
+public function store(Request $request)
+{
+    $request->validate([
+        'entreprise' => 'required|string',
+        'type_voiture' => 'required|string',
+        'nom_piece' => 'required|string',
+        'num_piece' => 'required|integer',
+        'paye_fabrication' => 'required|string',
+        'prix' => 'required|numeric|min:0',
+        'stock' => 'required|integer|min:0',
+        'photo_piece' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        // Gérer l'upload de la photo
-        if ($request->hasFile('photo_piece')) {
-            $photoPath = $request->file('photo_piece')->store('catalogues', 'public');
-        } else {
-            $photoPath = null;
-        }
+    $photoPath = $request->hasFile('photo_piece')
+        ? $request->file('photo_piece')->store('catalogues', 'public')
+        : null;
 
-        Catalogue::create([
-            'entreprise' => $request->entreprise,
-            'type_voiture' => $request->type_voiture,
-            'nom_piece' => $request->nom_piece,
-            'num_piece' => $request->num_piece,
-            'paye_fabrication' => $request->paye_fabrication,
-            'photo_piece' => $photoPath,
-        ]);
+    Catalogue::create([
+        'entreprise' => $request->entreprise,
+        'type_voiture' => $request->type_voiture,
+        'nom_piece' => $request->nom_piece,
+        'num_piece' => $request->num_piece,
+        'paye_fabrication' => $request->paye_fabrication,
+        'prix' => $request->prix,
+        'stock' => $request->stock,
+        'photo_piece' => $photoPath,
+    ]);
 
-        return redirect()->route('catalogues.index')->with('success', 'Catalogue ajouté avec succès.');
+    return redirect()->route('catalogues.index')->with('success', 'Catalogue ajouté avec succès.');
+}
+
+// Mettre à jour un catalogue
+public function update(Request $request, Catalogue $catalogue)
+{
+    $request->validate([
+        'entreprise' => 'required|string',
+        'type_voiture' => 'required|string',
+        'nom_piece' => 'required|string',
+        'num_piece' => 'required|integer',
+        'paye_fabrication' => 'required|string',
+        'prix' => 'required|numeric|min:0',
+        'stock' => 'required|integer|min:0',
+        'photo_piece' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    if ($request->hasFile('photo_piece')) {
+        $catalogue->photo_piece = $request->file('photo_piece')->store('catalogues', 'public');
     }
+
+    $catalogue->update([
+        'entreprise' => $request->entreprise,
+        'type_voiture' => $request->type_voiture,
+        'nom_piece' => $request->nom_piece,
+        'num_piece' => $request->num_piece,
+        'paye_fabrication' => $request->paye_fabrication,
+        'prix' => $request->prix,
+        'stock' => $request->stock,
+    ]);
+
+    return redirect()->route('catalogues.index')->with('success', 'Catalogue mis à jour avec succès.');
+}
+
 
     // Afficher les détails d'un catalogue
     public function show(Catalogue $catalogue)
@@ -64,33 +98,7 @@ class CatalogueController extends Controller
         return view('catalogues.edit', compact('catalogue'));
     }
 
-    // Mettre à jour un catalogue
-    public function update(Request $request, Catalogue $catalogue)
-    {
-        $request->validate([
-            'entreprise' => 'required|string',
-            'type_voiture' => 'required|string',
-            'nom_piece' => 'required|string',
-            'num_piece' => 'required|integer',
-            'paye_fabrication' => 'required|string',
-            'photo_piece' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        if ($request->hasFile('photo_piece')) {
-            $photoPath = $request->file('photo_piece')->store('catalogues', 'public');
-            $catalogue->photo_piece = $photoPath;
-        }
-
-        $catalogue->update([
-            'entreprise' => $request->entreprise,
-            'type_voiture' => $request->type_voiture,
-            'nom_piece' => $request->nom_piece,
-            'num_piece' => $request->num_piece,
-            'paye_fabrication' => $request->paye_fabrication,
-        ]);
-
-        return redirect()->route('catalogues.index')->with('success', 'Catalogue mis à jour avec succès.');
-    }
+  
 
     // Supprimer un catalogue
     public function destroy(Catalogue $catalogue)
@@ -112,6 +120,7 @@ class CatalogueController extends Controller
                 'num_piece' => $item->num_piece,
                 'paye_fabrication' => $item->paye_fabrication,
                 'prix' => $item->prix,
+                'stock' => $item->stock,
                 'photo_piece' => $item->photo_piece
                     ? url('storage/'.$item->photo_piece)
                     : null,

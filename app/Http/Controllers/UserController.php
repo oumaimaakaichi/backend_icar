@@ -591,19 +591,19 @@ public function showRequestChoice()
               ],
               'employes' => [
                   'total' => User::where('atelier_id', $atelierId)
-                              ->where('role', 'employe')
+                              ->where('role', 'Client')
                               ->count(),
                   'actifs' => User::where('atelier_id', $atelierId)
-                               ->where('role', 'employe')
+                               ->where('role', 'Client')
                                ->where('isActive', true)
                                ->count(),
                   'inactifs' => User::where('atelier_id', $atelierId)
-                                 ->where('role', 'employe')
+                                 ->where('role', 'Client')
                                  ->where('isActive', false)
                                  ->count()
               ],
               'total_personnel' => User::where('atelier_id', $atelierId)
-                                    ->whereIn('role', ['technicien', 'employe'])
+                                    ->whereIn('role', ['technicien', 'Client'])
                                     ->count(),
               'recentActivities' => [] // Vous pouvez ajouter des données d'activité ici
           ];

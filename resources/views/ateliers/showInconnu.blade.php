@@ -505,12 +505,12 @@
             .detail-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .action-buttons {
                 flex-direction: column;
                 gap: 0.75rem;
             }
-            
+
             .action-btn {
                 width: 100%;
                 justify-content: center;
@@ -523,7 +523,7 @@
 
     <div class="container-fluid animate-slide-up" style="margin-top: 60px">
         <div class="page-header">
-            <h1 class="page-title">Request Details <span class="request-id">#{{ $demande->id }}</span></h1>
+            <h1 class="page-title">Request Details <span class="request-id"></span></h1>
             <p class="page-subtitle">Manage and track maintenance requests with advanced tools</p>
         </div>
 

@@ -40,9 +40,13 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\RecusController;
+use App\Http\Controllers\ChatbotController;
+
+
+Route::post('/chatbot', [ChatbotController::class, 'ask']);
 Route::post('/demandes/{demandeId}/payer', [PaiementController::class, 'payer']);
 Route::get('/atelier/{id}/disponibilite', [AtelierController::class, 'getAvailability']);
-
+Route::post('/demandes/{demandeId}/payerConnu', [PaiementController::class, 'payerConnu']);
  Route::get('/mes-recus/{clientId}', [RecusController::class, 'mesRecus']);
 
     // Télécharger un reçu spécifique

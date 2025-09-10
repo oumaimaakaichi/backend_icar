@@ -76,7 +76,7 @@
         /* Header with Glassmorphism Effect */
         .profile-header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
-            padding: 1rem 2rem 5rem;
+            padding: 1rem 1rem 2rem;
             position: relative;
             overflow: hidden;
         }
@@ -102,7 +102,7 @@
             font-size: 2rem;
             font-weight: 800;
             color: white;
-           
+
             letter-spacing: -0.025em;
         }
 
@@ -168,10 +168,10 @@
         }
 
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--gray-900);
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
             position: relative;
             display: flex;
             align-items: center;
@@ -199,7 +199,7 @@
         .form-label {
             font-weight: 600;
             color: var(--gray-700);
-           
+
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -208,7 +208,7 @@
         .form-control {
             border: 2px solid var(--gray-200);
             border-radius: 16px;
-       
+
             font-size: 1rem;
             font-weight: 500;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -408,7 +408,7 @@
             <div class="profile-header">
                 <div class="profile-header-content">
                     <h1 class="profile-title">Profil Super Admin</h1>
-                    <p class="profile-subtitle">Mettez à jour vos informations personnelles et gérez vos paramètres de sécurité</p>
+                    <p class="profile-subtitle" style="margin-bottom: 40px">Mettez à jour vos informations personnelles et gérez vos paramètres de sécurité</p>
                 </div>
             </div>
 
@@ -494,11 +494,11 @@
             <!-- Action Bar -->
             <div class="action-bar">
                 <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-2"></i> 
+                    <i class="fas fa-arrow-left me-2"></i>
                     Retour
                 </a>
                 <button type="submit" form="profile-form" class="btn btn-primary">
-                    <i class="fas fa-save me-2"></i> 
+                    <i class="fas fa-save me-2"></i>
                     Enregistrer les modifications
                 </button>
             </div>
@@ -511,7 +511,7 @@
     function togglePassword(fieldId) {
         const field = document.getElementById(fieldId);
         const icon = field.parentElement.querySelector('.password-toggle i');
-        
+
         if (field.type === 'password') {
             field.type = 'text';
             icon.classList.remove('fa-eye');

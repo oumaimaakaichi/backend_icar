@@ -674,8 +674,8 @@
     <div class="modal fade" id="addTechnicienModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
+                <div class="modal-header" style="background-color: #35677d">
+                    <h5 class="modal-title" style="color: white">
                         <i class="fas fa-user-plus me-2"></i>New Expert
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

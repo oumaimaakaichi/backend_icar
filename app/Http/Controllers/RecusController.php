@@ -34,27 +34,32 @@ class RecusController extends Controller
             ->get();
 
             // Formatter les données pour l'app Flutter
-            $recus = $paiements->map(function ($paiement) {
-                return [
-                    'id' => $paiement->id,
-                    'montant' => $paiement->montant,
-                    'methode' => $paiement->methode,
-                    'date_paiement' => $paiement->date_paiement,
-                    'created_at' => $paiement->created_at,
-                    'pdf_url' => asset('storage/recus/recu_' . $paiement->id . '.pdf'),
-                    'demande_id' => $paiement->demande_id,
-                    'demande' => [
-                        'id' => $paiement->demande->id,
-                        'description' => $paiement->demande->description_probleme ?? '',
-                        'statut' => $paiement->demande->status,
-                        'voiture' => [
-                            'marque' => $paiement->demande->voiture->company ?? '',
-                            'modele' => $paiement->demande->voiture->model ?? '',
-                            'immatriculation' => $paiement->demande->voiture->serie ?? '',
-                        ]
-                    ]
-                ];
-            });
+          // Formatter les données pour l'app Flutter
+$recus = $paiements->map(function ($paiement) {
+    // Choisir la demande selon le type
+    $demande = $paiement->demande ?? $paiement->demandeConnu;
+
+    return [
+        'id' => $paiement->id,
+        'montant' => $paiement->montant,
+        'methode' => $paiement->methode,
+        'date_paiement' => $paiement->date_paiement,
+        'created_at' => $paiement->created_at,
+        'pdf_url' => asset('storage/recus/recu_' . $paiement->id . '.pdf'),
+        'demande_id' => $paiement->demande_id ?? $paiement->demande_connu_id,
+        'demande' => $demande ? [
+            'id' => $demande->id,
+            'description' => $demande->description_probleme ?? '',
+            'statut' => $demande->statut ?? '',
+            'voiture' => [
+                'marque' => $demande->voiture->company ?? '',
+                'modele' => $demande->voiture->model ?? '',
+                'immatriculation' => $demande->voiture->serie ?? '',
+            ]
+        ] : null
+    ];
+});
+
 
             return response()->json([
                 'success' => true,

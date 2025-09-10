@@ -11,7 +11,7 @@
         :root {
             --sidebar-width: 280px;
             --sidebar-collapsed-width: 70px;
-            --primary: #6366f1;
+            --primary: #4f46e5;
             --primary-dark: #4f46e5;
             --secondary: #8b5cf6;
             --accent: #06b6d4;
@@ -714,6 +714,12 @@
                     <span>Users Management</span>
                     <div class="tooltip-text">Users Management</div>
                 </a>
+                  <a href="{{ route('atelier.profile.show') }}" class="menu-link" data-title="Profile Management" data-breadcrumb="Home › Management › Profile">
+                  <i class="fas fa-cog"></i>
+
+                    <span>Setting</span>
+                    <div class="tooltip-text">Setting</div>
+                </a>
             </div>
         </div>
 
@@ -752,7 +758,7 @@
                 </div>
                 <div class="user-details">
                     <div class="user-name">Workshop Account</div>
-                  
+
                 </div>
             </div>
         </div>
@@ -789,7 +795,7 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        
+
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -827,16 +833,16 @@
 
             // Handle menu links and dynamic header
             const currentURL = window.location.pathname;
-            
+
             menuLinks.forEach(link => {
                 // Set active state based on current URL
                 if (link.getAttribute("href") === currentURL) {
                     link.classList.add("active");
-                    
+
                     // Update header with current page info
                     const title = link.getAttribute('data-title') || link.textContent.trim();
                     const breadcrumbText = link.getAttribute('data-breadcrumb') || `Home › ${title}`;
-                    
+
                     updateHeader(title, breadcrumbText);
                 }
 
@@ -844,16 +850,16 @@
                 link.addEventListener('click', function(e) {
                     // Remove active class from all links
                     menuLinks.forEach(l => l.classList.remove('active'));
-                    
+
                     // Add active class to clicked link
                     this.classList.add('active');
-                    
+
                     // Update header
                     const title = this.getAttribute('data-title') || this.textContent.trim();
                     const breadcrumbText = this.getAttribute('data-breadcrumb') || `Home › ${title}`;
-                    
+
                     updateHeader(title, breadcrumbText);
-                    
+
                     // Store current page info
                     localStorage.setItem('currentPageTitle', title);
                     localStorage.setItem('currentBreadcrumb', breadcrumbText);
@@ -868,11 +874,11 @@
                     pageTitle.offsetHeight; // Trigger reflow
                     pageTitle.style.animation = 'fadeInLeft 0.5s ease';
                 }
-                
+
                 if (breadcrumb) {
                     const breadcrumbParts = breadcrumbText.split(' › ');
                     breadcrumb.innerHTML = '';
-                    
+
                     breadcrumbParts.forEach((part, index) => {
                         const span = document.createElement('span');
                         span.className = 'breadcrumb-item';
@@ -888,7 +894,7 @@
             // Restore header state from localStorage
             const savedTitle = localStorage.getItem('currentPageTitle');
             const savedBreadcrumb = localStorage.getItem('currentBreadcrumb');
-            
+
             if (savedTitle && savedBreadcrumb && !document.querySelector('.menu-link.active')) {
                 updateHeader(savedTitle, savedBreadcrumb);
             }
@@ -952,7 +958,7 @@
                 if (e.key === 'Escape' && userPopup?.classList.contains('show')) {
                     userPopup.classList.remove('show');
                 }
-                
+
                 // Ctrl+B to toggle sidebar
                 if (e.ctrlKey && e.key === 'b') {
                     e.preventDefault();
@@ -1020,7 +1026,7 @@
                                 link.style.display = 'none';
                             }
                         });
-                        
+
                         // Hide sections with no visible links
                         document.querySelectorAll('.menu-section').forEach(section => {
                             const visibleLinks = section.querySelectorAll('.menu-link[style*="flex"]').length;
@@ -1046,7 +1052,7 @@
                         document.body.classList.toggle('dark-theme');
                         const isDark = document.body.classList.contains('dark-theme');
                         localStorage.setItem('darkTheme', isDark);
-                        
+
                         // Update icon
                         const icon = this.querySelector('i');
                         if (isDark) {
@@ -1055,7 +1061,7 @@
                             icon.className = 'fas fa-moon';
                         }
                     });
-                    
+
                     // Load saved theme
                     const savedTheme = localStorage.getItem('darkTheme') === 'true';
                     if (savedTheme) {
@@ -1100,7 +1106,7 @@
                     }
                 }
             }, 250);
-            
+
             window.addEventListener('resize', window.resizeHandler);
 
             // Add animation observer for better performance

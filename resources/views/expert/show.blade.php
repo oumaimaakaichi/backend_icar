@@ -85,7 +85,7 @@
         }
 
         .page-title {
-            font-size: 2rem;
+            font-size: 3rem;
             font-weight: 800;
             color: rgb(104, 101, 101);
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -580,8 +580,8 @@
   <div class="container animate-slide-up" style="margin-top: 60px ; margin-right:50px">
     <!-- Modern Header -->
 
-        <div class="page-header-content">
-            <h3 class="page-title">
+        <div class="page-header-content" style="margin-bottom: 40px">
+            <h3 class="page-title" style="font-size: 2rem">
                 <i class="fas fa-clipboard-list"></i>
                 Request Details
             </h3>
@@ -706,7 +706,7 @@
                                     </button>
                                 @else
                                     <button class="btn btn-primary-modern btn-modern share-btn"
-                                            data-flux-id="{{ $demandeFlux->id }}">
+                                            data-flux-id="{{ $demandeFlux->id }}" style="color: white">
                                         <i class="fas fa-share-square"></i>
                                         Allow Sharing
                                     </button>
@@ -715,7 +715,7 @@
 
                             @if($flux && $flux->ouvert)
                                 @if($flux && $flux->lien_meet)
-                                    <a href="{{ $flux->lien_meet }}" target="_blank" class="btn btn-info-modern btn-modern">
+                                    <a href="{{ $flux->lien_meet }}" target="_blank" class="btn btn-info-modern btn-modern" style="color: white">
                                         <i class="fas fa-video"></i>
                                         Meet
                                     </a>
@@ -748,39 +748,7 @@
         <!-- Sidebar -->
         <div class="col-lg-4">
             <!-- Price Proposal -->
-            <div class="modern-card animate-slide-up animate-delay-1">
-                <div class="card-header-modern">
-                    <h5 class="card-title">
-                        <i class="fas fa-euro-sign"></i>
-                        Price Proposal
-                    </h5>
-                </div>
-                <div class="card-body-modern">
-                    <form id="prixForm" action="{{ route('demandes.ajouterPrixMainOeuvre', $demande->id) }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="prix_main_oeuvre" class="form-label-modern">
-                                <i class="fas fa-hand-holding-usd me-1"></i>
-                                Labor Price (€)
-                            </label>
-                            <input type="number" step="0.01" min="0" class="form-control form-control-modern"
-                                   id="prix_main_oeuvre" name="prix_main_oeuvre"
-                                   value="{{ old('prix_main_oeuvre', $demande->prix_main_oeuvre) }}"
-                                   @if($demande->status !== 'Nouvelle_demande') disabled @endif
-                                   required>
-                            @error('prix_main_oeuvre')
-                                <div class="text-danger mt-2 small">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        @if($demande->status === 'Nouvelle_demande')
-                        <button type="submit" class="btn btn-primary-modern btn-modern w-100 pulse-animation">
-                            <i class="fas fa-paper-plane" style="color: white"></i>
-                            <b style="color: white"> Send Offer</b>
-                        </button>
-                        @endif
-                    </form>
-                </div>
-            </div>
+
 
             <!-- Package -->
             <div class="modern-card animate-slide-up animate-delay-2">
@@ -799,7 +767,7 @@
             </div>
 
             <!-- Assign Technicians -->
-            @if($demande->status === 'offre_acceptee')
+            @if($demande->status === 'Nouvelle_demande')
             <div class="modern-card animate-slide-up animate-delay-3">
                 <div class="card-header-modern">
                     <h5 class="card-title">
@@ -852,16 +820,17 @@
                 e.preventDefault();
                 const fluxId = this.getAttribute('data-flux-id');
 
-                Swal.fire({
-                    title: 'Confirmer le partage',
-                    text: "Voulez-vous vraiment autoriser le partage de ce lien avec le client?",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#4361ee',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Oui, partager',
-                    cancelButtonText: 'Annuler'
-                }).then((result) => {
+              Swal.fire({
+    title: 'Confirm Sharing',
+    text: "Do you really want to allow sharing of this link with the client?",
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#4361ee',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Yes, share',
+    cancelButtonText: 'Cancel'
+})
+.then((result) => {
                     if (result.isConfirmed) {
                         fetch(`/demande-flux/permission/${fluxId}`, {
                             method: 'PUT',

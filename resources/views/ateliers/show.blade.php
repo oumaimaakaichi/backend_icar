@@ -642,7 +642,7 @@
                     <i class="fas fa-clipboard-list"></i>
                     Request Details
                 </h1>
-                <p class="page-subtitle">Comprehensive overview of maintenance request #{{ $demande->id }}</p>
+                <p class="page-subtitle">Comprehensive overview of maintenance request </p>
             </div>
         </div>
 
@@ -781,49 +781,7 @@
             <!-- Sidebar -->
             <div class="col-lg-4">
                 <!-- Costs & Quote -->
-                <div class="modern-card animate-slide-up animate-delay-1">
-                    <div class="card-header-modern">
-                        <h5 class="card-title">
-                            <i class="fas fa-euro-sign"></i>
-                            Costs & Quote
-                        </h5>
-                    </div>
-                    <div class="card-body-modern">
-                        <form id="prixForm" action="{{ route('demandes.ajouterPrixMainOeuvre', $demande->id) }}" method="POST">
-                            @csrf
-                            <div class="mb-4">
-                                <label for="prix_main_oeuvre" class="form-label-modern">
-                                    Labor Cost
-                                </label>
-                                <div class="price-input">
-                                    <input type="number" step="0.01" min="0" class="form-control form-control-modern"
-                                           id="prix_main_oeuvre" name="prix_main_oeuvre"
-                                           value="{{ old('prix_main_oeuvre', $demande->prix_main_oeuvre) }}"
-                                           @if($demande->status !== 'Nouvelle_demande') disabled @endif
-                                           required>
-                                </div>
-                                @error('prix_main_oeuvre')
-                                    <div class="text-danger mt-2 small">{{ $message }}</div>
-                                @enderror
-                            </div>
 
-                            <div class="mb-4">
-                                <label class="form-label-modern">Service Package</label>
-                                <div class="info-value">
-                                    <i class="fas fa-tag text-success"></i>
-                                    {{ $demande->forfait->nomForfait }}
-                                </div>
-                            </div>
-
-                            @if($demande->status === 'Nouvelle_demande')
-                            <button type="submit" class="btn btn-success-modern btn-modern w-100 pulse-animation">
-                                <i class="fas fa-paper-plane"></i>
-                                Send Quote to Client
-                            </button>
-                            @endif
-                        </form>
-                    </div>
-                </div>
 
                 <!-- Assigned Team -->
                 @if($demande->techniciens && count($demande->techniciens) > 0)
@@ -851,26 +809,25 @@
                 @endif
 
                 <!-- Assign Technicians -->
-                @if($demande->status === 'offre_acceptee')
-                <div class="modern-card animate-slide-up animate-delay-3">
-                    <div class="card-header-modern">
-                        <h5 class="card-title">
-                            <i class="fas fa-user-plus"></i>
-                            Assign Technicians
-                        </h5>
+                @if($demande->status === 'Nouvelle_demande')
+            <div class="modern-card animate-slide-up animate-delay-3">
+                <div class="card-header-modern">
+                    <h5 class="card-title">
+                        <i class="fas fa-user-plus"></i>
+                        Assign Technicians
+                    </h5>
+                </div>
+                <div class="card-body-modern">
+                    <div class="mb-3">
+                        <label for="nombre_techniciens" class="form-label-modern">Number of Technicians</label>
+                        <input type="number" min="1" max="{{ $techniciens->count() }}" class="form-control form-control-modern"
+                               id="nombre_techniciens" value="1">
                     </div>
-                    <div class="card-body-modern">
-                        <div class="mb-3">
-                            <label for="nombre_techniciens" class="form-label-modern">Number of Technicians</label>
-                            <input type="number" min="1" max="{{ $techniciens->count() }}"
-                                   class="form-control form-control-modern" id="nombre_techniciens" value="1">
-                        </div>
-
-                        <form id="assignTechniciensForm">
+                     <form id="assignTechniciensForm">
                             <div id="techniciens_select_container">
                                 <div class="mb-3">
-                                    <label class="form-label-modern">Technician 1</label>
-                                    <select class="form-control form-control-modern" name="techniciens[]" required>
+                                    <label class="form-label">Technician 1</label>
+                                    <select class="form-select" name="techniciens[]" required>
                                         <option value="" disabled selected>-- Select Technician --</option>
                                         @foreach($techniciens as $tech)
                                             <option value="{{ $tech->id }}">{{ $tech->prenom ?? '' }} {{ $tech->nom ?? $tech->name }}</option>
@@ -879,20 +836,21 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary-modern btn-modern w-100">
-                                <i class="fas fa-user-plus" style="color: white"></i>
-                                <b style="color: white"> Assign Team</b>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-user-plus me-2"></i>Assign Team
                             </button>
                         </form>
-                    </div>
                 </div>
-                @endif
+            </div>
+            @endif
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+
+
         // Animation d'entrée progressive
         const cards = document.querySelectorAll('.modern-card');
         cards.forEach((card, index) => {
@@ -952,6 +910,7 @@
 
         // Gestion de l'assignation des techniciens
         const assignForm = document.getElementById('assignTechniciensForm');
+         console.log("assignForm =", assignForm);
         if (assignForm) {
             assignForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -963,9 +922,10 @@
                         nom: select.options[select.selectedIndex].text
                     };
                 });
+console.log("URL API =", "{{ route('demandes.updateTechniciens', $demande->id) }}");
 
                 fetch("{{ route('demandes.updateTechniciens', $demande->id) }}", {
-                    method: 'put',
+                    method: 'PUT',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Accept': 'application/json',
@@ -1003,52 +963,7 @@
         }
 
         // Gestion du formulaire de prix
-        const prixForm = document.getElementById('prixForm');
-        if (prixForm) {
-            prixForm.addEventListener('submit', function(e) {
-                e.preventDefault();
 
-                const form = this;
-                const formData = new FormData(form);
-
-                fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: "Quote sent successfully, awaiting client acceptance.",
-                            confirmButtonColor: '#4361ee',
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: "Quote sent successfully, awaiting client acceptance.",
-                            confirmButtonColor: '#4361ee',
-                        })
-                    }
-                })
-                .catch(error => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: "Quote sent successfully, awaiting client acceptance.",
-                        confirmButtonColor: '#4361ee',
-                    })
-                });
-            });
-        }
 
         // Effets de survol pour les cartes
         document.querySelectorAll('.modern-card').forEach(card => {

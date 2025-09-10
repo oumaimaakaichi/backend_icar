@@ -14,6 +14,7 @@ class Catalogue extends Model
         'paye_fabrication',
         'photo_piece',
         'prix', // ✅ nouveau champ
+        'stock'
     ];
 
 }

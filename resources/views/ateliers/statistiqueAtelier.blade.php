@@ -68,10 +68,11 @@
             font-size: 2.5rem;
             font-weight: 700;
             text-shadow: none;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            background: linear-gradient(45deg, #3f4d87, #4e6a89);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-top: 50px
         }
 
         .timestamp {
@@ -135,6 +136,7 @@
             justify-content: center;
             font-size: 1.5rem;
             animation: pulse 2s infinite;
+            color: white
         }
 
         @keyframes pulse {
@@ -143,7 +145,7 @@
         }
 
         .stat-number {
-            font-size: 3rem;
+            font-size: 2rem;
             font-weight: 700;
             color: #1f2937;
             text-shadow: none;
@@ -207,7 +209,7 @@
         .progress-bar {
             width: 100%;
             height: 8px;
-            background: #f3f4f6;
+            background: white;
             border-radius: 4px;
             overflow: hidden;
             margin-top: 0.5rem;
@@ -268,7 +270,7 @@
         .chart-container {
             position: relative;
             height: 300px;
-            background: #f9fafb;
+            background: white;
             border-radius: 15px;
             padding: 1rem;
         }
@@ -301,7 +303,7 @@
             gap: 1rem;
             padding: 1.5rem;
             margin-bottom: 1rem;
-            background: #f9fafb;
+            background: white;
             border-radius: 15px;
             border-left: 4px solid transparent;
             transition: all 0.3s ease;
@@ -448,10 +450,7 @@
 
     <div class="dashboard-container" style="margin-top: 100px">
         <!-- Header -->
-        <div class="header">
-            <h1><i class="fas fa-chart-line"></i> Dashboard Analytics</h1>
-           
-        </div>
+        
 
         <!-- Stats Cards -->
         <div class="stats-grid">
@@ -645,7 +644,7 @@
                                 padding: 25,
                                 usePointStyle: true,
                                 pointStyle: 'circle',
-                                color: 'rgba(255, 255, 255, 0.9)',
+                                color: 'black',
                                 font: {
                                     size: 14,
                                     weight: '600'
@@ -716,7 +715,7 @@
                                 drawBorder: false
                             },
                             ticks: {
-                                color: 'rgba(255, 255, 255, 0.9)',
+                                color: 'black',
                                 font: {
                                     size: 14,
                                     weight: '600'
@@ -731,7 +730,7 @@
                                 drawBorder: false
                             },
                             ticks: {
-                                color: 'rgba(255, 255, 255, 0.9)',
+                                color: 'black',
                                 font: {
                                     size: 12
                                 }
@@ -745,7 +744,7 @@
                                 padding: 25,
                                 usePointStyle: true,
                                 pointStyle: 'circle',
-                                color: 'rgba(255, 255, 255, 0.9)',
+                                color: 'black',
                                 font: {
                                     size: 14,
                                     weight: '600'

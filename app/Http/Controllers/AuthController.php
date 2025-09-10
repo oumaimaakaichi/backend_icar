@@ -36,57 +36,66 @@ class AuthController extends Controller
 
 
     // Traitement de la connexion
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string'
-        ]);
+  public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|string'
+    ]);
 
-        // Essayer de se connecter avec chaque guard jusqu'à trouver le bon
-        $guards = ['web', 'atelier', 'entreprise'];
-        $successfulGuard = null;
-        $user = null;
+    // Essayer de se connecter avec chaque guard jusqu'à trouver le bon
+    $guards = ['web', 'atelier', 'entreprise'];
+    $successfulGuard = null;
+    $user = null;
 
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->attempt($request->only('email', 'password'))) {
-                $successfulGuard = $guard;
-                $user = Auth::guard($guard)->user();
-                break;
-            }
+    foreach ($guards as $guard) {
+        if (Auth::guard($guard)->attempt($request->only('email', 'password'))) {
+            $successfulGuard = $guard;
+            $user = Auth::guard($guard)->user();
+            break;
         }
-
-        if ($successfulGuard && $user) {
-            $request->session()->put('auth_guard', $successfulGuard);
-            $request->session()->regenerate();
-
-            // Redirection basée sur le type d'utilisateur
-            switch ($successfulGuard) {
-                case 'web':
-                    if ($user->role === 'admin') {
-                        return redirect()->route('technicien');
-                    } elseif ($user->role === 'expert' && $user->isActive ) {
-                        return redirect()->route('demandes.statistics');
-                    } elseif ($user->role === 'Responsable_piece') {
-                        return redirect()->route('responsable.choice');
-                    }
-                    break;
-
-                case 'atelier':
-                    if($user->is_active){
-                    return redirect()->route('atelierss.statistiques');
-                    }
-                case 'entreprise':
-                    return redirect()->intended(route('entreprise.statistiques'));
-            }
-
-            return redirect('/');
-        }
-
-        return back()->withErrors([
-            'email' => 'Identifiants incorrects',
-        ])->onlyInput('email');
     }
+
+    if ($successfulGuard && $user) {
+        // Check if account is active
+        if (($successfulGuard === 'atelier' && !$user->is_active) || 
+            ($successfulGuard === 'web' && $user->role === 'expert' && !$user->isActive)) {
+            
+            Auth::guard($successfulGuard)->logout();
+            return back()->with('inactive', 'Your account is not yet activated. Please wait for administrator approval.');
+        }
+
+        $request->session()->put('auth_guard', $successfulGuard);
+        $request->session()->regenerate();
+
+        // Redirection basée sur le type d'utilisateur
+        switch ($successfulGuard) {
+            case 'web':
+                if ($user->role === 'admin') {
+                    return redirect()->route('technicien');
+                } elseif ($user->role === 'expert' && $user->isActive) {
+                    return redirect()->route('demandes.statistics');
+                } elseif ($user->role === 'Responsable_piece') {
+                    return redirect()->route('responsable.choice');
+                }
+                break;
+
+            case 'atelier':
+                if($user->is_active){
+                    return redirect()->route('atelierss.statistiques');
+                }
+                break;
+            case 'entreprise':
+                return redirect()->intended(route('entreprise.statistiques'));
+        }
+
+        return redirect('/');
+    }
+
+    return back()->withErrors([
+        'email' => 'Email or password is incorrect',
+    ])->onlyInput('email');
+}
 
     // Déconnexion
     public function logout(Request $request)

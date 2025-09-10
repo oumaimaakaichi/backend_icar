@@ -283,7 +283,7 @@
                     <th>Client</th>
                     <th>Car</th>
 
-                    <th>Description</th>
+                    
                     <th>Type</th>
                     <th>Date</th>
                     <th>Status</th>
@@ -307,9 +307,7 @@
                         <div class="fw-semibold">{{ $demande['voiture_model'] }}</div>
                     </td>
 
-                    <td>
-                        <span class="badge bg-light text-dark">{{ $demande['description_probleme'] }}</span>
-                    </td>
+                   
                     <td>
                         <span class="badge bg-info bg-opacity-10 text-info"><i class="fas fa-home me-1"></i> {{$demande['type_emplacement']}}</span>
                     </td>

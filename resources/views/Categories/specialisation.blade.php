@@ -118,10 +118,10 @@
                 <div class="flex justify-between items-center">
                     <h1 class="text-2xl font-bold flex items-center">
                          <i class="fas fa-user-graduate"></i> &nbsp;
-                        Gestion des specialisations
+                   Management of Specializations
                     </h1>
                     <a href="categorie" class="bg-white text-indigo-800 px-4 py-2 rounded-full font-medium hover:bg-gray-100 transition" style="color: #5e8899">
-                        <i class="fas fa-arrow-left mr-2" style="color: #5e8899"></i> Retour
+                        <i class="fas fa-arrow-left mr-2" style="color: #5e8899"></i> Back
                     </a>
                 </div>
             </div>
@@ -133,12 +133,12 @@
                    <!-- Add City Button and Search -->
 <div class="flex justify-between mb-6">
     <div class="relative w-1/3">
-        <input type="text" id="searchInput" placeholder="Rechercher une ville..."
+        <input type="text" id="searchInput" placeholder="Search..."
                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
         <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
     </div>
     <button id="openModalBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg transition duration-200 flex items-center" style="background-color: #5e8899">
-        <i class="fas fa-plus-circle mr-2"></i> Ajouter une spécialité
+        <i class="fas fa-plus-circle mr-2"></i> Add Specialization
     </button>
 </div>
 
@@ -148,7 +148,7 @@
                     <div class="modal-header">
                         <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                             <i class="fas fa-plus-circle text-indigo-600 mr-2"></i>
-                            Ajouter une nouvelle specialité
+                            Add new Specialization
                         </h2>
                         <span class="close-btn">&times;</span>
                     </div>
@@ -156,7 +156,7 @@
                         <form action="{{ route('specialisation.store') }}" method="POST" class="grid grid-cols-1 gap-4">
                             @csrf
                             <div class="md:col-span-1">
-                                <label for="nom_specialite" class="block text-sm font-medium text-gray-700 mb-1">Nom de la specialité</label>
+                                <label for="nom_specialite" class="block text-sm font-medium text-gray-700 mb-1">Specialization name</label>
                                 <input type="text" id="nom_specialite" name="nom_specialite" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
@@ -165,10 +165,10 @@
 
                             <div class="modal-footer">
                                 <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-modal">
-                                    Annuler
+                                    Cancel
                                 </button>
                                 <button type="submit" id="submit-btn"  class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
-                                    <i class="fas fa-save mr-2"></i> Enregistrer
+                                    <i class="fas fa-save mr-2"></i> Save
                                 </button>
                             </div>
                         </form>
@@ -181,7 +181,7 @@
         <div class="modal-header">
             <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                 <i class="fas fa-edit text-indigo-600 mr-2"></i>
-                Modifier la spécialité
+                Edit Specialization
             </h2>
             <span class="close-edit-modal close-btn">&times;</span>
         </div>
@@ -190,7 +190,7 @@
                 @csrf
                 @method('PUT')
                 <div class="md:col-span-1">
-                    <label for="edit_nom_specialite" class="block text-sm font-medium text-gray-700 mb-1">Nom de la spécialité</label>
+                    <label for="edit_nom_specialite" class="block text-sm font-medium text-gray-700 mb-1">Specialization name</label>
                     <input type="text" id="edit_nom_specialite" name="nom_specialite" required
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
@@ -200,10 +200,10 @@
 
                 <div class="modal-footer">
                     <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-edit-modal">
-                        Annuler
+                        Cancel
                     </button>
                     <button type="submit" id="edit-submit-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
-                        <i class="fas fa-save mr-2"></i> Enregistrer
+                        <i class="fas fa-save mr-2"></i> Save
                     </button>
                 </div>
             </form>
@@ -215,7 +215,7 @@
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                         <i class="fas fa-list-ul text-indigo-600 mr-2" style="color: #5e8899"></i>
-                        Liste des specialités
+                        Specializations list
                     </h2>
                 </div>
 
@@ -234,7 +234,7 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Nom
+                                    Name
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Actions
@@ -258,7 +258,7 @@
                                        <!-- Edit Button -->
 <button onclick="openEditModal({{ $specialisation->id }}, '{{ $specialisation->nom_specialite }}')"
     class="text-yellow-600 hover:text-yellow-900 ml-3"
-    title="Modifier">
+    title="Edit">
 <i class="fas fa-edit"></i>
 
 </button>
@@ -270,7 +270,7 @@
                                             @method('DELETE')
                                             <button type="submit"
                                                     class="text-red-600 hover:text-red-900"
-                                                    title="Supprimer"
+                                                    title="Delete"
                                                     onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette specialisation?')">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>

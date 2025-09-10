@@ -116,6 +116,21 @@
         .divider::after {
             margin-left: 1rem;
         }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -145,6 +160,16 @@
                     </div>
                 </div>
             @endif
+            
+            <!-- Inactive account message -->
+            @if(session('inactive'))
+                <div class="bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg animate__animated animate__shakeX flex items-start">
+                    <i class="fas fa-exclamation-triangle mt-1 mr-3 flex-shrink-0"></i>
+                    <div>
+                        <span class="font-medium">Notice:</span> {{ session('inactive') }}
+                    </div>
+                </div>
+            @endif
 
             <!-- Social login buttons -->
             <div class="flex justify-center space-x-4 mb-6 animate__animated animate__fadeIn animate__delay-1s">
@@ -164,6 +189,14 @@
             <!-- Login form -->
             <form action="{{ route('login') }}" method="POST" class="space-y-5">
                 @csrf
+@error('email')
+    <div class="mt-2 flex items-center text-red-600 text-sm bg-red-100 p-2 rounded-lg">
+        <svg class="w-4 h-4 mr-2 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-9-4a1 1 0 012 0v4a1 1 0 01-2 0V6zm1 8a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" clip-rule="evenodd"/>
+        </svg>
+        {{ $message }}
+    </div>
+@enderror
 
                 <!-- Email field -->
                 <div class="animate__animated animate__fadeIn animate__delay-1s">
@@ -179,8 +212,10 @@
                             placeholder="Email address"
                             required
                             autofocus
+                            value="{{ old('email') }}"
                         >
                     </div>
+                
                 </div>
 
                 <!-- Password field -->
@@ -205,9 +240,12 @@
                             <i id="togglePasswordIcon" class="fas fa-eye"></i>
                         </button>
                     </div>
+                    @error('password')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                     <div class="mt-2 flex justify-between items-center">
                         <label class="inline-flex items-center">
-                            <input type="checkbox" class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out rounded border-gray-300">
+                            <input type="checkbox" name="remember" class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out rounded border-gray-300">
                             <span class="ml-2 text-sm text-gray-600">Remember me</span>
                         </label>
                         <a href="#" class="text-sm text-indigo-600 hover:underline">Forgot password?</a>

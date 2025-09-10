@@ -144,6 +144,7 @@
                     <div class="section-title">Technicien</div>
                     <div><strong>Nom:</strong> <span class="highlight">{{ $rapport->technicien->nom }}{{ $rapport->technicien->prenom }}</span></div>
                 <div><strong>Téléphone:</strong> {{ $rapport->technicien->phone ?? 'Non spécifié' }}</div>
+ <div><strong>Email:</strong> {{ $rapport->technicien->email ?? 'Non spécifié' }}</div>
 
                 </div>
             </div>
@@ -153,6 +154,7 @@
                     <div class="section-title">Client</div>
                     <div><strong>Nom:</strong> <span class="highlight">{{ $rapport->demande->client->nom ?? 'Non spécifié' }} {{ $rapport->demande->client->prenom ?? 'Non spécifié' }}</span></div>
                     <div><strong>Téléphone:</strong> {{ $rapport->demande->client->phone ?? 'Non spécifié' }}</div>
+                        <div><strong>Email:</strong> {{ $rapport->demande->client->email ?? 'Non spécifié' }}</div>
                 </div>
             </div>
         </div>
@@ -161,14 +163,13 @@
             <div class="section-title">Détails de la Demande</div>
             <div class="two-columns">
                 <div>
-                    <div><strong>ID Demande:</strong> {{ $rapport->demande->id }}</div>
+
                     <div><strong>Service:</strong> {{ $rapport->demande->servicePanne->titre ?? 'Non spécifié' }}</div>
                     <div><strong>Catégorie:</strong> {{ $rapport->demande->servicePanne->categoryPane->titre ?? 'Non spécifié' }}</div>
                 </div>
                 <div>
                     <div><strong>Forfait:</strong> {{ $rapport->demande->forfait->nom ?? 'Non spécifié' }}</div>
-                    <div><strong>Prix total:</strong> <span style="color: #27ae60; font-weight: 600;">{{ number_format($rapport->demande->prix_total, 2) }} €</span></div>
-                </div>
+                       </div>
             </div>
         </div>
 
@@ -181,25 +182,14 @@
                 </div>
                 <div>
                     <div><strong>Type d'emplacement:</strong> {{ $rapport->demande->type_emplacement }}</div>
-                    <div><strong>Statut:</strong>
-                        <span style="background-color:
-                            @if($rapport->demande->status == 'Terminé') #2ecc71
-                            @elseif($rapport->demande->status == 'En cours') #f39c12
-                            @else #e74c3c
-                            @endif;
-                            color: white;
-                            padding: 2px 8px;
-                            border-radius: 3px;
-                            font-size: 13px;">
-                            {{ $rapport->demande->status }}
-                        </span>
-                    </div>
+<div><strong>Prix de main oeuvre:</strong> {{ $rapport->demande->prix_main_oeuvre }}€ </div>
+
                 </div>
             </div>
         </div>
 
         @if(!empty($rapport->demande->pieces_choisies))
-        <div class="section" style="margin-top: 50px">
+        <div class="section" style="margin-top: 100px">
             <div class="section-title">Pièces utilisées</div>
             <table>
                 <thead>

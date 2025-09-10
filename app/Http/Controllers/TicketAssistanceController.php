@@ -65,15 +65,15 @@ class TicketAssistanceController extends Controller
             'statut' => 'traite',
         ]);
 
-        return response()->json(['message' => 'Réponse enregistrée avec succès.']);
+        return response()->json(['message' => 'Response saved successfully.']);
     }
    public function index()
 {
     $tickets = TicketAssistance::with('user')
                 ->orderBy('created_at', 'desc')
-                ->paginate(10);
+                ->paginate(3);
 
-    return view('admin.ticketAssistance', ['tickets' => $tickets]); // Passage explicite de la variable
+    return view('admin.ticketAssistance', ['tickets' => $tickets]); 
 }
 public function closeTicket($id)
 {

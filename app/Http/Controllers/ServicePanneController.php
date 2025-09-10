@@ -21,11 +21,13 @@ class ServicePanneController extends Controller
     }
 
 
-     public function index()
-    {
-        $services = ServicePanne::paginate(6);
-        return view('Categories.service', compact('services'));
-    }
+    public function index()
+{
+    $services = ServicePanne::paginate(6);
+    $categories = \App\Models\CategoryPane::all(); // Récupérer toutes les catégories
+    return view('Categories.service', compact('services', 'categories'));
+}
+
     public function store(Request $request)
     {
         $validated = $request->validate([

@@ -117,9 +117,9 @@
         }
 
         .success-message .close-btn {
-            background: rgba(255,255,255,0.2);
+            background: white;
             border: none;
-            color: var(--white);
+            color: white;
             width: 28px;
             height: 28px;
             border-radius: 50%;
@@ -735,11 +735,11 @@
     <div class="modal fade" id="addTechnicienModal" tabindex="-1" aria-labelledby="addTechnicienModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title" id="addTechnicienModalLabel">
+                <div class="modal-header" style="background-color: #35677d">
+                    <h2 class="modal-title" id="addTechnicienModalLabel" style="color: white">
                         <i class="fas fa-user-plus me-2" aria-hidden="true"></i>New Technician
                     </h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: white"></button>
                 </div>
                 <form action="{{ route('techniciens.storeTech') }}" method="POST">
                     @csrf

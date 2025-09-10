@@ -811,7 +811,7 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.message) {
-                            showSuccessMessage('Technician deactivated successfully!');
+                            showSuccessMessage('Customer deactivated successfully!');
                             setTimeout(() => location.reload(), 1500);
                         } else {
                             alert("Deactivation error.");
@@ -840,7 +840,7 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.message) {
-                            showSuccessMessage('Technician activated successfully!');
+                            showSuccessMessage('Customer activated successfully!');
                             setTimeout(() => location.reload(), 1500);
                         } else {
                             alert("Erreur lors de l'activation.");

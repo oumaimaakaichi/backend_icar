@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth; // ✅ Ceci est correct
 use App\Events\DemandeCreated;
+use Illuminate\Support\Str;
 
 use App\Events\NotificationSent;
 
@@ -304,33 +305,43 @@ public function getDetailsForConfirmation($id)
     $demande = Demande::with([
         'servicePanne',
         'voiture',
-        'atelier'
+        'atelier',
+        'pieceRecommandee' // relation à ajouter si pas encore faite
     ])->find($id);
 
     if (!$demande) {
         return response()->json(['message' => 'Demande non trouvée'], 404);
     }
 
-    // Calcul du total des pièces
+    // ---- Total des pièces choisies ----
     $pieces = $demande->pieces_choisies ?? [];
     if (!is_array($pieces)) {
         $pieces = json_decode($pieces, true) ?? [];
     }
 
-    $totalPieces = array_reduce($pieces, function($carry, $item) {
+    $totalPieces = array_reduce($pieces, function ($carry, $item) {
         return $carry + ($item['prix'] ?? 0);
     }, 0);
 
+    // ---- Total de la main d’œuvre (table PieceRecommandee -> JSON "pieces") ----
+    $totalMainOeuvre = 0;
+    if ($demande->pieceRecommandee && is_array($demande->pieceRecommandee->pieces)) {
+        foreach ($demande->pieceRecommandee->pieces as $piece) {
+            $totalMainOeuvre += $piece['prix_main_oeuvre'] ?? 0;
+        }
+    }
+
     return response()->json([
-        'service_titre' => $demande->servicePanne->titre ?? 'Non spécifié',
-        'voiture_model' => $demande->voiture->model ?? 'Non spécifié',
-        'total_pieces' => $totalPieces,
-        'total_main_oeuvre' => $demande->prix_main_oeuvre ?? 0,
-        'pieces_choisies' => $pieces,
-        'date_maintenance' => $demande->date_maintenance,
-        'atelier' => $demande->atelier,
+        'service_titre'     => $demande->servicePanne->titre ?? 'Non spécifié',
+        'voiture_model'     => $demande->voiture->model ?? 'Non spécifié',
+        'total_pieces'      => $totalPieces,
+        'total_main_oeuvre' => $totalMainOeuvre,
+        'pieces_choisies'   => $pieces,
+        'date_maintenance'  => $demande->date_maintenance,
+        'atelier'           => $demande->atelier,
     ]);
 }
+
 public function updateLocation(Request $request, $id)
 {
     // Validation commune
@@ -340,6 +351,7 @@ public function updateLocation(Request $request, $id)
         'longitude' => 'required|numeric',
         'date_maintenance' => 'nullable|date',
         'heure_maintenance' => 'nullable|date_format:H:i',
+
     ]);
 
     $demande = Demande::find($id);

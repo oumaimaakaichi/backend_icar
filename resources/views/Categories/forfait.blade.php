@@ -180,10 +180,10 @@
                 <div class="flex justify-between items-center">
                     <h1 class="text-2xl font-bold flex items-center">
                         <i class="fas fa-boxes mr-3"></i>
-                        Gestion des Forfaits
+                       Package Management
                     </h1>
                     <a href="categorie" class="bg-white text-indigo-800 px-4 py-2 rounded-full font-medium hover:bg-gray-100 transition" style="color: #5e8899">
-                        <i class="fas fa-arrow-left mr-2" style="color: #5e8899"></i> Retour
+                        <i class="fas fa-arrow-left mr-2" style="color: #5e8899"></i> back
                     </a>
                 </div>
             </div>
@@ -195,12 +195,12 @@
             <!-- Add Forfait Button and Search -->
             <div class="flex justify-between mb-6">
                 <div class="relative w-1/3">
-                    <input type="text" id="searchInput" placeholder="Rechercher un forfait..."
+                    <input type="text" id="searchInput" placeholder="Search..."
                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                 </div>
                 <button id="openModalBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg transition duration-200 flex items-center" style="background-color: #5e8899">
-                    <i class="fas fa-plus-circle mr-2"></i> Ajouter un forfait
+                    <i class="fas fa-plus-circle mr-2"></i> Add package
                 </button>
             </div>
 
@@ -210,7 +210,7 @@
                     <div class="modal-header">
                         <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                             <i class="fas fa-plus-circle text-indigo-600 mr-2"></i>
-                            Ajouter un nouveau forfait
+                            Add new package
                         </h2>
                         <span class="close-btn">&times;</span>
                     </div>
@@ -219,13 +219,13 @@
                             @csrf
                             <div class="grid grid-cols-1 gap-6">
                                 <div>
-                                    <label for="nomForfait" class="block text-sm font-medium text-gray-700 mb-1">Nom du forfait</label>
+                                    <label for="nomForfait" class="block text-sm font-medium text-gray-700 mb-1">Package name</label>
                                     <input type="text" id="nomForfait" name="nomForfait" required
                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                 </div>
 
                                 <div>
-                                    <label for="prixForfait" class="block text-sm font-medium text-gray-700 mb-1">Prix du forfait</label>
+                                    <label for="prixForfait" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
                                     <input type="number" step="0.01" id="prixForfait" name="prixForfait" required
                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                                 </div>
@@ -237,7 +237,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Services inclus</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Services Included</label>
                                     <div class="services-grid" id="servicesContainer">
                                        @foreach($servicePannes as $service)
     <div class="service-item">
@@ -260,10 +260,10 @@
 
                             <div class="modal-footer">
                                 <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-modal">
-                                    Annuler
+                                    Cancel
                                 </button>
                                 <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
-                                    <i class="fas fa-save mr-2"></i> Enregistrer
+                                    <i class="fas fa-save mr-2"></i> Save
                                 </button>
                             </div>
                         </form>
@@ -277,7 +277,7 @@
                     <div class="modal-header">
                         <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                             <i class="fas fa-edit text-indigo-600 mr-2"></i>
-                            Modifier le forfait
+                            Edit package
                         </h2>
                         <span class="close-edit-modal close-btn">&times;</span>
                     </div>
@@ -286,13 +286,13 @@
                             @csrf
                             @method('PUT')
                             <div>
-                                <label for="edit_nomForfait" class="block text-sm font-medium text-gray-700 mb-1">Nom du forfait</label>
+                                <label for="edit_nomForfait" class="block text-sm font-medium text-gray-700 mb-1">Package name</label>
                                 <input type="text" id="edit_nomForfait" name="nomForfait" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
                             <div>
-                                <label for="edit_prixForfait" class="block text-sm font-medium text-gray-700 mb-1">Prix du forfait</label>
+                                <label for="edit_prixForfait" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
                                 <input type="number" step="0.01" id="edit_prixForfait" name="prixForfait" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
@@ -304,7 +304,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Services inclus</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Services included</label>
                                 <div class="services-grid" id="editServicesContainer">
                                    @foreach($servicePannes as $service)
     <div class="service-item">
@@ -325,10 +325,10 @@
 
                             <div class="modal-footer">
                                 <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-edit-modal">
-                                    Annuler
+                                    Cancel
                                 </button>
                                 <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
-                                    <i class="fas fa-save mr-2"></i> Enregistrer
+                                    <i class="fas fa-save mr-2"></i> Save
                                 </button>
                             </div>
                         </form>
@@ -341,7 +341,7 @@
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                         <i class="fas fa-list-ul text-indigo-600 mr-2" style="color: #5e8899"></i>
-                        Liste des forfaits
+                        Packags list
                     </h2>
                 </div>
 
@@ -360,10 +360,10 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Nom
+                                    Name
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Prix
+                                    Price
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Rival
@@ -408,7 +408,7 @@
                                         <!-- Edit Button -->
                                         <button onclick="openEditModal({{ $forfait->id }}, '{{ $forfait->nomForfait }}', '{{ $forfait->prixForfait }}', '{{ $forfait->rival }}', [{{ $forfait->servicePannes->pluck('id')->implode(',') }}])"
     class="text-yellow-600 hover:text-yellow-900 ml-3"
-    title="Modifier">
+    title="Edit">
     <i class="fas fa-edit"></i>
 </button>
 
@@ -418,7 +418,7 @@
                                             @method('DELETE')
                                             <button type="submit"
                                                     class="text-red-600 hover:text-red-900"
-                                                    title="Supprimer"
+                                                    title="delete"
                                                     onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce forfait?')">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>

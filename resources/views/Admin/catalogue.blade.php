@@ -13,8 +13,8 @@
     <style>
         :root {
             --primary-color:  #567288;
-            --secondary-color: #3f37c9;
-            --accent-color: #4cc9f0;
+            --secondary-color: #567288;
+            --accent-color: #567288;
             --dark-color: #2b2d42;
             --light-color: #f8f9fa;
             --success-color: #4caf50;
@@ -133,7 +133,7 @@ width:100%
         }
 
         .modal-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            background: linear-gradient(135deg, #567288 0%, #567288 100%);
             color: white;
             border-bottom: none;
         }
@@ -369,7 +369,7 @@ width:100%
                     <h5 class="modal-title" id="addCatalogueModalLabel">
                         <i class="fas fa-plus-circle me-2"></i>Add New Part to Catalog
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="color: white"></button>
                 </div>
                 <div class="modal-body">
                     <form action="{{ route('catalogues.store') }}" method="POST" enctype="multipart/form-data">
@@ -414,6 +414,15 @@ width:100%
                                 <input type="file" name="photo_piece" class="form-control" accept="image/*">
                                 <small class="text-muted">Max file size: 2MB (JPEG, PNG)</small>
                             </div>
+                            <div class="col-md-6">
+    <label class="form-label fw-bold"><i class="fas fa-dollar-sign me-2 text-primary"></i>Price</label>
+    <input type="number" name="prix" class="form-control" placeholder="Enter price" min="0" required>
+</div>
+<div class="col-md-6">
+    <label class="form-label fw-bold"><i class="fas fa-boxes me-2 text-primary"></i>Stock</label>
+    <input type="number" name="stock" class="form-control" placeholder="Enter stock quantity" min="0" required>
+</div>
+
                         </div>
                         <div class="modal-footer border-0 pt-4">
                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
@@ -434,7 +443,7 @@ width:100%
     <div class="modal fade" id="editCatalogueModal{{ $catalogue->id }}" tabindex="-1" aria-labelledby="editCatalogueModalLabel{{ $catalogue->id }}" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="background-color: darkcyan">
                     <h5 class="modal-title" id="editCatalogueModalLabel{{ $catalogue->id }}">
                         <i class="fas fa-edit me-2"></i>Edit Part: {{ $catalogue->nom_piece }}
                     </h5>
@@ -492,6 +501,15 @@ width:100%
                                     </div>
                                 @endif
                             </div>
+                            <div class="col-md-6">
+    <label class="form-label fw-bold"><i class="fas fa-dollar-sign me-2 text-primary"></i>Price</label>
+    <input type="number" name="prix" class="form-control" value="{{ $catalogue->prix }}" min="0" required>
+</div>
+<div class="col-md-6">
+    <label class="form-label fw-bold"><i class="fas fa-boxes me-2 text-primary"></i>Stock</label>
+    <input type="number" name="stock" class="form-control" value="{{ $catalogue->stock }}" min="0" required>
+</div>
+
                         </div>
                         <div class="modal-footer border-0 pt-4">
                             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">

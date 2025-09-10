@@ -668,20 +668,36 @@ public function saveSelections(Request $request, $demandeId)
 
     $demande = DemandePanneInconnu::findOrFail($demandeId);
 
-    // CORRECTION: Utiliser 'pieces_selectionnees' au lieu de 'pieces'
-    $prixTotal = collect($request->pieces_selectionnees)->sum('prix');
+    // ---- Calcul du total des pièces choisies ----
+    $prixPieces = collect($request->pieces_selectionnees)->sum('prix');
 
-    // Enregistrer les sélections dans le champ JSON pieces_selectionnees
+    // ---- Récupération de la main d’œuvre liée aux pièces ----
+    $mainOeuvrePieces = $demande->main_oeuvre_pieces ?? [];
+    if (!is_array($mainOeuvrePieces)) {
+        $mainOeuvrePieces = json_decode($mainOeuvrePieces, true) ?? [];
+    }
+
+    $prixMainOeuvre = collect($mainOeuvrePieces)->map(function ($val) {
+        return (float)$val;
+    })->sum();
+
+    // ---- Prix total = pièces + main d’œuvre ----
+    $prixTotal = $prixPieces + $prixMainOeuvre;
+
+    // ---- Enregistrer dans la demande ----
     $demande->update([
         'pieces_selectionnees' => $request->pieces_selectionnees,
         'prix_total' => $prixTotal,
-        'statut' => 'selections_enregistrees' // Optionnel: changer le statut
+        'statut' => 'selections_enregistrees'
     ]);
 
     return response()->json([
         'success' => true,
         'message' => 'Sélections enregistrées avec succès',
+        'prix_pieces' => $prixPieces,
+        'prix_main_oeuvre' => $prixMainOeuvre,
         'prix_total' => $prixTotal,
     ]);
 }
+
 }

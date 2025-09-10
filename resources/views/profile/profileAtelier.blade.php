@@ -119,7 +119,7 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 46px;
+            font-size: 36px;
             font-weight: bold;
 
             position: relative;
@@ -479,7 +479,7 @@
         <div class="shape"></div>
     </div>
 
-    <div class="container" style="margin-top: 60px ; margin-right:50px">
+    <div class="container" style="margin-top: 60px ;margin-right:50px">
         <!-- Header Profile -->
         <div class="profile-header">
             <div class="header-content">

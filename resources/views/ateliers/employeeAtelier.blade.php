@@ -601,7 +601,7 @@
                             <input type="text" name="adresse" class="form-control" required>
                         </div>
                         <div class="d-flex justify-content-end gap-3 mt-4">
-                            <button type="button" class="btn btn-modern btn-secondary-modern" data-bs-dismiss="modal">
+                            <button type="button" class="btn btn-modern btn-secondary-modern" data-bs-dismiss="modal" style="color: white">
                                 <i class="bi bi-x-circle me-2"></i>Annuler
                             </button>
                             <button type="submit" class="btn btn-modern btn-primary-modern">
@@ -647,10 +647,10 @@
                             <input type="text" name="adresse" class="form-control" id="adresse">
                         </div>
                         <div class="d-flex justify-content-end gap-3 mt-4">
-                            <button type="button" class="btn btn-modern btn-secondary-modern" data-bs-dismiss="modal">
+                            <button type="button" class="btn btn-modern btn-secondary-modern" data-bs-dismiss="modal" style="color: white">
                                 <i class="bi bi-x-circle me-2"></i>Annuler
                             </button>
-                            <button type="submit" class="btn btn-modern btn-primary-modern">
+                            <button type="submit" class="btn btn-modern btn-primary-modern" style="color: white">
                                 <i class="bi bi-check-circle me-2"></i>Mettre à jour
                             </button>
                         </div>

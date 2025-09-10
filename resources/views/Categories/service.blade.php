@@ -114,10 +114,10 @@
                 <div class="flex justify-between items-center">
                     <h1 class="text-2xl font-bold flex items-center">
                         <i class="fas fa-concierge-bell mr-3" style="color: white"></i>
-                        Gestion des Services
+                     Services Management
                     </h1>
                     <a href="categorie" class="bg-white text-indigo-800 px-4 py-2 rounded-full font-medium hover:bg-gray-100 transition" style="color: #5e8899">
-                        <i class="fas fa-arrow-left mr-2" style="color: #5e8899"></i> Retour
+                        <i class="fas fa-arrow-left mr-2" style="color: #5e8899"></i> Back
                     </a>
                 </div>
             </div>
@@ -134,7 +134,7 @@
                     <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                 </div>
                 <button id="openModalBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg transition duration-200 flex items-center" style="background-color: #5e8899">
-                    <i class="fas fa-plus-circle mr-2"></i> Ajouter un service
+                    <i class="fas fa-plus-circle mr-2"></i> Add service
                 </button>
             </div>
 
@@ -144,7 +144,7 @@
                     <div class="modal-header">
                         <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                             <i class="fas fa-plus-circle text-indigo-600 mr-2"></i>
-                            Ajouter un nouveau service
+                            Add new service
                         </h2>
                         <span class="close-btn">&times;</span>
                     </div>
@@ -152,19 +152,15 @@
                         <form action="{{ route('servicee.store') }}" method="POST" class="grid grid-cols-1 gap-4">
                             @csrf
                             <div class="md:col-span-1">
-                                <label for="titre" class="block text-sm font-medium text-gray-700 mb-1">Nom du service</label>
+                                <label for="titre" class="block text-sm font-medium text-gray-700 mb-1">Service name</label>
                                 <input type="text" id="titre" name="titre" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
-                            <div class="md:col-span-1">
-                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Pays de fabrication</label>
-                                <input type="text" id="description" name="description" required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                            </div>
+
 
                             <div class="md:col-span-1">
-                                <label for="prix" class="block text-sm font-medium text-gray-700 mb-1">Prix</label>
+                                <label for="prix" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
                                 <input type="number" step="0.01" id="prix" name="prix" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
@@ -174,13 +170,25 @@
                                 <input type="number" id="rival" name="rival" min="0" max="100" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
+<div class="md:col-span-1">
+    <label for="category_pane_id" class="block text-sm font-medium text-gray-700 mb-1">
+        Categpry
+    </label>
+    <select id="category_pane_id" name="category_pane_id" required
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+        <option value="">-- Select a category --</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->titre }}</option>
+        @endforeach
+    </select>
+</div>
 
                             <div class="modal-footer">
                                 <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-modal">
-                                    Annuler
+                                    Cancel
                                 </button>
                                 <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
-                                    <i class="fas fa-save mr-2"></i> Enregistrer
+                                    <i class="fas fa-save mr-2"></i> Save
                                 </button>
                             </div>
                         </form>
@@ -195,7 +203,7 @@
         <div class="modal-header">
             <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                 <i class="fas fa-edit text-indigo-600 mr-2"></i>
-                Modifier le service
+                Edit service
             </h2>
             <span class="close-edit-modal close-btn">&times;</span>
         </div>
@@ -204,27 +212,35 @@
                 @csrf
                 @method('PUT')
                 <div class="md:col-span-1">
-                    <label for="edit_titre" class="block text-sm font-medium text-gray-700 mb-1">Nom du service</label>
+                    <label for="edit_titre" class="block text-sm font-medium text-gray-700 mb-1">Service name</label>
                     <input type="text" id="edit_titre" name="titre" required
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
-                <div class="md:col-span-1">
-                    <label for="edit_description" class="block text-sm font-medium text-gray-700 mb-1">Pays de fabrication</label>
-                    <input type="text" id="edit_description" name="description" required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                </div>
 
+
+<div class="md:col-span-1">
+    <label for="edit_category_pane_id" class="block text-sm font-medium text-gray-700 mb-1">
+        Category
+    </label>
+    <select id="edit_category_pane_id" name="category_pane_id" required
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+        <option value="">-- Select catagory --</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->titre }}</option>
+        @endforeach
+    </select>
+</div>
 
 
 
 
                 <div class="modal-footer">
                     <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-edit-modal">
-                        Annuler
+                        Cancel
                     </button>
                     <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
-                        <i class="fas fa-save mr-2"></i> Enregistrer
+                        <i class="fas fa-save mr-2"></i> Save
                     </button>
                 </div>
             </form>
@@ -237,7 +253,7 @@
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h2 class="text-xl font-semibold text-gray-800 flex items-center">
                         <i class="fas fa-list-ul text-indigo-600 mr-2" style="color: #5e8899"></i>
-                        Liste des services
+                        Services list
                     </h2>
                 </div>
 
@@ -256,7 +272,7 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Nom
+                                    Name
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Description
@@ -288,7 +304,7 @@
                                         <!-- Edit Button -->
                                         <button onclick="openEditModal({{ $service->id }}, '{{ $service->titre }}', '{{ $service->description }}')"
                                             class="text-yellow-600 hover:text-yellow-900 ml-3"
-                                            title="Modifier">
+                                            title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
 
@@ -298,7 +314,7 @@
                                             @method('DELETE')
                                             <button type="submit"
                                                     class="text-red-600 hover:text-red-900"
-                                                    title="Supprimer"
+                                                    title="delete"
                                                     onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce service?')">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
@@ -327,7 +343,7 @@
                                 <td colspan="4" class="px-6 py-4 text-center text-gray-500">
                                     Aucun service enregistré pour le moment.
                                 </td>
-                            </tr>
+                            </tr
                             @endforelse
                         </tbody>
                     </table>
