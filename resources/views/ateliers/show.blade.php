@@ -809,40 +809,35 @@
                 @endif
 
                 <!-- Assign Technicians -->
-                @if($demande->status === 'Nouvelle_demande')
-            <div class="modern-card animate-slide-up animate-delay-3">
-                <div class="card-header-modern">
-                    <h5 class="card-title">
-                        <i class="fas fa-user-plus"></i>
-                        Assign Technicians
-                    </h5>
-                </div>
-                <div class="card-body-modern">
-                    <div class="mb-3">
-                        <label for="nombre_techniciens" class="form-label-modern">Number of Technicians</label>
-                        <input type="number" min="1" max="{{ $techniciens->count() }}" class="form-control form-control-modern"
-                               id="nombre_techniciens" value="1">
-                    </div>
-                     <form id="assignTechniciensForm">
-                            <div id="techniciens_select_container">
-                                <div class="mb-3">
-                                    <label class="form-label">Technician 1</label>
-                                    <select class="form-select" name="techniciens[]" required>
-                                        <option value="" disabled selected>-- Select Technician --</option>
-                                        @foreach($techniciens as $tech)
-                                            <option value="{{ $tech->id }}">{{ $tech->prenom ?? '' }} {{ $tech->nom ?? $tech->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="fas fa-user-plus me-2"></i>Assign Team
-                            </button>
-                        </form>
-                </div>
+              <!-- Assign Technician -->
+@if($demande->status === 'Nouvelle_demande')
+<div class="modern-card animate-slide-up animate-delay-3">
+    <div class="card-header-modern">
+        <h5 class="card-title">
+            <i class="fas fa-user-plus"></i>
+            Assign Technician
+        </h5>
+    </div>
+    <div class="card-body-modern">
+        <form id="assignTechnicienForm">
+            <div class="mb-3">
+                <label class="form-label">Select Technician</label>
+                <select class="form-select" name="technicien_id" required aria-label="Select Technician">
+                    <option value="" disabled selected>-- Select Technician --</option>
+                    @foreach($techniciens as $tech)
+                        <option value="{{ $tech->id }}">{{ $tech->prenom ?? '' }} {{ $tech->nom ?? $tech->name }}</option>
+                    @endforeach
+                </select>
             </div>
-            @endif
+
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-user-plus me-2"></i>Assign Technician
+            </button>
+        </form>
+    </div>
+</div>
+@endif
+
             </div>
         </div>
     </div>

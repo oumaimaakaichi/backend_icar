@@ -46,7 +46,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.03) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.03) 0%, transparent 50%),
                 radial-gradient(circle at 40% 40%, rgba(102, 126, 234, 0.02) 0%, transparent 50%);
@@ -72,7 +72,7 @@
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(102, 126, 234, 0.1);
             border-radius: 20px;
-            box-shadow: 
+            box-shadow:
                 0 8px 32px 0 rgba(102, 126, 234, 0.1),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
             transform: translateY(0);
@@ -80,7 +80,7 @@
 
         .glass-card:hover {
             transform: translateY(-8px) scale(1.02);
-            box-shadow: 
+            box-shadow:
                 0 20px 40px 0 rgba(102, 126, 234, 0.15),
                 inset 0 1px 0 rgba(255, 255, 255, 0.4);
         }
@@ -363,7 +363,7 @@
         }
 
         .pagination-modern .page-item.active .page-link {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #667eea 100%);
             border-color: transparent;
             color: white;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
@@ -408,27 +408,27 @@
             .page-title {
                 font-size: 2rem;
             }
-            
+
             .glass-card {
                 margin: 1rem;
                 border-radius: 15px;
             }
-            
+
             .modern-table {
                 font-size: 0.9rem;
             }
-            
+
             .modern-table thead {
                 display: none;
             }
-            
+
             .modern-table tbody tr {
                 display: block;
                 margin-bottom: 1rem;
                 border-radius: 15px;
                 padding: 1rem;
             }
-            
+
             .modern-table tbody td {
                 display: flex;
                 justify-content: space-between;
@@ -436,7 +436,7 @@
                 padding: 0.75rem 0;
                 border-bottom: 1px solid rgba(102, 126, 234, 0.1);
             }
-            
+
             .modern-table tbody td::before {
                 content: attr(data-label);
                 font-weight: 600;
@@ -849,7 +849,7 @@
             card.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-8px) scale(1.02)';
             });
-            
+
             card.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0) scale(1)';
             });

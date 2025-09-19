@@ -19,7 +19,7 @@ class DemandeController extends Controller
 public function store(Request $request)
 {
     $request->validate([
-        'forfait_id' => 'required|exists:forfaits,id',
+
         'service_panne_id' => 'required|exists:service_pannes,id',
         'voiture_id' => 'required|exists:voitures,id',
     ]);
@@ -28,7 +28,7 @@ public function store(Request $request)
     $clientId = $voiture->client_id;
 
     $demande = Demande::create([
-        'forfait_id' => $request->forfait_id,
+
         'service_panne_id' => $request->service_panne_id,
         'voiture_id' => $request->voiture_id,
         'client_id' => $clientId,
@@ -515,6 +515,16 @@ public function getDemandesParTechnicien($technicien_id)
             'longitude' => $demande->longitude,
             'prix_total' => $demande->prix_total,
             'prix_main_oeuvre' => $demande->prix_main_oeuvre,
+            'surface_maison' => $demande->surface_maison,
+            'hauteur_plafond_maison' => $demande->hauteur_plafond_maison,
+             'porte_garage_maison' => $demande->porte_garage_maison,
+             'surface_bureau'  => $demande->surface_bureau,
+             'hauteur_plafond_bureau'  => $demande->hauteur_plafond_bureau,
+             'porte_garage_bureau'  => $demande->porte_garage_bureau,
+             'surface_parking_travail' => $demande->surface_parking_travail,
+             'autorisation_entree_travail' => $demande->autorisation_entree_travail,
+             'porte_travail' => $demande->porte_travail,
+             'proximite_parking_public' => $demande->proximite_parking_public
         ];
     });
 

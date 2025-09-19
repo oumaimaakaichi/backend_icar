@@ -616,7 +616,7 @@
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Logout</span>
             </button>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            <form id="logout-form" action="{{ route('login') }}" method="POST" style="display: none;">
                 @csrf
             </form>
         </div>
@@ -669,7 +669,7 @@
             <ul class="user-popup-menu">
                <li><a href="{{ route('profile.edit') }}"><i class="fas fa-user"></i> Profile</a></li>
                 <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-                <li><a href="#" id="popup-logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+               <li><a href="{{ route('login') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </div>
     </header>

@@ -53,7 +53,7 @@
         /* Modern Sidebar */
         .sidebar {
             width: var(--sidebar-width);
-            background: linear-gradient(145deg, rgb(255, 255, 255), var(--gray-50));
+            background: linear-gradient(145deg, var(--gray-50), var(--gray-50));
             height: 100vh;
             position: fixed;
             left: 0;
@@ -95,7 +95,7 @@
         .toggle-sidebar {
             position: absolute;
             right: -15px;
-            top: 50%;
+            top: 20%;
             transform: translateY(-50%);
             background: white;
             border: 2px solid var(--gray-200);
@@ -109,6 +109,7 @@
             box-shadow: var(--shadow);
             z-index: 1001;
             transition: var(--transition);
+            color: blue
         }
 
         .toggle-sidebar:hover {
@@ -688,11 +689,11 @@
                     <div class="tooltip-text">Current Requests</div>
                 </a>
 
-                <a href="ticket_maintenance" class="menu-link" data-title="Maintenance Tickets" data-breadcrumb="Home › Tickets">
-                    <i class="fas fa-ticket-alt"></i>
-                    <span>Maintenance Tickets</span>
-                    <div class="tooltip-text">Maintenance Tickets</div>
-                </a>
+                <a href="{{ route('assistance.index') }}" class="menu-link" data-title="Maintenance Tickets" data-breadcrumb="Home › Tickets">
+    <i class="fas fa-ticket-alt me-2"></i>
+    <span>Maintenance Tickets</span>
+    <div class="tooltip-text">Maintenance Tickets</div>
+</a>
             </div>
 
             <div class="menu-section">
@@ -723,15 +724,7 @@
             </div>
         </div>
 
-        <div class="sidebar-footer">
-            <button id="logout-button" type="button">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </button>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                @csrf
-            </form>
-        </div>
+
     </div>
 
     <!-- Modern Header -->
@@ -789,7 +782,7 @@
             <li><a href="{{ route('atelier.profile.show') }}"><i class="fas fa-user-cog"></i> Profile Settings</a></li>
             <li><a href="#"><i class="fas fa-cog"></i> Preferences</a></li>
             <li><a href="#"><i class="fas fa-question-circle"></i> Help & Support</a></li>
-            <li><a href="#" id="popup-logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                           <li><a href="{{ route('login') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>
 

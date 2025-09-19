@@ -83,11 +83,45 @@
             color: #374151;
         }
 
-        .truncate-description {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+        /* Description Popup */
+        .description-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .description-content {
+            background-color: white;
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 500px;
+            padding: 1.5rem;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        .description-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .description-text {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 0.25rem;
+            line-height: 1.6;
         }
     </style>
 </head>
@@ -197,6 +231,19 @@
                 </div>
             </div>
 
+            <!-- Description Popup -->
+            <div id="descriptionPopup" class="description-popup">
+                <div class="description-content">
+                    <div class="description-header">
+                        <h3 class="text-lg font-semibold text-gray-800" id="popupTitle">Category Description</h3>
+                        <span class="close-btn" id="closeDescriptionPopup">&times;</span>
+                    </div>
+                    <div class="description-text" id="popupDescription">
+                        <!-- Description content will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
             <!-- Categories List -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden animate-fade-in">
                 <div class="px-6 py-4 border-b border-gray-200">
@@ -224,9 +271,6 @@
                                     Title
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Description
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Status
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -241,11 +285,6 @@
                                     <div class="flex items-center">
                                         <i class="fas fa-tools text-indigo-500 mr-3" style="color: #5e8899"></i>
                                         <span class="font-medium text-gray-900">{{ $category->titre }}</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="text-gray-600 truncate-description">
-                                        {{ $category->description }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -268,11 +307,11 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <!-- View Button -->
-                                        <a href="{{ route('category-panes.show', $category->id) }}"
-                                           class="text-blue-600 hover:text-blue-900 mr-3"
-                                           title="View Details">
+                                        <button onclick="showDescription('{{ $category->titre }}', `{{ $category->description }}`)"
+                                                class="text-blue-600 hover:text-blue-900 mr-3"
+                                                title="View Description">
                                             <i class="fas fa-eye"></i>
-                                        </a>
+                                        </button>
 
                                         <!-- Edit Button -->
                                         <button onclick="openEditModal({{ $category->id }}, '{{ $category->titre }}', `{{ $category->description }}`)"
@@ -297,7 +336,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                <td colspan="3" class="px-6 py-4 text-center text-gray-500">
                                     No fault categories registered yet.
                                 </td>
                             </tr>
@@ -351,12 +390,33 @@
                 }
             });
 
+            // Description popup functionality
+            const descriptionPopup = document.getElementById('descriptionPopup');
+            const closeDescriptionBtn = document.getElementById('closeDescriptionPopup');
+
+            closeDescriptionBtn.addEventListener('click', function() {
+                descriptionPopup.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === descriptionPopup) {
+                    descriptionPopup.style.display = 'none';
+                }
+            });
+
             // Reset form function
             function resetForm() {
                 document.getElementById('titre').value = '';
                 document.getElementById('description').value = '';
             }
         });
+
+        // Function to show description in popup
+        function showDescription(title, description) {
+            document.getElementById('popupTitle').textContent = title + ' - Description';
+            document.getElementById('popupDescription').textContent = description;
+            document.getElementById('descriptionPopup').style.display = 'flex';
+        }
 
         // Function to open edit modal
         function openEditModal(id, titre, description) {
@@ -396,5 +456,4 @@
         });
     </script>
 </body>
-
 </html>

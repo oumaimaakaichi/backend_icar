@@ -751,20 +751,6 @@
 
 
             <!-- Package -->
-            <div class="modern-card animate-slide-up animate-delay-2">
-                <div class="card-header-modern">
-                    <h5 class="card-title">
-                        <i class="fas fa-box"></i>
-                        Package
-                    </h5>
-                </div>
-                <div class="card-body-modern">
-                    <div class="info-value">
-                        <i class="fas fa-tag text-success"></i>
-                        {{ $demande->forfait->nomForfait }}
-                    </div>
-                </div>
-            </div>
 
             <!-- Assign Technicians -->
             @if($demande->status === 'Nouvelle_demande')

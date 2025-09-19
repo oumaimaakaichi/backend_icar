@@ -51,7 +51,16 @@ use App\Http\Controllers\DemandeFluxInconnuPanneController;
 use App\Http\Controllers\AtelierAvailabilityController;
 use App\Http\Controllers\TicketAssistanceController;
 use App\Http\Controllers\RapportMaintenanceController;
+use App\Http\Controllers\AssistanceAtelierController;
 
+
+   Route::get('/assistance', [AssistanceAtelierController::class, 'index'])->name('assistance.index');
+   Route::post('/assistance', [AssistanceAtelierController::class, 'store'])->name('assistance.store');
+    Route::get('/assistance/{id}', [AssistanceAtelierController::class, 'show'])->name('assistance.show');
+Route::middleware(['auth'])->group(function () {
+
+
+});
 Route::prefix('demande-flux')->group(function () {
     Route::post('/', [DemandeFluxController::class, 'store']);
     Route::get('/by-demande/{demandeId}', [DemandeFluxController::class, 'getFluxByDemandeId']);
@@ -515,7 +524,7 @@ Route::get('atelierss/technicienAtelier', function() {
     return view('ateliers.techniciens', [
         'techniciens' => User::where('role', 'technicien')
                           ->where('atelier_id', Auth::id())
-                          ->paginate(6),
+                          ->paginate(4),
         'specialisations' => Specialisation::where('is_visible', true)->get()
     ]);
 })->name('atelierss.techniciensAtelier');

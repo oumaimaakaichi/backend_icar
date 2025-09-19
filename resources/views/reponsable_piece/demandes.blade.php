@@ -70,15 +70,15 @@
     </style>
 </head>
 <body>
- <div style="margin-left: 20px ; margin-top:20px">
+ <div style="margin-left: 20px ">
     <div>
         @include('Sidebar.responsablePiece')
     </div>
 
     <div class="main-content flex-grow-1">
         <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3 mb-0 text-gray-800">Requests List</h1>
+            <div class="d-flex justify-content-between">
+                <h1 class="h3 mb-0 text-gray-800"> <b>Requests List</b></h1>
             </div>
 
             <!-- Filters Section -->
@@ -105,7 +105,7 @@
                 </div>
             </div>
 
-            <div class="table-container">
+            <div class="table-container" style="width: 1300px">
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="thead-dark">
@@ -115,7 +115,7 @@
                                 <th>Service</th>
                                 <th>Category</th>
                                 <th>Car</th>
-                                <th>Package</th>
+
                                 <th>Date</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -233,7 +233,7 @@
                         <td>${demande.service_titre || 'N/A'}</td>
                         <td>${demande.categorie_titre || 'N/A'}</td>
                         <td>${demande.voiture_model || 'N/A'} (${demande.voiture_serie || 'N/A'})</td>
-                        <td>${demande.forfait_titre || 'N/A'}</td>
+
                         <td>${new Date(demande.created_at).toLocaleDateString()}</td>
                         <td>${statusBadge}</td>
                         <td>

@@ -664,7 +664,7 @@
 
             // Update statistics display with animation
             animateNumber('totalCompanies', total);
-            animateNumber('pendingCompanies', pending);
+
             animateNumber('acceptedCompanies', accepted);
             animateNumber('refusedCompanies', refused);
             animateNumber('activeCompanies', active);

@@ -104,6 +104,12 @@
         #clearSearch:hover {
             color: #4b5563 !important;
         }
+
+        /* Description popup styles */
+        .description-popup {
+            max-width: 500px;
+            word-wrap: break-word;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -157,7 +163,11 @@
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
 
-
+                            <div class="md:col-span-1">
+                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <textarea id="description" name="description" rows="3"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                            </div>
 
                             <div class="md:col-span-1">
                                 <label for="prix" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
@@ -170,18 +180,18 @@
                                 <input type="number" id="rival" name="rival" min="0" max="100" required
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
-<div class="md:col-span-1">
-    <label for="category_pane_id" class="block text-sm font-medium text-gray-700 mb-1">
-        Categpry
-    </label>
-    <select id="category_pane_id" name="category_pane_id" required
-        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-        <option value="">-- Select a category --</option>
-        @foreach($categories as $category)
-            <option value="{{ $category->id }}">{{ $category->titre }}</option>
-        @endforeach
-    </select>
-</div>
+                            <div class="md:col-span-1">
+                                <label for="category_pane_id" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Categpry
+                                </label>
+                                <select id="category_pane_id" name="category_pane_id" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="">-- Select a category --</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->titre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-modal">
@@ -197,56 +207,80 @@
             </div>
 
             <!-- Edit Service Modal -->
-           <!-- Edit Service Modal -->
-<div id="editServiceModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 class="text-xl font-semibold text-gray-800 flex items-center">
-                <i class="fas fa-edit text-indigo-600 mr-2"></i>
-                Edit service
-            </h2>
-            <span class="close-edit-modal close-btn">&times;</span>
-        </div>
-        <div class="modal-body">
-            <form id="editServiceForm" method="POST" class="grid grid-cols-1 gap-4">
-                @csrf
-                @method('PUT')
-                <div class="md:col-span-1">
-                    <label for="edit_titre" class="block text-sm font-medium text-gray-700 mb-1">Service name</label>
-                    <input type="text" id="edit_titre" name="titre" required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <div id="editServiceModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                            <i class="fas fa-edit text-indigo-600 mr-2"></i>
+                            Edit service
+                        </h2>
+                        <span class="close-edit-modal close-btn">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editServiceForm" method="POST" class="grid grid-cols-1 gap-4">
+                            @csrf
+                            @method('PUT')
+                            <div class="md:col-span-1">
+                                <label for="edit_titre" class="block text-sm font-medium text-gray-700 mb-1">Service name</label>
+                                <input type="text" id="edit_titre" name="titre" required
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+
+                            <div class="md:col-span-1">
+                                <label for="edit_description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <textarea id="edit_description" name="description" rows="3"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                            </div>
+
+                            <div class="md:col-span-1">
+                                <label for="edit_category_pane_id" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Category
+                                </label>
+                                <select id="edit_category_pane_id" name="category_pane_id" required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="">-- Select catagory --</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->titre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-edit-modal">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
+                                    <i class="fas fa-save mr-2"></i> Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
+            </div>
 
-
-
-<div class="md:col-span-1">
-    <label for="edit_category_pane_id" class="block text-sm font-medium text-gray-700 mb-1">
-        Category
-    </label>
-    <select id="edit_category_pane_id" name="category_pane_id" required
-        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-        <option value="">-- Select catagory --</option>
-        @foreach($categories as $category)
-            <option value="{{ $category->id }}">{{ $category->titre }}</option>
-        @endforeach
-    </select>
-</div>
-
-
-
-
-                <div class="modal-footer">
-                    <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-edit-modal">
-                        Cancel
-                    </button>
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-200 flex items-center justify-center">
-                        <i class="fas fa-save mr-2"></i> Save
-                    </button>
+            <!-- View Description Modal -->
+            <div id="viewDescriptionModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                            <i class="fas fa-eye text-indigo-600 mr-2"></i>
+                            Service Description
+                        </h2>
+                        <span class="close-description-modal close-btn">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="description-popup">
+                            <h3 class="font-semibold text-lg mb-2" id="description-title"></h3>
+                            <p id="description-content" class="text-gray-700"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 mr-2 hover:bg-gray-100 transition close-description-modal">
+                            Close
+                        </button>
+                    </div>
                 </div>
-            </form>
-        </div>
-    </div>
-</div>
+            </div>
 
             <!-- Services List -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden animate-fade-in">
@@ -275,10 +309,6 @@
                                     Name
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Description
-                                </th>
-
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Actions
                                 </th>
                             </tr>
@@ -293,16 +323,16 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="text-gray-600">{{ $service->description }}</span>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <!-- View Button -->
-
+                                        <button onclick="openDescriptionModal('{{ $service->titre }}', '{{ $service->description }}')"
+                                            class="text-blue-600 hover:text-blue-900"
+                                            title="View Description">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
 
                                         <!-- Edit Button -->
-                                        <button onclick="openEditModal({{ $service->id }}, '{{ $service->titre }}', '{{ $service->description }}')"
+                                        <button onclick="openEditModal({{ $service->id }}, '{{ $service->titre }}', '{{ $service->description }}', {{ $service->category_pane_id }})"
                                             class="text-yellow-600 hover:text-yellow-900 ml-3"
                                             title="Edit">
                                             <i class="fas fa-edit"></i>
@@ -340,10 +370,10 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                                <td colspan="2" class="px-6 py-4 text-center text-gray-500">
                                     Aucun service enregistré pour le moment.
                                 </td>
-                            </tr
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -358,29 +388,7 @@
             </div>
         </main>
     </div>
-<script>
-    function openEditModal(id, titre, description) {
-    const modal = document.getElementById('editServiceModal');
 
-    // Pré-remplir le formulaire
-    document.getElementById('edit_titre').value = titre;
-    document.getElementById('edit_description').value = description;
-
-
-    // Mettre à jour l'action du formulaire
-    document.getElementById('editServiceForm').action = `/servicee/${id}`;
-
-    // Afficher le modal
-    modal.style.display = 'flex';
-}
-
-// Fermer le modal d'édition
-document.querySelectorAll('.close-edit-modal').forEach(btn => {
-    btn.addEventListener('click', function() {
-        document.getElementById('editServiceModal').style.display = 'none';
-    });
-});
-</script>
     <!-- Scripts -->
     <script>
         // Animation for success message
@@ -414,10 +422,42 @@ document.querySelectorAll('.close-edit-modal').forEach(btn => {
                 }
             });
 
+            // Close description modal
+            document.querySelectorAll('.close-description-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('viewDescriptionModal').style.display = 'none';
+                });
+            });
+
+            // Fonction pour ouvrir le modal de description
+            window.openDescriptionModal = function(title, description) {
+                document.getElementById('description-title').textContent = title;
+                document.getElementById('description-content').textContent = description || 'No description available.';
+                document.getElementById('viewDescriptionModal').style.display = 'flex';
+            }
+
             // Fonction pour ouvrir le modal d'édition
-           // Fonction pour ouvrir le modal d'édition
+            window.openEditModal = function(id, titre, description, categoryId) {
+                const modal = document.getElementById('editServiceModal');
 
+                // Pré-remplir le formulaire
+                document.getElementById('edit_titre').value = titre;
+                document.getElementById('edit_description').value = description;
+                document.getElementById('edit_category_pane_id').value = categoryId;
 
+                // Mettre à jour l'action du formulaire
+                document.getElementById('editServiceForm').action = `/servicee/${id}`;
+
+                // Afficher le modal
+                modal.style.display = 'flex';
+            }
+
+            // Fermer le modal d'édition
+            document.querySelectorAll('.close-edit-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('editServiceModal').style.display = 'none';
+                });
+            });
 
             // Fonction de recherche
             document.getElementById('searchInput').addEventListener('input', function() {
@@ -435,8 +475,7 @@ document.querySelectorAll('.close-edit-modal').forEach(btn => {
             });
 
             // Optionnel: Ajouter un bouton pour effacer la recherche
-         // To this:
-const searchContainer = document.querySelector('.relative.w-1\\/3');
+            const searchContainer = document.querySelector('.relative.w-1\\/3');
             if (searchContainer) {
                 const clearButton = document.createElement('button');
                 clearButton.innerHTML = '<i class="fas fa-times"></i>';
