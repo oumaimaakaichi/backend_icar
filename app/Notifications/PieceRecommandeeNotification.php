@@ -27,7 +27,7 @@ class PieceRecommandeeNotification extends Notification implements ShouldQueue
     {
         return [
             'demande_id' => $this->demandeId,
-            'message' => 'Des pièces ont été recommandées pour votre demande',
+            'message' => 'Parts have been recommended for your request',
             // plus de 'pieces' ici
         ];
     }
@@ -36,7 +36,7 @@ class PieceRecommandeeNotification extends Notification implements ShouldQueue
     {
         return new BroadcastMessage([
             'demande_id' => $this->demandeId,
-            'message' => 'Des pièces ont été recommandées pour votre demande',
+            'message' => 'Parts have been recommended for your request',
         ]);
     }
 }

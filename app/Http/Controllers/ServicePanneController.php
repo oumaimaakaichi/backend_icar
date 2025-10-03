@@ -77,6 +77,6 @@ class ServicePanneController extends Controller
     {
         $service->update(['isVisible' => !$service->isVisible]);
 
-        return back()->with('success', 'Visibilité du service mise à jour');
+        return back()->with('success', 'Visibility changed successfully');
     }
 }

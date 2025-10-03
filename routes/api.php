@@ -178,7 +178,24 @@ Route::prefix('demande-flux')->group(function () {
 Route::get('/demandes-inconnues/{demandeId}', [DemandePanneInconnuController::class, 'show']);
 
 Route::get('/flux-par-demande/{demandeId}', [FluxDirectController::class, 'getFluxParDemande']);
+Route::get('/demandes', [DemandeController::class, 'getAllDemandes']);
+Route::get('/demandes/count-by-date', [DemandeController::class, 'getDemandesCountByDate']);
+Route::get('/demandes/blocked-dates', [DemandeController::class, 'getBlockedDates']);
 
+Route::get('/atelier/{id}/disponibilite-avec-occupation', [DemandePanneInconnuController::class, 'getAvailabilityWithOccupiedSlots']);
+
+
+Route::get('/reviews/client/{clientId}', [ReviewController::class, 'getReviewsByClient']);
+
+Route::get('/technicians-count', [DemandePanneInconnuController::class, 'getTechniciansCountByAtelier']);
+Route::get('/demandes-count', [DemandePanneInconnuController::class, 'getDemandesCountByDatee']);
+Route::get('/blocked-days', [DemandePanneInconnuController::class, 'getBlockedDays']);
+
+
+
+
+Route::get('/demandes/count-by-datee', [DemandePanneInconnuController::class, 'getDemandesCountByDate']);
+Route::get('/demandes/blocked-datees', [DemandePanneInconnuController::class, 'getBlockedDates']);
 Route::post('/flux-par-demandeInconnu', [FluxDirectInconnuPanneController::class, 'store']);
 Route::get('/flux-par-demande_inconnu/{demandeId}', [FluxDirectInconnuPanneController::class, 'getFluxParDemande']);
 Route::post('/tickets/{id}/generate-ai-response', [TicketAssistanceController::class, 'generateAIResponse'])->name('tickets.generate-ai-response');
@@ -234,16 +251,25 @@ Route::get('/voiture/{client_id}', [VoitureController::class, 'index2']);       
     Route::delete('/voitures/{id}', [VoitureController::class, 'destroy']);
     Route::get('/panne/category/{categoryId}', [ServicePanneController::class, 'getByCategory']);
     Route::apiResource('category-panes', CategoryPaneController::class);
-    Route::get('/notifications', [NotificationController::class, 'index']);
-     Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
-Route::middleware('auth:api')->group(function() {
-
+ Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
     Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount']);
+    // Dans routes/web.php (car vous utilisez la session web)
+Route::middleware(['auth:web'])->group(function () {
+
 });
 
+ Route::put('/reviews/{id}', [ReviewController::class, 'update']);
+    Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
+    Route::get('/reviews/user/{technicienId}/{demandeId}', [ReviewController::class, 'getUserReview']);
+    Route::get('/reviews/user2/{technicienId}/{demandeInconnuId}', [ReviewController::class, 'getUserReview2']);
+Route::get('/reviews/grouped-by-technicien', [ReviewController::class, 'getAllReviewsGroupedByTechnicien']);
+Route::middleware('auth:sanctum')->group(function () {
+    // ... routes existantes ...
 
 
-
+});
 Route::prefix('notificationsT')->group(function () {
 
     // CRUD de base
@@ -276,7 +302,7 @@ Route::prefix('notificationsT')->group(function () {
 
 Route::post('/tickets/store', [TicketAssistanceController::class, 'store']);
 Route::get('/tickets/user/{userId}', [TicketAssistanceController::class, 'getUserTickets']);
-
+Route::post('/forgot-password', [UserController::class, 'forgotPassword']);
 Route::get('/tickets/{id}', [TicketAssistanceController::class, 'show']);
 Route::post('/tickets/{id}/reply', [TicketAssistanceController::class, 'reply']);
 Route::middleware('auth:api')->post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);

@@ -161,12 +161,12 @@
         }
 
         .modern-table thead th {
-            background: linear-gradient(135deg, #3b71a7 0%, #3b71a7 100%);
-            color: white;
+            background: linear-gradient(135deg, white 0%, white 100%);
+            color: black;
             font-weight: 600;
-            padding: 1.5rem 1.5rem;
+            padding: 0.75rem 1.5rem;
             border: none;
-            font-size: 0.9rem;
+            font-size: 1rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -239,7 +239,7 @@
         }
 
         .status-active-modern {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, #3b71a7 0%, #3b71a7 100%);
             color: white;
             box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
         }
@@ -474,7 +474,7 @@
                 @if($techniciens->count())
                     <div class="modern-table">
                         <table class="table table-hover mb-0">
-                            <thead>
+                            <thead >
                                 <tr>
                                     <th>Technician</th>
                                     <th>Specialty</th>
@@ -499,11 +499,12 @@
                                     </td>
                                     <td data-label="Specialty">{{ $tech->extra_data['specialite'] ?? 'Non spécifié' }}</td>
                                     <td data-label="Experience">{{ $tech->extra_data['annee_experience'] ?? '0' }} years</td>
-                                    <td data-label="Status">
-                                        <span class="status-badge-modern {{ $tech->isActive ? 'status-active-modern' : 'status-inactive-modern' }}">
-                                            {{ $tech->isActive ? 'Actif' : 'Inactif' }}
-                                        </span>
-                                    </td>
+                                   <td data-label="Status">
+    <span class="status-badge-modern {{ $tech->isActive ? 'status-active-modern' : 'status-inactive-modern' }}">
+        {{ $tech->isActive ? 'Active' : 'Inactive' }}
+    </span>
+</td>
+
                                     <td class="text-end" data-label="Actions">
                                         <div class="d-flex justify-content-end">
                                             <button class="action-btn-modern btn-edit-modern me-2 edit-technicien"
@@ -590,13 +591,13 @@
                     @endif
                 @else
                     <div class="empty-state">
-                        <i class="fas fa-user-cog fa-3x mb-3"></i>
-                        <h5 class="fw-bold">Aucun technicien trouvé</h5>
-                        <p>Commencez par ajouter votre premier technicien</p>
-                        <button class="btn btn-modern btn-primary-modern" data-bs-toggle="modal" data-bs-target="#addTechnicienModal">
-                            <i class="fas fa-plus me-2"></i>Ajouter un technicien
-                        </button>
-                    </div>
+    <i class="fas fa-user-cog fa-3x mb-3"></i>
+    <h5 class="fw-bold">No technician found</h5>
+    <p>Start by adding your first technician</p>
+    <button class="btn btn-modern btn-primary-modern" data-bs-toggle="modal" data-bs-target="#addTechnicienModal" style="background-color: cornflowerblue ; color:white">
+       Add a technician
+    </button>
+</div>
                 @endif
             </div>
         </div>
@@ -722,138 +723,184 @@
             </div>
         </div>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Remplir le formulaire de modification
-        document.querySelectorAll('.edit-technicien').forEach(button => {
-            button.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                document.getElementById('edit_technicien_id').value = id;
-                document.getElementById('edit_nom').value = this.getAttribute('data-nom');
-                document.getElementById('edit_prenom').value = this.getAttribute('data-prenom');
-                document.getElementById('edit_email').value = this.getAttribute('data-email');
-                document.getElementById('edit_phone').value = this.getAttribute('data-phone');
-                document.getElementById('edit_adresse').value = this.getAttribute('data-adresse');
-                document.getElementById('edit_annee_experience').value = this.getAttribute('data-annee_experience');
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Fill edit form
+    document.querySelectorAll('.edit-technicien').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            document.getElementById('edit_technicien_id').value = id;
+            document.getElementById('edit_nom').value = this.getAttribute('data-nom');
+            document.getElementById('edit_prenom').value = this.getAttribute('data-prenom');
+            document.getElementById('edit_email').value = this.getAttribute('data-email');
+            document.getElementById('edit_phone').value = this.getAttribute('data-phone');
+            document.getElementById('edit_adresse').value = this.getAttribute('data-adresse');
+            document.getElementById('edit_annee_experience').value = this.getAttribute('data-annee_experience');
 
-                // Sélectionner la spécialité
-                const specialite = this.getAttribute('data-specialite');
-                const select = document.getElementById('edit_specialite');
-                Array.from(select.options).forEach(option => {
-                    option.selected = option.value === specialite;
-                });
-
-                // Mettre à jour l'action du formulaire
-                document.getElementById('editTechnicienForm').action = `/users/${id}`;
+            // Select speciality
+            const specialite = this.getAttribute('data-specialite');
+            const select = document.getElementById('edit_specialite');
+            Array.from(select.options).forEach(option => {
+                option.selected = option.value === specialite;
             });
+
+            // Update form action
+            document.getElementById('editTechnicienForm').action = `/users/${id}`;
         });
+    });
 
-        // Gestion de l'activation/désactivation
-        document.querySelectorAll('.accept-btn').forEach(button => {
-            button.addEventListener('click', async function() {
-                if (!confirm('Activer ce technicien ?')) return;
+    // Activation
+    document.querySelectorAll('.accept-btn').forEach(button => {
+        button.addEventListener('click', async function() {
+            const userId = this.getAttribute('data-id');
 
-                const userId = this.getAttribute('data-id');
-                try {
-                    const response = await fetch(`/users/${userId}/activate`, {
-                        method: 'PATCH',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json'
-                        }
-                    });
-
-                    if (response.ok) {
-                        location.reload();
-                    } else {
-                        alert('Erreur lors de l\'activation');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Une erreur est survenue');
-                }
+            const result = await Swal.fire({
+                title: 'Activate technician?',
+                text: "This technician will be activated.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, activate',
+                cancelButtonText: 'Cancel'
             });
-        });
 
-        document.querySelectorAll('.refuse-btn').forEach(button => {
-            button.addEventListener('click', async function() {
-                if (!confirm('Désactiver ce technicien ?')) return;
-
-                const userId = this.getAttribute('data-id');
-                try {
-                    const response = await fetch(`/users/${userId}/desactivate`, {
-                        method: 'PATCH',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json'
-                        }
-                    });
-
-                    if (response.ok) {
-                        location.reload();
-                    } else {
-                        alert('Erreur lors de la désactivation');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Une erreur est survenue');
-                }
-            });
-        });
-
-        // Gestion de la soumission du formulaire de modification
-        document.getElementById('editTechnicienForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const form = this;
-            const formData = new FormData(form);
+            if (!result.isConfirmed) return;
 
             try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
+                const response = await fetch(`/users/${userId}/activate`, {
+                    method: 'PATCH',
                     headers: {
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: formData
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    }
                 });
 
-                const data = await response.json();
-
-                if (data.success) {
-                    alert('Technicien mis à jour avec succès');
-                    location.reload();
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Activated!',
+                        text: 'The technician has been activated.',
+                        confirmButtonColor: '#3085d6'
+                    }).then(() => location.reload());
                 } else {
-                    alert(data.message || 'Erreur lors de la mise à jour');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error while activating technician.'
+                    });
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Une erreur est survenue');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An unexpected error occurred.'
+                });
             }
         });
+    });
 
-        // Add smooth animations on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const elements = document.querySelectorAll('.slide-in-up');
-            elements.forEach((el, index) => {
-                setTimeout(() => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                }, index * 200);
+    // Deactivation
+    document.querySelectorAll('.refuse-btn').forEach(button => {
+        button.addEventListener('click', async function() {
+            const userId = this.getAttribute('data-id');
+
+            const result = await Swal.fire({
+                title: 'Deactivate technician?',
+                text: "This technician will be deactivated.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, deactivate',
+                cancelButtonText: 'Cancel'
             });
+
+            if (!result.isConfirmed) return;
+
+            try {
+                const response = await fetch(`/users/${userId}/desactivate`, {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deactivated!',
+                        text: 'The technician has been deactivated.',
+                        confirmButtonColor: '#3085d6'
+                    }).then(() => location.reload());
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error while deactivating technician.'
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An unexpected error occurred.'
+                });
+            }
         });
+    });
 
-        // Add hover effects for cards
-        document.querySelectorAll('.glass-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-8px) scale(1.02)';
+    // Form submission
+    document.getElementById('editTechnicienForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const form = this;
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
             });
 
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
+            const data = await response.json();
+
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Technician updated successfully',
+                    confirmButtonColor: '#3085d6'
+                }).then(() => location.reload());
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message || 'Error while updating technician',
+                    confirmButtonColor: '#d33'
+                });
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An unexpected error occurred.'
             });
-        });
-    </script>
+        }
+    });
+</script>
+
 </body>
 </html>

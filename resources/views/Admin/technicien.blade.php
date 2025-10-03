@@ -492,7 +492,7 @@
             .btn {
                 border: 2px solid;
             }
-            
+
             .table tbody tr {
                 border-bottom: 2px solid var(--border);
             }
@@ -505,7 +505,7 @@
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
             }
-            
+
             .success-message {
                 animation: none;
             }
@@ -640,16 +640,16 @@
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
 
-                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="action-btn btn-danger"
-                                            onclick="return confirm('Confirm deletion?')"
-                                            aria-label="Delete technician {{ $user->nom }} {{ $user->prenom }}">
-                                        <i class="fas fa-trash-alt" aria-hidden="true"></i>
-                                    </button>
-                                </form>
+                               <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline delete-user-form">
+    @csrf
+    @method('DELETE')
+    <button type="button"
+            class="action-btn btn-danger delete-user-btn"
+            data-user-name="{{ $user->nom }} {{ $user->prenom }}">
+        <i class="fas fa-trash-alt"></i>
+    </button>
+</form>
+
 
                                 @if ($user->isActive == 0)
                                     <button class="action-btn btn-success accept-btn"
@@ -793,6 +793,191 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-user-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = this.closest('.delete-user-form');
+            const userName = this.getAttribute('data-user-name');
+
+            Swal.fire({
+                title: 'Confirm Deletion',
+                html: `Delete <strong>${userName}</strong>? This action cannot be undone.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn btn-danger px-4',
+                    cancelButton: 'btn btn-secondary px-4'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Afficher le loader
+                    Swal.fire({
+                        title: 'Deleting...',
+                        html: 'Please wait while we remove the user',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Soumettre la requête AJAX
+                    fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: new FormData(form)
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network error');
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Succès - cacher le loader et afficher le message de succès
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'User deleted successfully',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire('Error!', 'Failed to delete user.', 'error');
+                    });
+                }
+            });
+        });
+    });
+});
+</script>
+
+<style>
+.advanced-user-popup {
+    border-radius: 20px !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.user-avatar-large {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    margin: 0 auto 1.5rem;
+}
+
+.user-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.user-info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info-item label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.user-info-item span {
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.user-name {
+    font-weight: 600 !important;
+    color: #111827 !important;
+}
+
+.deletion-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: #fef2f2;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid #ef4444;
+}
+
+.warning-icon {
+    font-size: 1.5rem;
+    color: #ef4444;
+    margin-top: 0.25rem;
+}
+
+.warning-content h4 {
+    color: #dc2626;
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+}
+
+.warning-content p {
+    color: #b91c1c;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.advanced-delete-btn {
+    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 12px 28px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.advanced-delete-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4) !important;
+}
+
+.advanced-cancel-btn {
+    background: #ffffff !important;
+    color: #374151 !important;
+    border: 2px solid #d1d5db !important;
+    border-radius: 10px !important;
+    padding: 12px 28px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.advanced-cancel-btn:hover {
+    background: #f9fafb !important;
+    border-color: #9ca3af !important;
+    transform: translateY(-2px) !important;
+}
+</style>
     <script>
         // Success message functions
         function showSuccessMessage(message) {

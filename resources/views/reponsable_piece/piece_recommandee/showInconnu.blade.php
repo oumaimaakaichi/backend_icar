@@ -297,13 +297,19 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('reponsable_piece.demandesInconnu') }}" class="text-decoration-none">Requests</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Request {{ $demande->id }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">Request</li>
                 </ol>
             </nav>
         </div>
         <span class="status-badge status-new">
             <i class="fas fa-circle me-2" style="font-size: 8px;"></i>
-            {{ ucfirst(str_replace('_', ' ', $demande->status)) }}
+             @if ($demande->status === 'en_attente')
+        New
+    @elseif ($demande->status === 'Assignée')
+        Assigned
+    @else
+        {{ ucfirst(str_replace('_', ' ', $demande->status)) }}
+    @endif
         </span>
     </div>
 
@@ -403,7 +409,7 @@
             <i class="fas fa-plus"></i>
         </button>
     @else
-        <span class="badge bg-success">Déjà ajoutée</span>
+        <span class="badge bg-success">Already added</span>
     @endif
 </td>
                                 </tr>

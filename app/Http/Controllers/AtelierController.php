@@ -203,7 +203,7 @@ private function formatAvailabilityForView($availability)
     $atelier->is_active = 1;  // Activer
     $atelier->save();
 
-    return response()->json(['message' => 'L\'atelier a été activé avec succès.']);
+    return response()->json(['message' => 'The workshop has been successfully activated.']);
 }
 public function desactivateAtelier($id)
 {
@@ -211,10 +211,50 @@ public function desactivateAtelier($id)
     $atelier->is_active = 0;  // Désactiver
     $atelier->save();
 
-    return response()->json(['message' => 'L\'atelier a été désactivé avec succès.']);
+    return response()->json(['message' => 'The workshop has been successfully deactivated.']);
 }
+  public function setMaxDemandes(Request $request)
+{
+        $request->validate([
+            'nbr_max_demande_par_jour' => 'required|integer|min:1|max:50'
+        ]);
 
+        try {
+            $atelier = Auth::guard('atelier')->user();
+            $atelier->update([
+                'nbr_max_demande_par_jour' => $request->nbr_max_demande_par_jour
+            ]);
 
+            return response()->json([
+                'success' => true,
+                'message' => 'Nombre maximum de demandes mis à jour avec succès',
+                'nbr_max_demande_par_jour' => $atelier->nbr_max_demande_par_jour
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la mise à jour'
+            ], 500);
+        }
+    }
+
+    // API pour récupérer le nombre max de demandes
+    public function getMaxDemandes()
+    {
+        try {
+            $atelier = Auth::guard('atelier')->user();
+
+            return response()->json([
+                'success' => true,
+                'nbr_max_demande_par_jour' => $atelier->nbr_max_demande_par_jour
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération'
+            ], 500);
+        }
+    }
 
 public function getAllAteliers(Request $request)
 {

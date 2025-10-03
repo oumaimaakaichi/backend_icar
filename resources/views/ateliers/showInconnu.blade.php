@@ -139,7 +139,8 @@
             align-items: center;
             margin: 0;
             gap: 0.75rem;
-            margin-top: 20px
+            margin-top: 20px;
+            margin-bottom: 10px
         }
 
         .card-title i {
@@ -474,6 +475,192 @@
             color: white;
         }
 
+        /* New styles for technician selection */
+        .technician-item {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .technician-item:hover {
+            background: var(--gray-100);
+            border-color: var(--primary);
+        }
+
+        .technician-item.selected {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .technician-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .technician-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .technician-details h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--gray-800);
+            font-size: 0.9rem;
+        }
+
+        .technician-details small {
+            color: var(--gray-600);
+            font-size: 0.75rem;
+        }
+
+        .technician-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        .selected-count {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            @page {
+                margin: 0.5in;
+                size: A4;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 12pt;
+                line-height: 1.4;
+            }
+
+            .sidebar, .action-buttons, .btn-print, .btn-edit, .btn-delete,
+            #assignTechniciensForm, .technician-checkbox, .selected-count,
+            .timeline-dot, .timeline::before {
+                display: none !important;
+            }
+
+            .container-fluid {
+                margin-top: 0 !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+
+            .page-header {
+                margin-top: 0 !important;
+                box-shadow: none !important;
+                border: 2px solid #333 !important;
+                background: white !important;
+                color: black !important;
+                padding: 1rem !important;
+            }
+
+            .modern-card {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                margin-bottom: 1rem !important;
+                page-break-inside: avoid;
+                padding: 0 !important;
+            }
+
+            .card-header {
+                background: #f5f5f5 !important;
+                border-bottom: 2px solid #333 !important;
+                color: black !important;
+            }
+
+            .card-title, .section-title {
+                color: black !important;
+            }
+
+            .detail-item {
+                background: white !important;
+                border: 1px solid #ddd !important;
+                color: black !important;
+            }
+
+            .detail-label, .detail-value {
+                color: black !important;
+            }
+
+            .status-badge {
+                color: black !important;
+                border: 1px solid #333 !important;
+                background: white !important;
+            }
+
+            .team-member {
+                border: 1px solid #ddd !important;
+                background: white !important;
+            }
+
+            .team-avatar {
+                background: #333 !important;
+                color: white !important;
+            }
+
+            .print-header {
+                text-align: center;
+                margin-bottom: 1.5rem;
+                border-bottom: 3px double #333;
+                padding-bottom: 1rem;
+            }
+
+            .print-footer {
+                text-align: center;
+                margin-top: 2rem;
+                border-top: 1px solid #ccc;
+                padding-top: 1rem;
+                font-size: 10pt;
+                color: #666;
+            }
+
+            .print-watermark {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(-45deg);
+                font-size: 72pt;
+                color: rgba(0,0,0,0.1);
+                z-index: -1;
+                pointer-events: none;
+            }
+
+            a[href]:after {
+                content: " (" attr(href) ")";
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -515,13 +702,23 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .technician-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .technician-checkbox {
+                align-self: flex-end;
+            }
         }
     </style>
 </head>
 <body>
     @include('Sidebar.sidebarAtelier')
 
-    <div class="container-fluid animate-slide-up" style="margin-top: 60px">
+    <div class="container-fluid animate-slide-up" style="margin-top: 60px ; margin-right:30px">
         <div class="page-header">
             <h1 class="page-title">Request Details <span class="request-id"></span></h1>
             <p class="page-subtitle">Manage and track maintenance requests with advanced tools</p>
@@ -531,14 +728,10 @@
             <div class="col-lg-8">
                 <div class="modern-card">
                     <div class="card-header">
-                        <h6 class="card-title" >
+                        <h2 class="card-title" style="font-size: 1rem">
                             <i class="fas fa-info-circle"></i>
                             Request Information
-                        </h6>
-                        <span class="status-badge status-{{ $demande->status }}" style="margin-top: 30px">
-                            <i class="fas fa-circle"></i>
-                            {{ $demande->status }}
-                        </span>
+                        </h2>
                         <hr/>
                     </div>
                     <div class="card-body">
@@ -628,14 +821,11 @@
                         </div>
 
                         <div class="action-buttons">
-                            <button class="action-btn btn-print">
+                            <button class="action-btn btn-print" id="printButton">
                                 <i class="fas fa-print"></i> Print Details
                             </button>
-                            <button class="action-btn btn-edit">
-                                <i class="fas fa-edit"></i> Edit Request
-                            </button>
-                            <button class="action-btn btn-delete">
-                                <i class="fas fa-trash-alt"></i> Delete Request
+                            <button class="action-btn btn-print" onclick="simplePrint()">
+                                <i class="fas fa-print"></i> Quick Print
                             </button>
                         </div>
                     </div>
@@ -647,10 +837,12 @@
                 <div class="modern-card">
                     <div class="card-header">
                         <h6 class="card-title">
-                            <i class="fas fa-users"></i>
+                            <i class="fas fa-users" style="color: black"></i>
                             Assigned Team
+                            <br/>
                         </h6>
                     </div>
+                     <br/>
                     <div class="card-body">
                         @foreach($demande->techniciens as $tech)
                             <div class="team-member">
@@ -667,36 +859,42 @@
                 </div>
                 @endif
 
-                @if($demande->status === 'Nouvelle_demande')
-                <div class="modern-card">
+                @if($demande->status === 'en_attente')
+                <div class="modern-card no-print">
                     <div class="card-header">
-                        <h6 class="card-title">
-                            <i class="fas fa-user-plus"></i>
-                            Assign Technicians
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="nombre_techniciens" class="form-label">Number of Technicians</label>
-                            <input type="number" min="1" max="{{ $techniciens->count() }}"
-                                   class="form-control" id="nombre_techniciens" value="1">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-user-plus" style="color: black"></i>
+                                Assign Technicians
+                                <br/>
+                            </h6>
+                            <div class="selected-count" id="selectedCount" style="display: none;">
+                                0 selected
+                            </div>
                         </div>
+                    </div>
 
+                    <div class="card-body"  style="margin-top: 20px">
                         <form id="assignTechniciensForm">
-                            <div id="techniciens_select_container">
-                                <div class="mb-3">
-                                    <label class="form-label">Technician 1</label>
-                                    <select class="form-select" name="techniciens[]" required>
-                                        <option value="" disabled selected>-- Select Technician --</option>
-                                        @foreach($techniciens as $tech)
-                                            <option value="{{ $tech->id }}">{{ $tech->prenom ?? '' }} {{ $tech->nom ?? $tech->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div id="technicians_list">
+                                @foreach($techniciens as $tech)
+                                    <div class="technician-item" data-tech-id="{{ $tech->id }}">
+                                        <div class="technician-info">
+                                            <div class="technician-avatar">
+                                                {{ substr($tech->nom ?? $tech->name, 0, 1) }}{{ substr($tech->prenom ?? '', 0, 1) }}
+                                            </div>
+                                            <div class="technician-details">
+                                                <h6>{{ $tech->prenom ?? '' }} {{ $tech->nom ?? $tech->name }}</h6>
+                                                <small>ID: {{ $tech->id }}</small>
+                                            </div>
+                                        </div>
+                                        <input type="checkbox" class="technician-checkbox" name="techniciens[]" value="{{ $tech->id }}" data-name="{{ $tech->prenom ?? '' }} {{ $tech->nom ?? $tech->name }}">
+                                    </div>
+                                @endforeach
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="fas fa-user-plus me-2"></i>Assign Team
+                            <button type="submit" class="btn btn-primary w-100 mt-3" id="assignBtn" disabled>
+                                <i class="fas fa-user-plus me-2"></i>Assign Technician
                             </button>
                         </form>
                     </div>
@@ -707,69 +905,279 @@
     </div>
 
     <script>
-        // Gestion des techniciens
-        const nombreInput = document.getElementById('nombre_techniciens');
-        const container = document.getElementById('techniciens_select_container');
-        const techniciens = @json($techniciens);
+        // Print functionality
+        document.getElementById('printButton').addEventListener('click', function() {
+            // Create a print-friendly version of the content
+            const printContent = createPrintContent();
 
-        function createSelect(index) {
-            const div = document.createElement('div');
-            div.classList.add('mb-3');
+            // Open print window
+            const printWindow = window.open('', '_blank', 'width=800,height=600');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Request Details #{{ $demande->id }}</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            margin: 20px;
+                            color: #000;
+                            line-height: 1.4;
+                        }
+                        .print-header {
+                            text-align: center;
+                            margin-bottom: 30px;
+                            border-bottom: 2px solid #333;
+                            padding-bottom: 20px;
+                        }
+                        .print-section {
+                            margin-bottom: 25px;
+                            page-break-inside: avoid;
+                        }
+                        .print-section h3 {
+                            background: #f5f5f5;
+                            padding: 10px;
+                            border-left: 4px solid #4361ee;
+                            margin-bottom: 15px;
+                        }
+                        .detail-grid {
+                            display: grid;
+                            grid-template-columns: repeat(2, 1fr);
+                            gap: 15px;
+                            margin-bottom: 20px;
+                        }
+                        .detail-item {
+                            border: 1px solid #ddd;
+                            padding: 15px;
+                            border-left: 4px solid #4361ee;
+                        }
+                        .detail-label {
+                            font-weight: bold;
+                            color: #666;
+                            font-size: 12px;
+                            text-transform: uppercase;
+                            margin-bottom: 5px;
+                        }
+                        .detail-value {
+                            font-size: 14px;
+                        }
+                        .team-member {
+                            display: flex;
+                            align-items: center;
+                            margin-bottom: 10px;
+                            padding: 10px;
+                            border: 1px solid #eee;
+                        }
+                        .team-avatar {
+                            width: 30px;
+                            height: 30px;
+                            border-radius: 50%;
+                            background: #4361ee;
+                            color: white;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            margin-right: 10px;
+                            font-weight: bold;
+                        }
+                        .print-footer {
+                            text-align: center;
+                            margin-top: 40px;
+                            padding-top: 20px;
+                            border-top: 1px solid #ccc;
+                            font-size: 12px;
+                            color: #666;
+                        }
+                        @media print {
+                            body { margin: 0; }
+                            .print-section { page-break-inside: avoid; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${printContent}
+                </body>
+                </html>
+            `);
 
-            const label = document.createElement('label');
-            label.classList.add('form-label');
-            label.textContent = `Technician ${index + 1}`;
+            printWindow.document.close();
 
-            const select = document.createElement('select');
-            select.classList.add('form-select');
-            select.name = 'techniciens[]';
-            select.required = true;
-
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.disabled = true;
-            defaultOption.selected = true;
-            defaultOption.textContent = '-- Select Technician --';
-            select.appendChild(defaultOption);
-
-            techniciens.forEach(t => {
-                const option = document.createElement('option');
-                option.value = t.id;
-                option.textContent = (t.prenom ?? '') + ' ' + (t.nom ?? t.name);
-                select.appendChild(option);
-            });
-
-            div.appendChild(label);
-            div.appendChild(select);
-
-            return div;
-        }
-
-        nombreInput.addEventListener('input', () => {
-            let count = parseInt(nombreInput.value) || 1;
-            if(count < 1) count = 1;
-            if(count > techniciens.length) count = techniciens.length;
-
-            container.innerHTML = '';
-            for(let i = 0; i < count; i++) {
-                container.appendChild(createSelect(i));
-            }
+            // Wait for content to load then print
+            printWindow.onload = function() {
+                printWindow.print();
+                // printWindow.close(); // Optional: close after printing
+            };
         });
 
-        // Gestion du submit
+        function createPrintContent() {
+            const today = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            // Build assigned team HTML safely
+            let assignedTeamHTML = '';
+            @if($demande->techniciens && count($demande->techniciens) > 0)
+                assignedTeamHTML = `
+                    <div class="print-section">
+                        <h3>Assigned Team</h3>
+                `;
+
+                // Generate team members HTML using template literals
+                const teamMembers = @json($demande->techniciens);
+                teamMembers.forEach(tech => {
+                    const initials = (tech.nom ? tech.nom.charAt(0) : '') + (tech.prenom ? tech.prenom.charAt(0) : '');
+                    assignedTeamHTML += `
+                        <div class="team-member">
+                            <div class="team-avatar">${initials}</div>
+                            <div>
+                                <strong>${tech.nom || ''} ${tech.prenom || ''}</strong><br>
+                                <small>ID: ${tech.id}</small>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                assignedTeamHTML += `</div>`;
+            @endif
+
+            return `
+                <div class="print-header">
+                    <h1>Maintenance Request Details</h1>
+                    <h2>Request #{{ $demande->id }}</h2>
+                    <p>Generated on: ${today}</p>
+                </div>
+
+                <div class="print-section">
+                    <h3>Request Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Client</div>
+                            <div class="detail-value">{{ $demande->client->prenom }} {{ $demande->client->nom }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Vehicle</div>
+                            <div class="detail-value">{{ $demande->voiture->model }} ({{ $demande->voiture->serie }})</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Contact</div>
+                            <div class="detail-value">{{ $demande->client->phone }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Maintenance Date</div>
+                            <div class="detail-value">{{ $demande->date_maintenance }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Time</div>
+                            <div class="detail-value">{{ $demande->heure_maintenance }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Notes</div>
+                            <div class="detail-value">{{ $demande->notes ?? 'No notes provided' }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                ${assignedTeamHTML}
+
+                <div class="print-section">
+                    <h3>Status History</h3>
+                    <div style="padding-left: 20px; border-left: 2px solid #4361ee;">
+                        <div style="margin-bottom: 15px;">
+                            <strong>Today, 10:30 AM</strong><br>
+                            Request created
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <strong>Today, 11:45 AM</strong><br>
+                            Pending validation
+                        </div>
+                    </div>
+                </div>
+
+                <div class="print-footer">
+                    <p>© {{ date('Y') }} Your Company Name. All rights reserved.</p>
+                    <p>This document is computer-generated and does not require a signature.</p>
+                </div>
+            `;
+        }
+
+        // Alternative simple print function
+        function simplePrint() {
+            window.print();
+        }
+
+        // Handle technician selection (existing code)
+        const checkboxes = document.querySelectorAll('.technician-checkbox');
+        const technicianItems = document.querySelectorAll('.technician-item');
+        const selectedCount = document.getElementById('selectedCount');
+        const assignBtn = document.getElementById('assignBtn');
+
+        function updateSelection() {
+            const selected = document.querySelectorAll('.technician-checkbox:checked');
+            const count = selected.length;
+
+            if (count > 0) {
+                selectedCount.style.display = 'block';
+                selectedCount.textContent = `${count} selected`;
+                assignBtn.disabled = false;
+            } else {
+                selectedCount.style.display = 'none';
+                assignBtn.disabled = true;
+            }
+
+            technicianItems.forEach(item => {
+                const checkbox = item.querySelector('.technician-checkbox');
+                if (checkbox.checked) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateSelection);
+        });
+
+        technicianItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (e.target.type !== 'checkbox') {
+                    const checkbox = item.querySelector('.technician-checkbox');
+                    checkbox.checked = !checkbox.checked;
+                    updateSelection();
+                }
+            });
+        });
+
         document.getElementById('assignTechniciensForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const selects = this.querySelectorAll('select[name="techniciens[]"]');
-            const techniciensData = Array.from(selects).map(select => {
+            const selectedCheckboxes = document.querySelectorAll('.technician-checkbox:checked');
+            const techniciensData = Array.from(selectedCheckboxes).map(checkbox => {
                 return {
-                    id_technicien: parseInt(select.value),
-                    nom: select.options[select.selectedIndex].text
+                    id_technicien: parseInt(checkbox.value),
+                    nom: checkbox.getAttribute('data-name')
                 };
             });
 
+            if (techniciensData.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Selection',
+                    text: 'Please select at least one technician',
+                    confirmButtonColor: '#4361ee',
+                });
+                return;
+            }
+
+            assignBtn.disabled = true;
+            assignBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Assigning...';
+
             fetch("{{ route('demandes.updateTechniciensInconnu', $demande->id) }}", {
-                method: 'put',
+                method: 'PUT',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     'Accept': 'application/json',
@@ -793,51 +1201,20 @@
                         text: data.message || 'An error occurred',
                         confirmButtonColor: '#ef4444',
                     });
+                    assignBtn.disabled = false;
+                    assignBtn.innerHTML = '<i class="fas fa-user-plus me-2"></i>Assign Team';
                 }
             })
             .catch(error => {
+                console.error('Error:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Network Error',
                     text: 'Unable to contact the server',
                     confirmButtonColor: '#ef4444',
                 });
-            });
-        });
-
-        // Action buttons functionality
-        document.querySelector('.btn-print').addEventListener('click', function() {
-            window.print();
-        });
-
-        document.querySelector('.btn-edit').addEventListener('click', function() {
-            // Add edit functionality here
-            Swal.fire({
-                title: 'Edit Request',
-                text: 'This functionality will be implemented soon.',
-                icon: 'info',
-                confirmButtonColor: '#4361ee'
-            });
-        });
-
-        document.querySelector('.btn-delete').addEventListener('click', function() {
-            // Add delete functionality here
-            Swal.fire({
-                title: 'Delete Request?',
-                text: 'Are you sure you want to delete this request? This action cannot be undone.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire(
-                        'Deleted!',
-                        'The request has been deleted.',
-                        'success'
-                    );
-                }
+                assignBtn.disabled = false;
+                assignBtn.innerHTML = '<i class="fas fa-user-plus me-2"></i>Assign Team';
             });
         });
     </script>

@@ -160,7 +160,7 @@
                     </div>
                 </div>
             @endif
-            
+
             <!-- Inactive account message -->
             @if(session('inactive'))
                 <div class="bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg animate__animated animate__shakeX flex items-start">
@@ -215,7 +215,7 @@
                             value="{{ old('email') }}"
                         >
                     </div>
-                
+
                 </div>
 
                 <!-- Password field -->
@@ -248,7 +248,12 @@
                             <input type="checkbox" name="remember" class="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out rounded border-gray-300">
                             <span class="ml-2 text-sm text-gray-600">Remember me</span>
                         </label>
-                        <a href="#" class="text-sm text-indigo-600 hover:underline">Forgot password?</a>
+                      <a href="javascript:void(0)"
+   onclick="openForgotPasswordModal()"
+   class="text-sm text-indigo-600 hover:underline">
+   Forgot password?
+</a>
+
                     </div>
                 </div>
 
@@ -270,6 +275,41 @@
             </div>
         </div>
     </div>
+<!-- Forgot Password Modal -->
+<div id="forgotPasswordModal"
+     class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative animate__animated animate__fadeInDown">
+
+        <!-- Close button -->
+        <button onclick="closeForgotPasswordModal()"
+                class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">
+            Reset Password
+        </h2>
+        <p class="text-gray-600 text-sm mb-6 text-center">
+            Enter your email and we’ll send you a new password.
+        </p>
+
+        <!-- Input Email -->
+        <div class="mb-4">
+            <input type="email" id="forgotEmail"
+                   class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                   placeholder="Enter your email" required>
+        </div>
+
+        <!-- Error / Success message -->
+        <div id="forgotPasswordMessage" class="mb-4 text-sm"></div>
+
+        <!-- Submit button -->
+        <button onclick="submitForgotPassword()"
+                class="btn-login w-full py-3 rounded-lg text-white font-semibold">
+            <i class="fas fa-paper-plane mr-2"></i> Send
+        </button>
+    </div>
+</div>
 
     <script>
         function togglePasswordVisibility() {
@@ -307,5 +347,49 @@
             });
         });
     </script>
+    <script>
+    function openForgotPasswordModal() {
+        document.getElementById('forgotPasswordModal').classList.remove('hidden');
+    }
+
+    function closeForgotPasswordModal() {
+        document.getElementById('forgotPasswordModal').classList.add('hidden');
+    }
+
+   async function submitForgotPassword() {
+    const email = document.getElementById('forgotEmail').value;
+    const messageBox = document.getElementById('forgotPasswordMessage');
+
+    if (!email) {
+        messageBox.innerHTML = `<p class="text-red-500">Please enter your email.</p>`;
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/forgot-password", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+            messageBox.innerHTML = `<p class="text-green-600">${data.message}</p>`;
+            setTimeout(() => closeForgotPasswordModal(), 3000);
+        } else {
+            messageBox.innerHTML = `<p class="text-red-500">${data.message}</p>`;
+        }
+
+    } catch (error) {
+        messageBox.innerHTML = `<p class="text-red-500">An error occurred. Try again.</p>`;
+    }
+}
+
+</script>
+
 </body>
 </html>

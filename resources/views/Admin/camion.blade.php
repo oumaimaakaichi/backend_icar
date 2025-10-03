@@ -295,30 +295,32 @@
                                         <a href="{{ route('camions.show', $camion->id) }}" class="btn btn-sm btn-outline-secondary action-btn" title="Details">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <button class="btn btn-sm btn-outline-warning action-btn btn-edit-camion"
-                                                data-id="{{ $camion->id }}"
-                                                data-nom="{{ $camion->nom_camion }}"
-                                                data-type="{{ $camion->type_camion }}"
-                                                data-emplacement="{{ $camion->emplacement }}"
-                                                data-latitude="{{ $camion->latitude }}"
-                                                data-longitude="{{ $camion->longitude }}"
-                                                data-lien="{{ $camion->lien_map }}"
-                                                data-entreprise="{{ $camion->nom_entreprise }}"
-                                                data-date="{{ $camion->date_accord }}"
-                                                data-direction="{{ $camion->direction }}"
-                                                data-bs-toggle="modal" data-bs-target="#modifierCamionModal"
-                                                title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <form action="{{ route('camions.destroy', $camion->id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger action-btn"
-                                                    onclick="return confirm('Are you sure you want to delete this truck?')"
-                                                    title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
+                                      <!-- Dans la boucle foreach des camions -->
+<button class="btn btn-sm btn-outline-warning action-btn btn-edit-camion"
+        data-id="{{ $camion->id }}"
+        data-nom="{{ $camion->nom_camion }}"
+        data-type="{{ $camion->type_camion }}"
+        data-emplacement="{{ $camion->emplacement }}"
+        data-latitude="{{ $camion->latitude }}"
+        data-longitude="{{ $camion->longitude }}"
+        data-lien="{{ $camion->lien_map }}"
+        data-entreprise="{{ $camion->nom_entreprise }}"
+        data-date="{{ $camion->date_accord }}"
+        data-direction="{{ $camion->direction }}"
+        data-techniciens="{{ $camion->techniciens->pluck('id')->toJson() }}"
+        data-bs-toggle="modal" data-bs-target="#modifierCamionModal"
+        title="Edit">
+    <i class="fas fa-edit"></i>
+</button>
+                                      <form action="{{ route('camions.destroy', $camion->id) }}" method="POST" class="d-inline delete-form">
+    @csrf
+    @method('DELETE')
+    <button type="button" class="btn btn-sm btn-outline-danger action-btn delete-btn"
+            title="Delete"
+            data-camion-name="{{ $camion->marque }} {{ $camion->modele }}">
+        <i class="fas fa-trash"></i>
+    </button>
+</form>
                                     </div>
                                 </td>
                             </tr>
@@ -467,6 +469,16 @@
                                 </div>
                             </div>
 
+
+<!-- Dans le modal de modification (#modifierCamionModal) -->
+<div class="mb-3">
+    <label class="form-label"><i class="fas fa-users me-2"></i>Technicians</label>
+    <select name="techniciens[]" class="form-select" multiple required>
+        @foreach ($techniciens as $technicien)
+            <option value="{{ $technicien->id }}">{{ $technicien->nom }} {{ $technicien->prenom }}</option>
+        @endforeach
+    </select>
+</div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label"><i class="fas fa-building me-2"></i>Company Name</label>
@@ -520,123 +532,247 @@
             </div>
         </div>
     </div>
+<!-- jQuery (required for the script) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- Bootstrap Bundle with Popper -->
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        $(document).ready(function () {
-            // Map initialization
-            var map, marker;
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = this.closest('.delete-form');
+            const camionName = this.getAttribute('data-camion-name');
 
-            $('#ajouterCamionModal').on('shown.bs.modal', function () {
-                if (!map) {
-                    map = L.map('map').setView([36.81897000, 10.16579000], 12);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '© OpenStreetMap contributors'
-                    }).addTo(map);
-
-                    marker = L.marker([36.81897000, 10.16579000], { draggable: true }).addTo(map);
-
-                    marker.on('dragend', function (event) {
-                        var position = marker.getLatLng();
-                        $('#latitude').val(position.lat);
-                        $('#longitude').val(position.lng);
+            Swal.fire({
+                title: 'Delete Truck',
+                html: `
+                    <div style="text-align: center;">
+                        <div style="font-size: 4rem; color: #ef4444; margin-bottom: 1rem;">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                        <p style="font-size: 1.1rem; color: #64748b; margin-bottom: 0.5rem;">
+                            Are you sure you want to delete this truck?
+                        </p>
+                        <p style="font-weight: 600; color: #374151; font-size: 1.2rem;">
+                            ${camionName}
+                        </p>
+                        <p style="color: #ef4444; font-size: 0.9rem; margin-top: 1rem;">
+                            This action cannot be undone!
+                        </p>
+                    </div>
+                `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="fas fa-trash me-2"></i>Delete',
+                cancelButtonText: '<i class="fas fa-times me-2"></i>Cancel',
+                background: '#fff',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                },
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn btn-danger px-4 py-2',
+                    cancelButton: 'btn btn-secondary px-4 py-2'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Afficher un loader pendant la suppression
+                    Swal.fire({
+                        title: 'Deleting...',
+                        text: 'Please wait while we delete the truck',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
                     });
 
-                    map.on('click', function (event) {
-                        var latLng = event.latlng;
-                        marker.setLatLng(latLng);
-                        $('#latitude').val(latLng.lat);
-                        $('#longitude').val(latLng.lng);
-                    });
-
-                    map.invalidateSize();
-                } else {
-                    map.setView([36.81897000, 10.16579000], 12);
-                    marker.setLatLng([36.81897000, 10.16579000]);
+                    form.submit();
                 }
             });
-
-            // Edit truck modal handling
-            $('.btn-edit-camion').click(function () {
-                var id = $(this).data('id');
-                var nom = $(this).data('nom');
-                var type = $(this).data('type');
-                var emplacement = $(this).data('emplacement');
-                var latitude = $(this).data('latitude');
-                var longitude = $(this).data('longitude');
-                var lien = $(this).data('lien');
-                var entreprise = $(this).data('entreprise');
-                var date = $(this).data('date');
-                var direction = $(this).data('direction');
-
-                $('#editCamionId').val(id);
-                $('#editNomCamion').val(nom);
-                $('#editTypeCamion').val(type);
-                $('#editEmplacementCamion').val(emplacement);
-                $('#editLatitude').val(latitude);
-                $('#editLongitude').val(longitude);
-                $('#editLienMap').val(lien);
-                $('#editNomEntreprise').val(entreprise);
-                $('#editDateAccord').val(date);
-                $('#editDirection').val(direction);
-
-                var updateUrl = "/camions/" + id;
-                $('#editCamionForm').attr('action', updateUrl);
-            });
-
-            // Table filtering
-            $('#searchNomCamion, #searchDirection').on('input', function() {
-                var searchNom = $('#searchNomCamion').val().toLowerCase();
-                var searchDirection = $('#searchDirection').val().toLowerCase();
-
-                $('#CamionTable tr').each(function() {
-                    var nomMatch = $(this).find('.camion-nom').text().toLowerCase().includes(searchNom);
-                    var directionMatch = $(this).find('.badge').text().toLowerCase().includes(searchDirection);
-
-                    $(this).toggle(nomMatch && directionMatch);
-                });
-
-                // Reset pagination when filtering
-                currentPage = 0;
-                showPage(currentPage);
-            });
-
-            // Pagination
-            let currentPage = 0;
-            const rowsPerPage = 5;
-            const rows = $("#CamionTable tr");
-
-            function showPage(page) {
-                const filteredRows = rows.filter(':visible');
-
-                filteredRows.hide();
-                filteredRows.slice(page * rowsPerPage, (page + 1) * rowsPerPage).show();
-
-                $('#prevBtn').prop('disabled', page === 0);
-                $('#nextBtn').prop('disabled', (page + 1) * rowsPerPage >= filteredRows.length);
-            }
-
-            $('#prevBtn').click(function() {
-                if (currentPage > 0) {
-                    currentPage--;
-                    showPage(currentPage);
-                }
-            });
-
-            $('#nextBtn').click(function() {
-                const filteredRows = rows.filter(':visible');
-                if ((currentPage + 1) * rowsPerPage < filteredRows.length) {
-                    currentPage++;
-                    showPage(currentPage);
-                }
-            });
-
-            // Initialize
-            showPage(currentPage);
         });
-    </script>
+    });
+});
+</script>
+
+<style>
+.swal2-popup {
+    border-radius: 16px !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.swal2-title {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+}
+
+.btn {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    border: none !important;
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px) !important;
+}
+</style>
+   <script>
+    // Map initialization - DON'T use $(document).ready yet
+    var map, marker;
+    var editMap, editMarker;
+
+    // Initialize map when add modal opens
+    $('#ajouterCamionModal').on('shown.bs.modal', function () {
+        if (!map) {
+            map = L.map('map').setView([36.81897000, 10.16579000], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            marker = L.marker([36.81897000, 10.16579000], { draggable: true }).addTo(map);
+
+            // Update coordinates on marker drag
+            marker.on('dragend', function (event) {
+                var position = marker.getLatLng();
+                $('#latitude').val(position.lat.toFixed(6));
+                $('#longitude').val(position.lng.toFixed(6));
+            });
+
+            // Update marker position on map click
+            map.on('click', function (event) {
+                var latLng = event.latlng;
+                marker.setLatLng(latLng);
+                $('#latitude').val(latLng.lat.toFixed(6));
+                $('#longitude').val(latLng.lng.toFixed(6));
+            });
+
+            setTimeout(function() {
+                map.invalidateSize();
+            }, 100);
+        } else {
+            setTimeout(function() {
+                map.invalidateSize();
+            }, 100);
+        }
+
+        // Set initial coordinates
+        $('#latitude').val('36.818970');
+        $('#longitude').val('10.165790');
+    });
+
+    // Edit truck modal handling
+    $(document).on('click', '.btn-edit-camion', function () {
+        var id = $(this).data('id');
+        var nom = $(this).data('nom');
+        var type = $(this).data('type');
+        var emplacement = $(this).data('emplacement');
+        var latitude = $(this).data('latitude');
+        var longitude = $(this).data('longitude');
+        var lien = $(this).data('lien');
+        var entreprise = $(this).data('entreprise');
+        var date = $(this).data('date');
+        var direction = $(this).data('direction');
+
+        $('#editCamionId').val(id);
+        $('#editNomCamion').val(nom);
+        $('#editTypeCamion').val(type);
+        $('#editEmplacementCamion').val(emplacement);
+        $('#editLatitude').val(latitude);
+        $('#editLongitude').val(longitude);
+        $('#editLienMap').val(lien);
+        $('#editNomEntreprise').val(entreprise);
+        $('#editDateAccord').val(date);
+        $('#editDirection').val(direction);
+
+        var updateUrl = "/camions/" + id;
+        $('#editCamionForm').attr('action', updateUrl);
+    });
+
+    // Form validation before submit
+    $('#formAjoutCamion').on('submit', function(e) {
+        var latitude = $('#latitude').val();
+        var longitude = $('#longitude').val();
+
+        if (!latitude || !longitude) {
+            e.preventDefault();
+            alert('Veuillez sélectionner une position sur la carte');
+            return false;
+        }
+    });
+
+    // Table filtering
+    $('#searchNomCamion, #searchDirection').on('input', function() {
+        var searchNom = $('#searchNomCamion').val().toLowerCase();
+        var searchDirection = $('#searchDirection').val().toLowerCase();
+
+        $('#CamionTable tr').each(function() {
+            var nomMatch = $(this).find('.camion-nom').text().toLowerCase().includes(searchNom);
+            var directionMatch = $(this).find('.badge').text().toLowerCase().includes(searchDirection);
+
+            $(this).toggle(nomMatch && directionMatch);
+        });
+
+        // Reset pagination when filtering
+        currentPage = 0;
+        showPage(currentPage);
+    });
+
+    // Pagination
+    let currentPage = 0;
+    const rowsPerPage = 5;
+
+    function showPage(page) {
+        const rows = $("#CamionTable tr");
+        const filteredRows = rows.filter(':visible');
+
+        filteredRows.hide();
+        filteredRows.slice(page * rowsPerPage, (page + 1) * rowsPerPage).show();
+
+        $('#prevBtn').prop('disabled', page === 0);
+        $('#nextBtn').prop('disabled', (page + 1) * rowsPerPage >= filteredRows.length);
+    }
+
+    $('#prevBtn').click(function() {
+        if (currentPage > 0) {
+            currentPage--;
+            showPage(currentPage);
+        }
+    });
+
+    $('#nextBtn').click(function() {
+        const rows = $("#CamionTable tr");
+        const filteredRows = rows.filter(':visible');
+        if ((currentPage + 1) * rowsPerPage < filteredRows.length) {
+            currentPage++;
+            showPage(currentPage);
+        }
+    });
+
+    // Initialize pagination on page load
+    $(document).ready(function() {
+        showPage(currentPage);
+    });
+</script>
 </body>
 </html>

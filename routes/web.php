@@ -50,6 +50,7 @@ use App\Http\Controllers\DemandePanneInconnuController;
 use App\Http\Controllers\DemandeFluxInconnuPanneController;
 use App\Http\Controllers\AtelierAvailabilityController;
 use App\Http\Controllers\TicketAssistanceController;
+use App\Http\Controllers\RapportMaintenanceInconnuController;
 use App\Http\Controllers\RapportMaintenanceController;
 use App\Http\Controllers\AssistanceAtelierController;
 
@@ -81,14 +82,14 @@ Route::get('/flux-direct/{flux}', [FluxDirectController::class, 'show'])
 
      ->name('flux-direct.show');
 Route::get('/demandesPourExpertt/{id}', [DemandeController::class, 'show2'])->name('expert.show4');
-Route::get('/demandesPourExpert/{id}', [DemandePanneInconnuController::class, 'show2'])->name('expert.show2');
+Route::get('/demandesPourExpert/{id}', [DemandePanneInconnuController::class, 'show2'])->name('expert.showIn');
 Route::put('/demandes/{demande}/update-techniciens', [DemandeController::class, 'updateTechniciens'])
      ->name('demandes.updateTechniciens');
 Route::put('/demandesI/{demande}/update-techniciensInco', [DemandePanneInconnuController::class, 'updateTechniciens'])
      ->name('demandes.updateTechniciensInconnu');
 Route::get('/demande_maintenance', [DemandeController::class, 'getAllDemandeToExpert'])->name('expert.demande_maintenance');
 Route::get('/demande_maintenanceInconnu', [DemandePanneInconnuController::class, 'getAllDemandeToExpert'])->name('expert.demande_maintenanceInconnu');
-// Pour l'API (api.php)
+// Pour l'API (api.php)responsable.choic
 Route::get('/demandes/statistics', [DemandeController::class, 'getDemandeStatistics']);
 
 // Route pour l'interface admin
@@ -286,10 +287,13 @@ Route::put('/catalogues/{catalogue}', [CatalogueController::class, 'update'])->n
 Route::delete('/catalogues/{catalogue}', [CatalogueController::class, 'destroy'])->name('catalogues.destroy'); // Supprimer un catalogue
 Route::get('/catalogues/{catalogue}/edit', [CatalogueController::class, 'edit'])->name('catalogues.edit'); // Afficher le formulaire de modification (optionnel si vous utilisez une popup)
 // Afficher la vue de connexion par défauttt
-
+Route::get('/cataloguess', [CatalogueController::class, 'indexx'])->name('catalogues.indexx');
 Route::get('/login', function () {
     return view('login.login');
 })->name('login');
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
 
 Route::get('/statistiqueAtelier', function () {
     return view('statistiqueAtelier');
@@ -343,6 +347,10 @@ Route::get('/registreContactante', function () {
 })->name('sidebarAtelier');
 
 Route::get('/', function () {
+    return view('home');
+})->name('home');
+
+Route::get('/registreOption', function () {
     return view('registreOption');
 })->name('registreOption');
 Route::get('/factures', [FactureController::class, 'index'])
@@ -529,9 +537,28 @@ Route::get('atelierss/technicienAtelier', function() {
     ]);
 })->name('atelierss.techniciensAtelier');
 });
+Route::middleware(['auth:atelier'])->group(function () {
+Route::get('atelier/technicienAtelier', function() {
+    return view('ateliers.techniciens', [
+        'techniciens' => User::where('role', 'technicien')
+                          ->where('atelier_id', Auth::id())
+                          ->paginate(4),
+        'specialisations' => Specialisation::where('is_visible', true)->get()
+    ]);
+})->name('atelierss.techniciensAtelier');
+});
 
 
-
+Route::middleware(['auth:atelier'])->group(function () {
+Route::get('technicienAtelier', function() {
+    return view('ateliers.techniciens', [
+        'techniciens' => User::where('role', 'technicien')
+                          ->where('atelier_id', Auth::id())
+                          ->paginate(4),
+        'specialisations' => Specialisation::where('is_visible', true)->get()
+    ]);
+})->name('atelierss.techniciensAtelier');
+});
 
 Route::get('exper/technicien', function() {
     return view('expert.technician', [
@@ -540,6 +567,8 @@ Route::get('exper/technicien', function() {
                           ->paginate(6),
     ]);
 })->name('expert.techniciens');
+
+
 
 Route::middleware(['auth:atelier'])->prefix('atelier')->name('atelier.')->group(function () {
 
@@ -592,8 +621,20 @@ Route::get('atelierss/employeeAtelier', function() {
 })->name('atelierss.employeeAtelier');
 
 });
+Route::middleware(['auth:atelier'])->group(function () {
+Route::get('atelier/employeeAtelier', function() {
+    return view('ateliers.employeeAtelier', [
+        'employees' => User::where('role', 'Client')
+                          ->where('atelier_id', Auth::id())
+                          ->paginate(6)
+    ]);
+})->name('atelierss.employeeAtelier');
 
-
+});
+Route::prefix('atelier')->group(function () {
+    Route::post('/max-demandes', [AtelierController::class, 'setMaxDemandes'])->name('atelier.max-demandes.set');
+    Route::get('/max-demandes', [AtelierController::class, 'getMaxDemandes'])->name('atelier.max-demandes.get');
+});
 
 Route::middleware(['auth:atelier'])->group(function () {
     Route::get('/atelier/disponibilites', [AtelierController::class, 'showAvailabilityForm'])->name('atelier.availability');

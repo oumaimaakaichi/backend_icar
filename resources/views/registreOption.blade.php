@@ -1,272 +1,384 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription - AutoCare Pro</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Registration - AutoCare Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --accent: #4895ef;
-            --dark: #1b263b;
-            --light: #f8f9fa;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
             min-height: 100vh;
         }
 
-        .hero-section {
-            background: url('https://images.unsplash.com/photo-1549317661-bd32bbc8e486?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') no-repeat center center;
-            background-size: cover;
-            height: 170px;
-            position: relative;
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .hero-overlay {
-            background: rgba(27, 38, 59, 0.7);
-            border-radius: 0 0 20px 20px;
-        }
-
         .card-registration {
-            border: none;
-            border-radius: 15px;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            margin-bottom: 30px;
+        }
+
+        .card-registration::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .card-registration:hover::before {
+            left: 100%;
         }
 
         .card-registration:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        }
-
-        .card-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 1.5rem;
-            text-align: center;
-            border-bottom: none;
-        }
-
-        .atelier .card-header {
-            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
-        }
-
-        .entreprise .card-header {
-            background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
-        }
-
-        .user .card-header {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        }
-
-        .card-body {
-            padding: 2rem;
-        }
-
-        .btn-register {
-            background: var(--dark);
-            border: none;
-            padding: 10px 25px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            border-radius: 50px;
-            transition: all 0.3s;
-        }
-
-        .atelier .btn-register {
-            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
-        }
-
-        .entreprise .btn-register {
-            background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
-        }
-
-        .user .btn-register {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        }
-
-        .btn-register:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .icon-container {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2rem;
-            color: white;
+            transition: transform 0.5s ease;
         }
 
-        .atelier .icon-container {
-            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
-            box-shadow: 0 5px 15px rgba(58, 123, 213, 0.4);
+        .card-registration:hover .icon-container {
+            transform: rotateY(360deg) scale(1.1);
         }
 
-        .entreprise .icon-container {
-            background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
-            box-shadow: 0 5px 15px rgba(142, 45, 226, 0.4);
-        }
-
-        .user .icon-container {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
-        }
-
-        .feature-list {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .feature-list li {
-            padding: 8px 0;
-            position: relative;
-            padding-left: 30px;
-        }
-
-        .feature-list li:before {
-            content: "\f00c";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
+        .blob {
             position: absolute;
-            left: 0;
-            color: var(--accent);
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: blob 7s infinite;
         }
 
-        .section-title {
-            position: relative;
+        @keyframes blob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .check-icon {
             display: inline-block;
-            margin-bottom: 2rem;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            border-radius: 50%;
+            margin-right: 12px;
+            position: relative;
         }
 
-        .section-title:after {
+        .check-icon::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .btn-register {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-register::before {
             content: '';
             position: absolute;
-            width: 50%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            bottom: -10px;
-            left: 0;
-            border-radius: 2px;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-register:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .feature-badge {
+            background: rgba(96, 165, 250, 0.1);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            backdrop-filter: blur(10px);
         }
     </style>
 </head>
-<body>
+<body class="overflow-x-hidden">
+    <!-- Background Blobs -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="blob bg-blue-500" style="width: 400px; height: 400px; top: -100px; left: -100px;"></div>
+        <div class="blob bg-purple-500" style="width: 500px; height: 500px; top: 40%; right: -150px; animation-delay: 2s;"></div>
+        <div class="blob bg-pink-500" style="width: 350px; height: 350px; bottom: -100px; left: 30%; animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="relative z-10 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-2xl">
+                    <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                </div>
+                <span class="text-white text-2xl font-bold">AutoPro</span>
+            </div>
+        </div>
+    </nav>
+
     <!-- Hero Section -->
-
-
-    <!-- Registration Options -->
-    <div class="container py-5">
-        <div class="text-center mb-5">
-            <h2 class="section-title fw-bold">Choisissez votre profil</h2>
-            <p class="text-muted">Sélectionnez le type de compte qui correspond à votre activité</p>
-        </div>
-
-        <div class="row g-4">
-            <!-- Atelier Card -->
-            <div class="col-lg-4">
-                <div class="card-registration atelier h-100">
-                    <div class="card-header">
-                        <div class="icon-container">
-                            <i class="fas fa-tools"></i>
-                        </div>
-                        <h3>Atelier</h3>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Pour les garages et ateliers de réparation automobile souhaitant gérer leurs activités et techniciens.</p>
-
-                        <ul class="feature-list mb-4">
-                            <li>Gestion des employés</li>
-                            <li>Suivi des interventions</li>
-                            <li>Rapports détaillés</li>
-                            <li>Gestion du parc automobile</li>
-                        </ul>
-
-                        <div class="text-center mt-4">
-                            <a href="" class="btn btn-register text-white">
-                                S'inscrire comme atelier <i class="fas fa-arrow-right ms-2"></i>
-                            </a>
-                        </div>
-                    </div>
+    <div class="relative z-10 pt-12 px-6">
+        <div class="max-w-7xl mx-auto text-center mb-16">
+            <div class="animate-fadeInUp" style="animation-delay: 0.1s; opacity: 0;">
+                <div class="inline-block bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-full px-6 py-2 mb-6">
+                    <span class="text-white text-sm font-semibold">✨ Join our platform</span>
                 </div>
             </div>
 
-            <!-- Entreprise Contractante Card -->
-            <div class="col-lg-4">
-                <div class="card-registration entreprise h-100">
-                    <div class="card-header">
-                        <div class="icon-container">
-                            <i class="fas fa-building"></i>
-                        </div>
-                        <h3>Entreprise Contractante</h3>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Pour les entreprises ayant un parc automobile et souhaitant externaliser leur maintenance.</p>
-
-                        <ul class="feature-list mb-4">
-                            <li>Suivi des véhicules</li>
-                            <li>Historique des interventions</li>
-                            <li>Alertes maintenance</li>
-                            <li>Analyse des coûts</li>
-                        </ul>
-
-                        <div class="text-center mt-4">
-                            <a href="registreContactante" class="btn btn-register text-white">
-                                S'inscrire comme entreprise <i class="fas fa-arrow-right ms-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Utilisateur Card -->
-            <div class="col-lg-4">
-                <div class="card-registration user h-100">
-                    <div class="card-header">
-                        <div class="icon-container">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <h3>Particulier</h3>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Pour les particuliers souhaitant trouver des professionnels pour l'entretien de leur véhicule.</p>
-
-                        <ul class="feature-list mb-4">
-                            <li>Trouver des ateliers proches</li>
-                            <li>Prendre rendez-vous en ligne</li>
-                            <li>Historique des réparations</li>
-                            <li>Alertes d'entretien</li>
-                        </ul>
-
-                        <div class="text-center mt-4">
-                            <a href="{{ route('register') }}" class="btn btn-register text-white">
-                                S'inscrire comme particulier <i class="fas fa-arrow-right ms-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            <div class="animate-fadeInUp" style="animation-delay: 0.2s; opacity: 0;">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-6">
+                    Choose your <span class="gradient-text">account type</span>
+                </h1>
+                <p class="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                    Select the account type that matches your business needs and start your digital transformation
+                </p>
             </div>
         </div>
 
-        <div class="text-center mt-5">
-            <p class="text-muted">Vous avez déjà un compte? <a href="{{ route('login') }}" class="text-primary">Connectez-vous</a></p>
+        <!-- Registration Cards -->
+        <div class="max-w-6xl mx-auto pb-20">
+            <div class="grid md:grid-cols-2 gap-8">
+
+                <!-- Workshop Card -->
+                <div class="animate-fadeInUp" style="animation-delay: 0.3s; opacity: 0;">
+                    <div class="card-registration rounded-3xl p-8 h-full">
+                        <div class="relative z-10">
+                            <!-- Icon -->
+                            <div class="icon-container w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center shadow-2xl">
+                                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/>
+                                </svg>
+                            </div>
+
+                            <!-- Title -->
+                            <h2 class="text-4xl font-bold text-white text-center mb-4">Workshop</h2>
+
+                            <!-- Description -->
+                            <p class="text-gray-300 text-center mb-6 leading-relaxed text-lg">
+                                For auto repair garages and workshops looking to manage their operations and technicians
+                            </p>
+
+                            <!-- Features -->
+                            <div class="space-y-4 mb-8">
+                                <div class="feature-badge rounded-xl p-4 flex items-center">
+                                    <div class="check-icon flex-shrink-0"></div>
+                                    <span class="text-white font-medium">Employee and technician management</span>
+                                </div>
+                                <div class="feature-badge rounded-xl p-4 flex items-center">
+                                    <div class="check-icon flex-shrink-0"></div>
+                                    <span class="text-white font-medium">Real-time service tracking</span>
+                                </div>
+                                <div class="feature-badge rounded-xl p-4 flex items-center">
+                                    <div class="check-icon flex-shrink-0"></div>
+                                    <span class="text-white font-medium">Detailed reports and analytics</span>
+                                </div>
+                                <div class="feature-badge rounded-xl p-4 flex items-center">
+                                    <div class="check-icon flex-shrink-0"></div>
+                                    <span class="text-white font-medium">Fleet management tools</span>
+                                </div>
+                            </div>
+
+                            <!-- Stats -->
+                            <div class="grid grid-cols-3 gap-4 mb-8 pt-6 border-t border-white border-opacity-20">
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white mb-1">500+</div>
+                                    <div class="text-sm text-gray-400">Workshops</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white mb-1">2K+</div>
+                                    <div class="text-sm text-gray-400">Users</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white mb-1">4.9★</div>
+                                    <div class="text-sm text-gray-400">Rating</div>
+                                </div>
+                            </div>
+
+                            <!-- Button -->
+                            <a href="{{route('atelier.inscription')}}" class="btn-register block w-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white py-4 rounded-xl font-bold text-center hover:shadow-2xl transition-all relative z-10">
+                                <span class="relative z-10">Register as Workshop</span>
+                                <svg class="relative z-10 inline-block w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Corporate Fleet Card -->
+                <div class="animate-fadeInUp" style="animation-delay: 0.4s; opacity: 0;">
+                    <div class="card-registration rounded-3xl p-8 h-full">
+                        <div class="relative z-10">
+                            <!-- Icon -->
+                            <div class="icon-container w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-2xl">
+                                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                </svg>
+                            </div>
+
+                            <!-- Title -->
+                            <h2 class="text-4xl font-bold text-white text-center mb-4">Corporate Fleet</h2>
+
+                            <!-- Description -->
+                            <p class="text-gray-300 text-center mb-6 leading-relaxed text-lg">
+                                For companies with vehicle fleets looking to outsource their maintenance operations
+                            </p>
+
+                            <!-- Features -->
+                            <div class="space-y-4 mb-8">
+                                <div class="feature-badge rounded-xl p-4 flex items-center">
+                                    <div class="check-icon flex-shrink-0" style="background: linear-gradient(135deg, #a78bfa, #ec4899);"></div>
+                                    <span class="text-white font-medium">Fleet vehicle tracking</span>
+                                </div>
+                                <div class="feature-badge rounded-xl p-4 flex items-center">
+                                    <div class="check-icon flex-shrink-0" style="background: linear-gradient(135deg, #a78bfa, #ec4899);"></div>
+                                    <span class="text-white font-medium">Complete service history</span>
+                                </div>
+                                <div class="feature-badge rounded-xl p-4 flex items-center">
+                                    <div class="check-icon flex-shrink-0" style="background: linear-gradient(135deg, #a78bfa, #ec4899);"></div>
+                                    <span class="text-white font-medium">Maintenance alerts & reminders</span>
+                                </div>
+                                <div class="feature-badge rounded-xl p-4 flex items-center">
+                                    <div class="check-icon flex-shrink-0" style="background: linear-gradient(135deg, #a78bfa, #ec4899);"></div>
+                                    <span class="text-white font-medium">Cost analysis & budget tracking</span>
+                                </div>
+                            </div>
+
+                            <!-- Stats -->
+                            <div class="grid grid-cols-3 gap-4 mb-8 pt-6 border-t border-white border-opacity-20">
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white mb-1">300+</div>
+                                    <div class="text-sm text-gray-400">Companies</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white mb-1">5K+</div>
+                                    <div class="text-sm text-gray-400">Vehicles</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-white mb-1">4.8★</div>
+                                    <div class="text-sm text-gray-400">Rating</div>
+                                </div>
+                            </div>
+
+                            <!-- Button -->
+                            <a href="registreContactante" class="btn-register block w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-xl font-bold text-center hover:shadow-2xl transition-all relative z-10">
+                                <span class="relative z-10">Register as Company</span>
+                                <svg class="relative z-10 inline-block w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Section -->
+            <div class="text-center mt-16 animate-fadeInUp" style="animation-delay: 0.6s; opacity: 0;">
+                <div class="bg-white bg-opacity-5 backdrop-filter backdrop-blur-lg rounded-2xl p-8 border border-white border-opacity-10 max-w-2xl mx-auto">
+                    <div class="flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span class="text-white text-lg font-semibold">Already have an account?</span>
+                    </div>
+                    <a href="login" class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white px-10 py-3 rounded-xl font-semibold hover:shadow-2xl transition-all transform hover:scale-105">
+                        Sign in now
+                        <svg class="inline-block w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Floating Elements -->
+    <div class="fixed bottom-10 right-10 z-20 animate-float">
+        <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-full p-4 shadow-2xl border border-white border-opacity-20 cursor-pointer hover:scale-110 transition-transform">
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"/>
+                <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"/>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.animate-fadeInUp').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>

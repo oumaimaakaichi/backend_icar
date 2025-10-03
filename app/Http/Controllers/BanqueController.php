@@ -32,7 +32,7 @@ class BanqueController extends Controller
             Banque::create($request->all());
 
             return redirect()->route('banque.index')
-                             ->with('success', 'banque créée avec succès');
+                             ->with('success', 'Bank created successfully');
         }
 
         public function edit(Banque $banque)
@@ -50,7 +50,7 @@ class BanqueController extends Controller
             $banque->update($request->all());
 
             return redirect()->route('banque.index')
-                             ->with('success', 'banque mise à jour avec succès');
+                             ->with('success', 'Bank updated successfully');
         }
 
         public function destroy(Banque $banque)
@@ -58,12 +58,12 @@ class BanqueController extends Controller
             $banque->delete();
 
             return redirect()->route('banque.index')
-                             ->with('success', 'banque supprimée avec succès');
+                             ->with('success', 'Bank deleted successfully');
         }
         public function toggleVisibility(Banque $banque)
     {
         $banque->update(['is_visible' => !$banque->is_visible]);
 
-        return back()->with('success', 'Visibilité de la banque mise à jour');
+        return back()->with('success', 'Visibility changed successfully');
     }
 }

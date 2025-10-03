@@ -14,61 +14,46 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f3f4f7 0%, #f2f5fb 100%);
+            background: #f5f5f5;
             min-height: 100vh;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            z-index: -1;
         }
 
         .container {
             padding: 2rem;
             margin-top: 90px;
             margin-left: 0px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
+            background: white;
+            border-radius: 12px;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .header-title {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #309ad3 0%, #309ad3 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d3748;
             margin-bottom: 0.5rem;
         }
 
         .header-subtitle {
             color: #718096;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
+        /* Filter section */
         .filters {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
+            background: white;
+            border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .filter-group {
@@ -78,198 +63,161 @@
             flex-wrap: wrap;
         }
 
+        .filter-group label {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
         .filter-select {
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid rgba(102, 126, 234, 0.2);
-            border-radius: 12px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
             padding: 0.75rem 1rem;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: #4a5568;
             outline: none;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            min-width: 200px;
         }
 
         .filter-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #309ad3;
+            box-shadow: 0 0 0 3px rgba(48, 154, 211, 0.1);
         }
 
         .btn-filter {
-            background: linear-gradient(135deg, #309ad3 0%, #309ad3 100%);
+            background: #309ad3;
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 0.75rem 1.5rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-filter:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .requests-grid {
-            display: grid;
-            gap: 1.5rem;
-            grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
-        }
-
-        .request-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-        }
-
-        .request-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea 0%, #4b89a2 100%);
-        }
-
-        .request-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-            gap: 1rem;
-        }
-
-        .request-id {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #2d3748;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-filter:hover {
+            background: #2681b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(48, 154, 211, 0.4);
+        }
+
+        /* Cards container */
+        .requests-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Card styles */
+        .request-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            gap: 1.5rem;
+        }
+
+        .request-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-section {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card-section.action-section {
+            flex: 0 0 140px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .client-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .client-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .client-phone {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        .car-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .car-model {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .car-serie {
+            font-size: 0.85rem;
+            color: #718096;
         }
 
         .status-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             white-space: nowrap;
+            display: inline-block;
         }
 
-        .status-Nouvelle_demande {
-            background: linear-gradient(135deg, #4299e1, #3182ce);
-            color: white;
-        }
-
-        .status-Une_offre_a_été_faite {
-            background: linear-gradient(135deg, #ed8936, #dd6b20);
-            color: white;
-        }
-
-        .status-offre_acceptee {
-            background: linear-gradient(135deg, #48bb78, #38a169);
-            color: white;
+        .status-en_attente {
+            background: #F2EFC7;
+            color: #5a5520;
         }
 
         .status-Assignée {
-            background: linear-gradient(135deg, #309ad3, #309ad3);
-            color: white;
+            background: #B4DEBD;
+            color: #1e5128;
         }
 
-        .status-Non_assigné {
-            background: linear-gradient(135deg, #e53e3e, #c53030);
-            color: white;
-        }
-
-        .status-Assigné {
-            background: linear-gradient(135deg, #38a169, #2f855a);
-            color: white;
-        }
-
-        .card-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .info-section h4 {
-            color: #4a5568;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.75rem;
-            opacity: 0.7;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-            color: #2d3748;
-        }
-
-        .info-item i {
-            width: 16px;
-            color: #667eea;
-        }
-
-        .info-item strong {
-            min-width: 80px;
-            font-weight: 600;
-            color: #4a5568;
-        }
-
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .created-date {
-            color: #718096;
-            font-size: 0.9rem;
-        }
-
-        .rdv-date {
-            background: rgba(72, 187, 120, 0.1);
-            color: #38a169;
-            padding: 0.5rem 1rem;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.9rem;
+        .divider {
+            width: 1px;
+            background: #e2e8f0;
+            height: 60px;
+            align-self: center;
         }
 
         .btn-details {
-            background: linear-gradient(135deg, #309ad3 0%, #309ad3 100%);
+            background: #309ad3;
             color: white;
             border: none;
-            border-radius: 12px;
-            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            padding: 0.6rem 1.2rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -277,33 +225,20 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 0.9rem;
         }
 
         .btn-details:hover {
+            background: #2681b3;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-            color: white;
+            box-shadow: 0 4px 12px rgba(48, 154, 211, 0.4);
             text-decoration: none;
-        }
-
-        .piece-indicator {
-            color: #ed8936;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
         }
 
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #718096;
         }
 
         .empty-state i {
@@ -315,37 +250,159 @@
         .empty-state h3 {
             color: #4a5568;
             margin-bottom: 0.5rem;
-        }
-
-        .empty-state p {
-            color: #718096;
+            font-size: 1.5rem;
         }
 
         .alert {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
+            background: white;
+            border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             border-left: 4px solid #4299e1;
             color: #2d3748;
             font-size: 1.1rem;
         }
 
+        /* Pagination */
+        .pagination-wrapper {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 1.5rem;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .pagination li {
+            margin: 0;
+        }
+
+        .pagination a, .pagination span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 38px;
+            height: 38px;
+            padding: 0 0.75rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        .pagination a {
+            color: #4a5568;
+            background: white;
+        }
+
+        .pagination a:hover {
+            background: #309ad3;
+            color: white;
+            border-color: #309ad3;
+            transform: translateY(-2px);
+        }
+
+        .pagination .active span {
+            background: #309ad3;
+            color: white;
+            border-color: #309ad3;
+        }
+
+        .pagination .disabled span {
+            color: #a0aec0;
+            background: #f7fafc;
+            border-color: #e2e8f0;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            color: #4a5568;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .date-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .created-date {
+            font-size: 0.85rem;
+            color: #718096;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rdv-date {
+            font-size: 0.85rem;
+            color: #38a169;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 1200px) {
+            .request-card {
+                flex-wrap: wrap;
+            }
+
+            .card-section {
+                flex: 1 1 45%;
+            }
+
+            .card-section.action-section {
+                flex: 1 1 100%;
+                justify-content: center;
+            }
+
+            .divider {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
             .container {
-                margin-left: 0;
                 padding: 1rem;
             }
 
-            .requests-grid {
-                grid-template-columns: 1fr;
+            .request-card {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
             }
 
-            .card-content {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+            .card-section {
+                flex: 1 1 100%;
+            }
+
+            .card-section.action-section {
+                flex: 1 1 100%;
+                justify-content: stretch;
+            }
+
+            .btn-details {
+                width: 100%;
+                justify-content: center;
             }
 
             .filter-group {
@@ -353,10 +410,22 @@
                 align-items: stretch;
             }
 
-            .card-footer {
+            .filter-select {
+                width: 100%;
+            }
+
+            .btn-filter {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .pagination-container {
                 flex-direction: column;
-                align-items: stretch;
                 text-align: center;
+            }
+
+            .divider {
+                display: none;
             }
         }
     </style>
@@ -364,25 +433,21 @@
 <body>
     @include('Sidebar.sidebarAtelier')
 
-    <div class="container" style="margin-top: 80px ; margin-right:120px">
+    <div class="container" style="margin-right: 50px">
         <!-- Header -->
         <div class="header">
             <h3 class="header-title">Maintenance Requests</h3>
-           <p class="header-subtitle">Manage and track all maintenance requests for unknown issues</p>
-    </div>
+            <p class="header-subtitle">Manage and track all maintenance requests for unknown issues</p>
+        </div>
 
         <!-- Filters -->
         <div class="filters">
             <div class="filter-group">
-                <label for="statusFilter" style="font-weight: 600; color: #4a5568;">search by status:</label>
+                <label for="statusFilter">Search by status:</label>
                 <select id="statusFilter" class="filter-select">
                     <option value="all">All status</option>
-                    <option value="Nouvelle_demande">Nouvelle demande</option>
-                    <option value="Une_offre_a_été_faite">Une offre a été faite</option>
-                    <option value="offre_acceptee">Offre acceptée</option>
-                    <option value="Assignée">Assignée</option>
-                    <option value="Non_assigné">Non assigné</option>
-                    <option value="Assigné">Assigné</option>
+                    <option value="en_attente">New request</option>
+                    <option value="Assignée">Assigned</option>
                 </select>
                 <button id="applyFilter" class="btn-filter">
                     <i class="fas fa-filter"></i>
@@ -394,48 +459,75 @@
         @if($demandes->isEmpty())
             <div class="alert">
                 <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
-                Aucune demande trouvée pour cet atelier
+                No requests found for this workshop
             </div>
         @else
-            <div class="requests-grid">
+            <div class="requests-list" id="requestsList">
                 @foreach($demandes as $demande)
                     <div class="request-card" data-status="{{ str_replace(' ', '_', $demande->status) }}">
-
-
-                        <div class="card-content">
-                            <div class="info-section">
-                                <h4>Customer informations</h4>
-                                <div class="info-item">
-                                    <i class="fas fa-user"></i>
-                                    <strong>Customer:</strong>
-                                    <span>{{ $demande->client->prenom }} {{ $demande->client->nom }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fas fa-phone"></i>
-                                    <strong>Phone:</strong>
-                                    <span>{{ $demande->client->phone }}</span>
-                                </div>
-                                <div class="info-item">
-                                    <i class="fas fa-car"></i>
-                                    <strong>car:</strong>
-                                    <span>{{ $demande->voiture->model }} ({{ $demande->voiture->serie }})</span>
-                                </div>
+                        <!-- Client Section -->
+                        <div class="card-section">
+                            <div class="section-label">Client</div>
+                            <div class="client-info">
+                                <span class="client-name">{{ $demande->client->prenom }} {{ $demande->client->nom }}</span>
+                                <span class="client-phone">
+                                    <i class="fas fa-phone" style="font-size: 0.75rem;"></i>
+                                    {{ $demande->client->phone }}
+                                </span>
                             </div>
-
                         </div>
 
-                        <div class="card-footer">
-                            <span class="created-date">
-                                <i class="far fa-clock"></i>
-                                Created At  {{ $demande->created_at->format('d/m/Y H:i') }}
+                        <div class="divider"></div>
+
+                        <!-- Vehicle Section -->
+                        <div class="card-section">
+                            <div class="section-label">Vehicle</div>
+                            <div class="car-info">
+                                <span class="car-model">{{ $demande->voiture->model }}</span>
+                                <span class="car-serie">{{ $demande->voiture->serie }}</span>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- Status Section -->
+                        <div class="card-section">
+                            <div class="section-label">Status</div>
+                            <span class="status-badge status-{{ str_replace(' ', '_', $demande->status) }}">
+                                @if($demande->status == 'en_attente')
+                                    New Request
+                                @elseif($demande->status == 'Assignée')
+                                    Assigned
+                                @else
+                                    {{ ucfirst(str_replace('_', ' ', $demande->status)) }}
+                                @endif
                             </span>
-                            @if($demande->date_maintenance)
-                                <span class="rdv-date">
-                                    <i class="far fa-calendar-alt"></i>
-                                    RDV: {{ $demande->date_maintenance->format('d/m/Y H:i') }}
-                                </span>
-                            @endif
-                            <a   href="{{ route('ateliers.showInconnu', $demande->id) }}" class="btn-details">
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- Dates Section -->
+                        <div class="card-section">
+                            <div class="section-label">Dates</div>
+                            <div class="date-info">
+                                <div class="created-date">
+                                    <i class="far fa-clock"></i>
+                                    {{ $demande->created_at->format('d/m/Y H:i') }}
+                                </div>
+                                @if($demande->date_maintenance)
+                                    <div class="rdv-date">
+                                        <i class="far fa-calendar-alt"></i>
+                                        RDV: {{ $demande->date_maintenance->format('d/m/Y H:i') }}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- Action Section -->
+                        <div class="card-section action-section">
+                            <a href="{{ route('ateliers.showInconnu', $demande->id) }}" class="btn-details">
                                 <i class="fas fa-eye"></i>
                                 Details
                             </a>
@@ -443,6 +535,85 @@
                     </div>
                 @endforeach
             </div>
+
+            <!-- Pagination -->
+            @if($demandes->hasPages())
+            <div class="pagination-wrapper">
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        Showing {{ $demandes->firstItem() }} to {{ $demandes->lastItem() }} of {{ $demandes->total() }} results
+                    </div>
+
+                    <ul class="pagination">
+                        {{-- Previous Page Link --}}
+                        @if($demandes->onFirstPage())
+                            <li class="disabled" aria-disabled="true">
+                                <span><i class="fas fa-chevron-left"></i></span>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ $demandes->previousPageUrl() }}" rel="prev">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            </li>
+                        @endif
+
+                        {{-- Pagination Elements --}}
+                        @php
+                            $start = max(1, $demandes->currentPage() - 2);
+                            $end = min($demandes->lastPage(), $demandes->currentPage() + 2);
+                        @endphp
+
+                        @if($start > 1)
+                            <li>
+                                <a href="{{ $demandes->url(1) }}">1</a>
+                            </li>
+                            @if($start > 2)
+                                <li class="disabled">
+                                    <span>...</span>
+                                </li>
+                            @endif
+                        @endif
+
+                        @for($page = $start; $page <= $end; $page++)
+                            @if($page == $demandes->currentPage())
+                                <li class="active" aria-current="page">
+                                    <span>{{ $page }}</span>
+                                </li>
+                            @else
+                                <li>
+                                    <a href="{{ $demandes->url($page) }}">{{ $page }}</a>
+                                </li>
+                            @endif
+                        @endfor
+
+                        @if($end < $demandes->lastPage())
+                            @if($end < $demandes->lastPage() - 1)
+                                <li class="disabled">
+                                    <span>...</span>
+                                </li>
+                            @endif
+                            <li>
+                                <a href="{{ $demandes->url($demandes->lastPage()) }}">{{ $demandes->lastPage() }}</a>
+                            </li>
+                        @endif
+
+                        {{-- Next Page Link --}}
+                        @if($demandes->hasMorePages())
+                            <li>
+                                <a href="{{ $demandes->nextPageUrl() }}" rel="next">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        @else
+                            <li class="disabled" aria-disabled="true">
+                                <span><i class="fas fa-chevron-right"></i></span>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
+            </div>
+            @endif
         @endif
     </div>
 
@@ -452,21 +623,24 @@
             const status = document.getElementById('statusFilter').value;
             const cards = document.querySelectorAll('.request-card');
 
+            let visibleCount = 0;
             cards.forEach(card => {
-                if(status === 'all' || card.dataset.status === status) {
-                    card.style.display = 'block';
+                const cardStatus = card.dataset.status;
+
+                if(status === 'all' || cardStatus === status) {
+                    card.style.display = '';
+                    visibleCount++;
                     // Add smooth animation
                     card.style.opacity = '0';
-                    card.style.transform = 'translateY(20px)';
+                    card.style.transform = 'translateX(-20px)';
                     setTimeout(() => {
                         card.style.transition = 'all 0.4s ease';
                         card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, 100);
+                        card.style.transform = 'translateX(0)';
+                    }, 50);
                 } else {
                     card.style.transition = 'all 0.3s ease';
                     card.style.opacity = '0';
-                    card.style.transform = 'translateY(-20px)';
                     setTimeout(() => {
                         card.style.display = 'none';
                     }, 300);
@@ -475,11 +649,7 @@
 
             // Show empty state if no cards visible
             setTimeout(() => {
-                const visibleCards = Array.from(cards).filter(card =>
-                    card.style.display !== 'none'
-                );
-
-                if (visibleCards.length === 0) {
+                if (visibleCount === 0) {
                     showEmptyState();
                 } else {
                     hideEmptyState();
@@ -488,52 +658,42 @@
         });
 
         function showEmptyState() {
-            const container = document.querySelector('.requests-grid');
-            const existingEmpty = document.querySelector('.empty-state');
+            const container = document.getElementById('requestsList');
+            const existingEmpty = document.querySelector('.empty-state-card');
 
             if (!existingEmpty && container) {
-                const emptyState = document.createElement('div');
-                emptyState.className = 'empty-state';
-                emptyState.style.gridColumn = '1 / -1';
-                emptyState.innerHTML = `
-                    <i class="fas fa-search"></i>
-                    <h3>Aucune demande trouvée</h3>
-                    <p>Aucune demande ne correspond aux critères de filtrage sélectionnés.</p>
+                const emptyCard = document.createElement('div');
+                emptyCard.className = 'empty-state-card';
+                emptyCard.style.cssText = 'background: white; border-radius: 12px; padding: 4rem 2rem; text-align: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);';
+                emptyCard.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>No requests found</h3>
+                        <p>No requests match the selected filter criteria.</p>
+                    </div>
                 `;
-                container.appendChild(emptyState);
+                container.appendChild(emptyCard);
             }
         }
 
         function hideEmptyState() {
-            const emptyState = document.querySelector('.empty-state');
+            const emptyState = document.querySelector('.empty-state-card');
             if (emptyState) {
                 emptyState.remove();
             }
         }
-
-        // Add click animation to cards
-        document.querySelectorAll('.request-card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                if (!e.target.closest('.btn-details')) {
-                    this.style.transform = 'scale(0.98)';
-                    setTimeout(() => {
-                        this.style.transform = '';
-                    }, 150);
-                }
-            });
-        });
 
         // Initialize with smooth entrance animation
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.request-card');
             cards.forEach((card, index) => {
                 card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
+                card.style.transform = 'translateX(-30px)';
                 setTimeout(() => {
-                    card.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    card.style.transition = 'all 0.5s ease';
                     card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 100);
+                    card.style.transform = 'translateX(0)';
+                }, index * 50);
             });
         });
     </script>

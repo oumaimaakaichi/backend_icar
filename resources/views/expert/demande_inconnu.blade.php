@@ -283,7 +283,7 @@
                     <th>Client</th>
                     <th>Car</th>
 
-                    
+
                     <th>Type</th>
                     <th>Date</th>
                     <th>Status</th>
@@ -307,10 +307,23 @@
                         <div class="fw-semibold">{{ $demande['voiture_model'] }}</div>
                     </td>
 
-                   
-                    <td>
-                        <span class="badge bg-info bg-opacity-10 text-info"><i class="fas fa-home me-1"></i> {{$demande['type_emplacement']}}</span>
-                    </td>
+
+                   <td>
+    <span class="badge bg-info bg-opacity-10 text-info">
+        <i class="fas fa-{{ 
+            $demande['type_emplacement'] == 'maison' ? 'home' : 
+            ($demande['type_emplacement'] == 'fixe' ? 'wrench' : 
+            ($demande['type_emplacement'] == 'en_travail' ? 'building' : 'map-marker-alt')) 
+        }} me-1"></i>
+
+        {{
+            $demande['type_emplacement'] == 'maison' ? 'Home' : 
+            ($demande['type_emplacement'] == 'fixe' ? 'Workshop' : 
+            ($demande['type_emplacement'] == 'en_travail' ? 'Workplace' : $demande['type_emplacement'])) 
+        }}
+    </span>
+</td>
+
                     <td>
                         @if($demande['date_maintenance'])
                             <div class="fw-semibold">{{ \Carbon\Carbon::parse($demande['date_maintenance'])->format('d/m/Y') }}</div>
@@ -319,7 +332,7 @@
                         @endif
                     </td>
                     <td>
-                        @if($demande['status'] == 'Nouvelle_demande')
+                        @if($demande['status'] == 'en_attente')
                             <span class="badge-status badge-new"><i class="fas fa-clock me-1"></i> New</span>
                         @elseif($demande['status'] == 'Assignée')
                             <span class="badge-status badge-assigned"><i class="fas fa-user-check me-1"></i> Assigned</span>
@@ -327,13 +340,11 @@
                             <span class="badge-status badge-offer"><i class="fas fa-file-invoice me-1"></i> Offer Made</span>
                         @elseif($demande['status'] == 'completed')
                             <span class="badge-status badge-completed"><i class="fas fa-check-circle me-1"></i> Completed</span>
-                        @else
-                            <span class="badge bg-secondary">{{ $demande['status'] }}</span>
-                        @endif
+                            @endif
                     </td>
                     <td>
                         <div class="d-flex gap-2">
-                            <a href="{{ route('expert.show2', $demande['id']) }}" class="btn-action btn-details">
+                            <a href="{{ route('expert.showIn', $demande['id']) }}" class="btn-action btn-details">
                                 <i class="fas fa-eye me-1"></i> Details
                             </a>
                         </div>
@@ -432,7 +443,7 @@
         const date = document.getElementById('dateFilter').value;
         const search = document.getElementById('clientSearch').value.trim();
 
-        let url = "{{ route('expert.demandes') }}";
+        let url = "{{ route('expert.demande_maintenanceInconnu') }}";
         const params = [];
 
         if (status) params.push(`status=${status}`);

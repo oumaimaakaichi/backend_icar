@@ -65,10 +65,12 @@ width:100%
         }
 
         .table thead th {
-            background-color: #567288;
-            color: white;
+            background-color: white;
+            color: rgb(0, 0, 0);
             border: none;
-            font-weight: 500;
+
+            font-weight: 600;
+            font-size: 1rem;
         }
 
         .table tbody tr {
@@ -220,7 +222,7 @@ width:100%
     <div class="d-flex">
         <!-- Sidebar -->
 
-        @include('Sidebar.sidebar')
+         @include('Sidebar.responsablePiece')
 
 
 
@@ -318,15 +320,13 @@ width:100%
                                                 <button type="button" class="action-btn btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editCatalogueModal{{ $catalogue->id }}" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <form action="{{ route('catalogues.destroy', $catalogue->id) }}" method="POST" class="d-inline delete-catalogue-form">
-    @csrf
-    @method('DELETE')
-    <button type="button" class="action-btn btn btn-sm btn-outline-danger delete-catalogue-btn"
-            data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"
-            data-catalogue-name="{{ $catalogue->name ?? $catalogue->title }}">
-        <i class="fas fa-trash-alt"></i>
-    </button>
-</form>
+                                                <form action="{{ route('catalogues.destroy', $catalogue->id) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="action-btn btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this catalog item?')" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -531,47 +531,7 @@ width:100%
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialiser les tooltips Bootstrap
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    });
 
-    // Gestionnaire de suppression catalogue
-    document.querySelectorAll('.delete-catalogue-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const form = this.closest('.delete-catalogue-form');
-            const catalogueName = this.getAttribute('data-catalogue-name') || 'this catalog item';
-
-            Swal.fire({
-                title: 'Delete Catalog Item?',
-                text: `Are you sure you want to delete "${catalogueName}"? This action cannot be undone.`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel',
-                background: '#fff',
-                iconColor: '#ef4444',
-                customClass: {
-                    confirmButton: 'btn btn-danger',
-                    cancelButton: 'btn btn-secondary'
-                },
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        });
-    });
-});
-</script>
     <script>
         // Initialize tooltips
         document.addEventListener('DOMContentLoaded', function() {

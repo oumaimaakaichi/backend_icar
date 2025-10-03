@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Ajouter Pièces Recommandées</title>
+    <title>Add Recommended Parts</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
@@ -41,10 +41,9 @@
         }
 
         .main-content {
-width: 1100px;
+            width: 1100px;
             padding: 30px;
             transition: var(--transition);
-
         }
 
         .page-header {
@@ -256,7 +255,7 @@ width: 1100px;
         }
 
         .btn-add-piece {
-            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            background: linear-gradient(135deg, #2980b9, #2980b9);
             color: white;
             border: none;
             padding: 15px 30px;
@@ -389,20 +388,48 @@ width: 1100px;
                 font-size: 1.5rem;
             }
         }
+
+        .main-oeuvre-only {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px dashed #6c757d;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .main-oeuvre-only h4 {
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .main-oeuvre-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .main-oeuvre-content {
+            display: none;
+            max-width: 400px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
-      <div style="margin-left: 50px">
+    <div style="margin-left: 50px">
         <div>
             @include('Sidebar.responsablePiece')
         </div>
 
         <div class="main-content flex-grow-1">
             <div class="container-fluid">
-                <div class="page-header" >
-                    <h1 class="page-title" >
+                <div class="page-header">
+                    <h1 class="page-title">
                         <i class="bi bi-tools"></i>
-                        Ajouter des pièces de rechange
+                        Add Recommended Parts
                     </h1>
                 </div>
 
@@ -410,7 +437,7 @@ width: 1100px;
                     <div class="alert alert-danger">
                         <h5 class="alert-heading">
                             <i class="bi bi-exclamation-triangle-fill"></i>
-                            Erreurs de validation
+                            Validation Errors
                         </h5>
                         <ul class="mb-0">
                             @foreach ($errors->all() as $error)
@@ -423,28 +450,56 @@ width: 1100px;
                 <form method="POST" action="{{ route('piece_recommandee.store') }}" class="form-container" id="spareParts">
                     @csrf
                     <input type="hidden" name="demande_id" value="{{ $demandeId }}">
+                    <input type="hidden" name="main_oeuvre_seule" id="mainOeuvreSeule" value="0">
+
+                    <!-- New section for labor-only option -->
+                    <div class="main-oeuvre-only">
+                        <h4><i class="bi bi-wrench-adjustable"></i> Alternative Option</h4>
+                        <div class="main-oeuvre-toggle">
+                            <span>Recommend labor only</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggleMainOeuvre" onchange="toggleMainOeuvreOption(this)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="main-oeuvre-content" id="mainOeuvreContent">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-currency-euro"></i>
+                                    Labor Cost
+                                </label>
+                                <input type="number" step="0.01" min="0" name="prix_main_oeuvre_seule"
+                                    id="prixMainOeuvreSeule" class="form-control" placeholder="0.00 €">
+                            </div>
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i>
+                                No parts will be recommended, only the labor cost.
+                            </div>
+                        </div>
+                    </div>
 
                     <div id="pieces-container">
                         <div class="empty-state" id="emptyState">
                             <i class="bi bi-box"></i>
-                            <h3>Aucune pièce ajoutée</h3>
-                            <p>Cliquez sur "Ajouter une pièce" pour commencer</p>
+                            <h3>No parts added</h3>
+                            <p>Click on "Add a part" to get started</p>
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
-                        <button type="button" class="btn btn-add-piece" onclick="ajouterPiece()">
+                        <button type="button" class="btn btn-add-piece" id="btnAddPiece" onclick="ajouterPiece()" style="color: rgb(243, 237, 237) ;background-color:#3498db">
                             <i class="bi bi-plus-circle"></i>
-                            Ajouter une pièce
+                           <b>Add a Part</b>
                         </button>
                         <div class="d-flex gap-2">
                             <button type="button" class="btn btn-outline-secondary" onclick="resetForm()">
                                 <i class="bi bi-arrow-clockwise"></i>
-                                Réinitialiser
+                                Reset
                             </button>
                             <button type="submit" class="btn btn-submit">
                                 <i class="bi bi-save"></i>
-                                Enregistrer les pièces
+                                Save Parts
                             </button>
                         </div>
                     </div>
@@ -452,13 +507,43 @@ width: 1100px;
             </div>
         </div>
 
-
     <script>
         let pieceIndex = 0;
-        // Utilisation des données Laravel
         const pieces = @json($pieces ?? []);
+        let mainOeuvreOnly = false;
+
+        function toggleMainOeuvreOption(checkbox) {
+            mainOeuvreOnly = checkbox.checked;
+            document.getElementById('mainOeuvreSeule').value = mainOeuvreOnly ? '1' : '0';
+
+            const mainOeuvreContent = document.getElementById('mainOeuvreContent');
+            const piecesContainer = document.getElementById('pieces-container');
+            const btnAddPiece = document.getElementById('btnAddPiece');
+            const emptyState = document.getElementById('emptyState');
+
+            if (mainOeuvreOnly) {
+                mainOeuvreContent.style.display = 'block';
+                piecesContainer.style.display = 'none';
+                btnAddPiece.disabled = true;
+                btnAddPiece.style.opacity = '0.5';
+
+                // Empty the parts container but keep the empty state hidden
+                piecesContainer.innerHTML = '';
+                if (emptyState) emptyState.style.display = 'none';
+            } else {
+                mainOeuvreContent.style.display = 'none';
+                piecesContainer.style.display = 'block';
+                btnAddPiece.disabled = false;
+                btnAddPiece.style.opacity = '1';
+
+                // Show empty state if no parts
+                checkEmptyState();
+            }
+        }
 
         function ajouterPiece() {
+            if (mainOeuvreOnly) return;
+
             const container = document.getElementById('pieces-container');
             const emptyState = document.getElementById('emptyState');
 
@@ -471,18 +556,18 @@ width: 1100px;
                     <div class="piece-header">
                         <h3 class="piece-title">
                             <span class="piece-number">${pieceIndex + 1}</span>
-                            Pièce de rechange
+                            Spare Part
                         </h3>
-                        <i class="bi bi-trash remove-piece" onclick="supprimerPiece(${pieceIndex})" title="Supprimer cette pièce"></i>
+                        <i class="bi bi-trash remove-piece" onclick="supprimerPiece(${pieceIndex})" title="Delete this part"></i>
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label">
                             <i class="bi bi-wrench"></i>
-                            Nom de la pièce
+                            Part Name
                         </label>
                         <select class="form-select" name="pieces[${pieceIndex}][idPiece]" required>
-                            <option value="">Sélectionner une pièce...</option>
+                            <option value="">Select a part...</option>
                             ${pieces.map(piece =>
                                 `<option value="${piece.id}">${piece.nom_piece}</option>`
                             ).join('')}
@@ -494,7 +579,7 @@ width: 1100px;
                             <div class="mb-3">
                                 <label class="form-label">
                                     <i class="bi bi-currency-euro"></i>
-                                    Prix Main d'œuvre
+                                    Labor Cost
                                 </label>
                                 <input type="number" step="0.01" min="0" name="pieces[${pieceIndex}][prix_main_oeuvre]" class="form-control" required placeholder="0.00 €">
                             </div>
@@ -506,7 +591,7 @@ width: 1100px;
                             <div class="availability-header">
                                 <h5 class="availability-label">
                                     <i class="bi bi-star-fill text-warning"></i>
-                                    Pièce Originale
+                                    Original Part
                                 </h5>
                                 <label class="toggle-switch">
                                     <input type="checkbox" checked onchange="toggleDisponibilite(this, 'pieces[${pieceIndex}][disponibiliteOriginal]', 'original-section-${pieceIndex}')">
@@ -516,11 +601,11 @@ width: 1100px;
                             </div>
                             <div id="original-section-${pieceIndex}" class="visible-section">
                                 <div class="mb-3">
-                                    <label class="form-label">Prix Original</label>
+                                    <label class="form-label">Original Price</label>
                                     <input type="number" step="0.01" min="0" name="pieces[${pieceIndex}][prixOriginal]" class="form-control" required placeholder="0.00 €">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Date de disponibilité</label>
+                                    <label class="form-label">Availability Date</label>
                                     <input type="date" name="pieces[${pieceIndex}][datedisponibiliteOriginale]" class="form-control" required>
                                 </div>
                             </div>
@@ -530,7 +615,7 @@ width: 1100px;
                             <div class="availability-header">
                                 <h5 class="availability-label">
                                     <i class="bi bi-shop text-primary"></i>
-                                    Pièce Commerciale
+                                    Commercial Part
                                 </h5>
                                 <label class="toggle-switch">
                                     <input type="checkbox" checked onchange="toggleDisponibilite(this, 'pieces[${pieceIndex}][disponibilitCommercial]', 'commercial-section-${pieceIndex}')">
@@ -540,11 +625,11 @@ width: 1100px;
                             </div>
                             <div id="commercial-section-${pieceIndex}" class="visible-section">
                                 <div class="mb-3">
-                                    <label class="form-label">Prix Commercial</label>
+                                    <label class="form-label">Commercial Price</label>
                                     <input type="number" step="0.01" min="0" name="pieces[${pieceIndex}][prixCommercial]" class="form-control" required placeholder="0.00 €">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Date de disponibilité</label>
+                                    <label class="form-label">Availability Date</label>
                                     <input type="date" name="pieces[${pieceIndex}][dateDisponibiliteComercial]" class="form-control" required>
                                 </div>
                             </div>
@@ -559,7 +644,7 @@ width: 1100px;
         }
 
         function supprimerPiece(index) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette pièce ?')) {
+            if (confirm('Are you sure you want to delete this part?')) {
                 const pieceElement = document.getElementById(`piece-${index}`);
                 if (pieceElement) {
                     pieceElement.style.transform = 'translateX(-100%)';
@@ -585,8 +670,10 @@ width: 1100px;
             const emptyState = document.getElementById('emptyState');
             const pieces = container.querySelectorAll('.piece-card');
 
-            if (pieces.length === 0) {
+            if (pieces.length === 0 && !mainOeuvreOnly) {
                 emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
             }
         }
 
@@ -620,14 +707,23 @@ width: 1100px;
         }
 
         function resetForm() {
-            if (confirm('Êtes-vous sûr de vouloir réinitialiser le formulaire ? Toutes les données seront perdues.')) {
+            if (confirm('Are you sure you want to reset the form? All data will be lost.')) {
+                // Disable labor-only option
+                document.getElementById('toggleMainOeuvre').checked = false;
+                toggleMainOeuvreOption(document.getElementById('toggleMainOeuvre'));
+
+                // Reset parts container
                 document.getElementById('pieces-container').innerHTML = `
                     <div class="empty-state" id="emptyState">
                         <i class="bi bi-box"></i>
-                        <h3>Aucune pièce ajoutée</h3>
-                        <p>Cliquez sur "Ajouter une pièce" pour commencer</p>
+                        <h3>No parts added</h3>
+                        <p>Click on "Add a part" to get started</p>
                     </div>
                 `;
+
+                // Reset labor-only field
+                document.getElementById('prixMainOeuvreSeule').value = '';
+
                 pieceIndex = 0;
             }
         }
@@ -640,11 +736,22 @@ width: 1100px;
             document.getElementById('loadingSpinner').style.display = 'none';
         }
 
-        // Form submission - permettre la soumission normale du formulaire Laravel
+        // Form submission
         document.getElementById('spareParts').addEventListener('submit', function(e) {
             showLoading();
-            // Laisser le formulaire se soumettre normalement
-            // Le showLoading() donnera un feedback visuel pendant la soumission
+
+            // Additional validation
+            if (mainOeuvreOnly) {
+                const prixMainOeuvre = document.getElementById('prixMainOeuvreSeule').value;
+                if (!prixMainOeuvre || prixMainOeuvre <= 0) {
+                    e.preventDefault();
+                    alert('Please enter a valid labor cost');
+                    hideLoading();
+                    return false;
+                }
+            }
+
+            // Let the form submit normally
         });
 
         // Initialize with one piece

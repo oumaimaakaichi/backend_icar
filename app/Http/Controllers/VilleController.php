@@ -35,7 +35,7 @@ public function show(Ville $ville)
         Ville::create($request->all());
 
         return redirect()->route('ville.index')
-                         ->with('success', 'Ville créée avec succès');
+                         ->with('success', 'City created successfully');
     }
 
     public function edit(Ville $ville)
@@ -54,7 +54,7 @@ public function show(Ville $ville)
         $ville->update($request->all());
 
         return redirect()->route('ville.index')
-                         ->with('success', 'Ville mise à jour avec succès');
+                         ->with('success', 'City updated successfully');
     }
  //supprimer une ville
     public function destroy(Ville $ville)
@@ -62,12 +62,12 @@ public function show(Ville $ville)
         $ville->delete();
 
         return redirect()->route('ville.index')
-                         ->with('success', 'Ville supprimée avec succès');
+                         ->with('success', 'City deleted successfully');
     }
     public function toggleVisibility(Ville $ville)
 {
     $ville->update(['is_visible' => !$ville->is_visible]);
 
-    return back()->with('success', 'Visibilité de la ville mise à jour');
+    return back()->with('success', 'Visibility updated successfully');
 }
 }

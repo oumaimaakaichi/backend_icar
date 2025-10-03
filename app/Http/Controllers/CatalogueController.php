@@ -13,7 +13,11 @@ class CatalogueController extends Controller
         $catalogues = Catalogue::all();
         return view('Admin.catalogue', compact('catalogues'));
     }
-
+ public function indexx()
+    {
+        $catalogues = Catalogue::all();
+        return view('reponsable_piece.catalogue', compact('catalogues'));
+    }
 
     // Afficher le formulaire de création
     public function create()
@@ -98,7 +102,7 @@ public function update(Request $request, Catalogue $catalogue)
         return view('catalogues.edit', compact('catalogue'));
     }
 
-  
+
 
     // Supprimer un catalogue
     public function destroy(Catalogue $catalogue)

@@ -34,13 +34,85 @@ class ReviewController extends Controller
         $review = Review::create($validated);
 
         return response()->json([
-            'message' => 'Review ajoutée avec succès',
+            'message' => 'Review added successfully',
             'review' => $review
         ], 201);
     }
 
 
+public function update(Request $request, $id)
+    {
+        $review = Review::find($id);
 
+        if (!$review) {
+            return response()->json([
+                'error' => 'Review not found'
+            ], 404);
+        }
+
+        // Vérifier que l'utilisateur est propriétaire de la review
+
+
+        $validated = $request->validate([
+            'nbr_etoile' => 'sometimes|required|integer|min:1|max:5',
+            'commentaire' => 'nullable|string',
+        ]);
+
+        $review->update($validated);
+
+        return response()->json([
+            'message' => 'Review updated successfully',
+            'review' => $review
+        ], 200);
+    }
+
+    // Supprimer une review
+    public function destroy($id)
+    {
+        $review = Review::find($id);
+
+        if (!$review) {
+            return response()->json([
+                'error' => 'Review not found'
+            ], 404);
+        }
+
+        // Vérifier que l'utilisateur est propriétaire de la review
+
+        $review->delete();
+
+        return response()->json([
+            'message' => 'Review deleted successfully'
+        ], 200);
+    }
+public function getUserReview($technicienId, $demandeId)
+    {
+        $userId = auth()->id();
+
+        $review = Review::where('technicien_id', $technicienId)
+            ->where('demande_id', $demandeId)
+            ->where('client_id', $userId)
+            ->first();
+
+        return response()->json([
+            'review' => $review
+        ]);
+    }
+
+    // Récupérer la review de l'utilisateur pour une demande inconnue
+    public function getUserReview2($technicienId, $demandeInconnuId)
+    {
+        $userId = auth()->id();
+
+        $review = Review::where('technicien_id', $technicienId)
+            ->where('demande_inconnu_id', $demandeInconnuId)
+            ->where('client_id', $userId)
+            ->first();
+
+        return response()->json([
+            'review' => $review
+        ]);
+    }
      public function store2(Request $request)
     {
         $validated = $request->validate([
@@ -67,11 +139,88 @@ class ReviewController extends Controller
         $review = Review::create($validated);
 
         return response()->json([
-            'message' => 'Review ajoutée avec succès',
+            'message' => 'Review added successfully',
             'review' => $review
         ], 201);
     }
+// Récupérer toutes les reviews classées par technicien
+public function getAllReviewsGroupedByTechnicien()
+{
+    $reviews = Review::with(['client', 'technicien', 'demande'])
+        ->orderBy('technicien_id')
+        ->orderBy('created_at', 'desc')
+        ->get()
+        ->groupBy('technicien_id');
 
+    $result = [];
+
+    foreach ($reviews as $technicienId => $technicienReviews) {
+        $technicien = $technicienReviews->first()->technicien;
+        $totalReviews = $technicienReviews->count();
+        $averageRating = $technicienReviews->avg('nbr_etoile');
+
+        $result[] = [
+            'technicien_id' => $technicienId,
+            'technicien' => $technicien,
+            'total_reviews' => $totalReviews,
+            'average_rating' => round($averageRating, 1),
+            'reviews' => $technicienReviews->map(function($review) {
+                return [
+                    'id' => $review->id,
+                    'nbr_etoile' => $review->nbr_etoile,
+                    'commentaire' => $review->commentaire,
+                    'created_at' => $review->created_at,
+                    'client' => [
+                        'id' => $review->client->id,
+                        'nom' => $review->client->nom ?? 'Client',
+                        'prenom' => $review->client->prenom ?? '',
+                    ]
+                ];
+            })
+        ];
+    }
+
+    return response()->json([
+        'success' => true,
+        'total_technicians' => count($result),
+        'data' => $result
+    ]);
+}
+
+// Get all reviews made by a specific client
+public function getReviewsByClient($clientId)
+{
+    $reviews = Review::where('client_id', $clientId)
+        ->with(['technicien', 'demande', 'demandeInconnu'])
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    // Calculate statistics
+    $totalReviews = $reviews->count();
+    $averageRating = $reviews->avg('nbr_etoile');
+
+    return response()->json([
+        'success' => true,
+        'client_id' => $clientId,
+        'total_reviews' => $totalReviews,
+        'average_rating' => round($averageRating, 1),
+        'reviews' => $reviews->map(function($review) {
+            return [
+                'id' => $review->id,
+                'nbr_etoile' => $review->nbr_etoile,
+                'commentaire' => $review->commentaire,
+                'created_at' => $review->created_at,
+                'technicien' => [
+                    'id' => $review->technicien->id,
+                    'nom' => $review->technicien->nom ?? 'Technicien',
+                    'prenom' => $review->technicien->prenom ?? '',
+                ],
+                'demande_id' => $review->demande_id,
+                'demande_inconnu_id' => $review->demande_inconnu_id,
+            ];
+        })
+    ]);
+}
     // Lister les reviews d'une demande
     public function getByDemande($demandeId)
     {

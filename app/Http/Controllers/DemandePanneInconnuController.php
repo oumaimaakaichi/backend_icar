@@ -8,8 +8,12 @@ use App\Models\Catalogue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Atelier;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\NotificationPrix;
+use Illuminate\Support\Str;
 class DemandePanneInconnuController extends Controller
 {
 public function store(Request $request)
@@ -158,12 +162,71 @@ public function showDemandesParAtelierPage()
     }
 
     // Paginer les résultats (10 par défaut)
-    $demandes = $query->paginate(5);
+    $demandes = $query->paginate(4);
 
     return view('ateliers.demandesInconnu', compact('atelier', 'demandes'));
 }
 
+  public function getDemandesCountByDate(Request $request)
+    {
+        try {
+            $startDate = $request->get('start_date', now()->format('Y-m-d'));
+            $endDate = $request->get('end_date', now()->addYear()->format('Y-m-d'));
 
+            $demandesCount = DemandePanneInconnu::whereNotNull('date_maintenance')
+                ->whereBetween('date_maintenance', [$startDate, $endDate])
+                ->select('date_maintenance', DB::raw('COUNT(*) as count'))
+                ->groupBy('date_maintenance')
+                ->get()
+                ->pluck('count', 'date_maintenance');
+
+            return response()->json([
+                'success' => true,
+                'data' => $demandesCount
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des comptes par date',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+
+     public function getBlockedDates(Request $request)
+    {
+        try {
+            $startDate = $request->get('start_date', now()->format('Y-m-d'));
+            $endDate = $request->get('end_date', now()->addYear()->format('Y-m-d'));
+            $maxDemandesPerDay = $request->get('max_demandes', 5);
+
+            $blockedDates = DemandePanneInconnu::whereNotNull('date_maintenance')
+                ->whereBetween('date_maintenance', [$startDate, $endDate])
+                ->select('date_maintenance', DB::raw('COUNT(*) as count'))
+                ->groupBy('date_maintenance')
+                ->having('count', '>=', $maxDemandesPerDay)
+                ->pluck('date_maintenance')
+                ->map(function ($date) {
+                    return $date->format('Y-m-d');
+                });
+
+            return response()->json([
+                'success' => true,
+                'data' => $blockedDates,
+                'max_demandes_per_day' => $maxDemandesPerDay
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des dates bloquées',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 public function updateTechniciens(Request $request, DemandePanneInconnu $demande)
 {
     \Log::info('Données reçues:', $request->all());
@@ -194,7 +257,7 @@ public function updateTechniciens(Request $request, DemandePanneInconnu $demande
 
         return response()->json([
             'success' => true,
-            'message' => 'Techniciens assignés avec succès',
+            'message' => 'Technicians assigned successfully',
             'data' => $demande->fresh(),
         ]);
     } catch (\Exception $e) {
@@ -206,6 +269,49 @@ public function updateTechniciens(Request $request, DemandePanneInconnu $demande
         ], 500);
     }
 }
+
+
+public function getAvailabilityWithOccupiedSlots($id)
+    {
+        try {
+            $maxDemandesPerSlot = request()->get('max_demandes', 5);
+
+            $atelier = Atelier::find($id);
+            if (!$atelier) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Atelier not found'
+                ], 404);
+            }
+
+            $occupiedSlots = DemandePanneInconnu::where('atelier_id', $id)
+                ->whereNotNull('date_maintenance')
+                ->whereNotNull('heure_maintenance')
+                ->where('date_maintenance', '>=', now()->format('Y-m-d'))
+                ->select('date_maintenance', 'heure_maintenance', DB::raw('COUNT(*) as count'))
+                ->groupBy('date_maintenance', 'heure_maintenance')
+                ->having('count', '>=', $maxDemandesPerSlot)
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    $key = $item->date_maintenance->format('Y-m-d') . '_' . $item->heure_maintenance;
+                    return [$key => $item->count];
+                });
+
+            return response()->json([
+                'success' => true,
+                'availability' => $atelier->availabilities ?? [],
+                'occupied_slots' => $occupiedSlots,
+                'max_demandes_per_slot' => $maxDemandesPerSlot
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error loading availability',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 public function show1($id)
 {
     $demande = DemandePanneInconnu::with('client', 'voiture', 'category')->findOrFail($id);
@@ -251,56 +357,98 @@ public function getAllDemande(): JsonResponse
 }
 public function updateDisponibilitePiece(Request $request, $id)
 {
-    $request->validate([
-        'idPiece' => 'required|integer',
-        'prixOriginal' => 'nullable|numeric|min:0',
-        'prixCommercial' => 'nullable|numeric|min:0',
-        'datedisponibiliteOriginale' => 'nullable|date',
-        'dateDisponibiliteComercial' => 'nullable|date',
-        'disponibiliteOriginal' => 'required|boolean',
-        'disponibiliteCommercial' => 'required|boolean',
-    ]);
+    try {
+        $request->validate([
+            'idPiece' => 'required|integer',
+            'prixOriginal' => 'nullable|numeric|min:0',
+            'prixCommercial' => 'nullable|numeric|min:0',
+            'datedisponibiliteOriginale' => 'nullable|date',
+            'dateDisponibiliteComercial' => 'nullable|date',
+            'disponibiliteOriginal' => 'required|boolean',
+            'disponibiliteCommercial' => 'required|boolean',
+        ]);
 
-    $demande = DemandePanneInconnu::findOrFail($id);
+        $demande = DemandePanneInconnu::findOrFail($id);
 
-    $disponibilites = $demande->disponibilite_pieces ?? [];
+        $disponibilites = $demande->disponibilite_pieces ?? [];
 
-    // Vérifie si une entrée existe déjà pour cette pièce
-    $existingIndex = null;
-    foreach ($disponibilites as $index => $item) {
-        if (isset($item['idPiece']) && $item['idPiece'] == $request->idPiece) {
-            $existingIndex = $index;
-            break;
+        // Vérifie si une entrée existe déjà pour cette pièce
+        $existingIndex = null;
+        foreach ($disponibilites as $index => $item) {
+            if (isset($item['idPiece']) && $item['idPiece'] == $request->idPiece) {
+                $existingIndex = $index;
+                break;
+            }
         }
+
+        $disponibiliteData = [
+            'idPiece' => $request->idPiece,
+            'prixOriginal' => $request->prixOriginal,
+            'prixCommercial' => $request->prixCommercial,
+            'datedisponibiliteOriginale' => $request->datedisponibiliteOriginale,
+            'dateDisponibiliteComercial' => $request->dateDisponibiliteComercial,
+            'disponibiliteOriginal' => $request->disponibiliteOriginal,
+            'disponibiliteCommercial' => $request->disponibiliteCommercial,
+            'updated_at' => now()->toDateTimeString()
+        ];
+
+        if ($existingIndex !== null) {
+            $disponibilites[$existingIndex] = $disponibiliteData;
+        } else {
+            $disponibilites[] = $disponibiliteData;
+        }
+
+        $demande->disponibilite_pieces = $disponibilites;
+        $demande->save();
+
+        // ✅ Notification au client comme dans la fonction store
+        if ($demande->client) {
+            // Récupérer les informations de la pièce
+            $catalogue = Catalogue::find($request->idPiece);
+            $pieceName = $catalogue ? $catalogue->name : 'Unknown Part';
+
+            NotificationPrix::create([
+                'id' => (string) Str::uuid(),
+                'type' => "Price Availability Update",
+                'notifiable_type' => get_class($demande->client),
+                'notifiable_id' => $demande->client->id,
+                'data' => [
+                    'demande_panne_inconnue_id' => $id,
+                    'piece_id' => $request->idPiece,
+                    'piece_name' => $pieceName,
+                    'message' => 'Price availability has been updated for part: ' . $pieceName,
+                    'prix_original' => $request->prixOriginal,
+                    'prix_commercial' => $request->prixCommercial,
+                    'disponibilite_original' => $request->disponibiliteOriginal,
+                    'disponibilite_commercial' => $request->disponibiliteCommercial,
+                    'date_disponibilite_originale' => $request->datedisponibiliteOriginale,
+                    'date_disponibilite_commercial' => $request->dateDisponibiliteComercial,
+                    'updated_at' => now()->toDateTimeString()
+                ],
+                'read_at' => null,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Availability recorded successfully.',
+            'disponibilites' => $disponibilites
+        ]);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Validation error',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        \Log::error('Erreur lors de la mise à jour de disponibilité : ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'Server error: ' . $e->getMessage()
+        ], 500);
     }
-
-    $disponibiliteData = [
-        'idPiece' => $request->idPiece,
-        'prixOriginal' => $request->prixOriginal,
-        'prixCommercial' => $request->prixCommercial,
-        'datedisponibiliteOriginale' => $request->datedisponibiliteOriginale,
-        'dateDisponibiliteComercial' => $request->dateDisponibiliteComercial,
-        'disponibiliteOriginal' => $request->disponibiliteOriginal,
-        'disponibiliteCommercial' => $request->disponibiliteCommercial,
-        'updated_at' => now()->toDateTimeString()
-    ];
-
-    if ($existingIndex !== null) {
-        $disponibilites[$existingIndex] = $disponibiliteData;
-    } else {
-        $disponibilites[] = $disponibiliteData;
-    }
-
-    $demande->disponibilite_pieces = $disponibilites;
-    $demande->save();
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Disponibilité enregistrée avec succès.',
-        'disponibilites' => $disponibilites
-    ]);
 }
-
 
 protected function calculateTotalPrice($disponibilites)
 {
@@ -494,7 +642,7 @@ public function updatePanne(Request $request, $id)
 
     return response()->json([
         'success' => true,
-        'message' => 'Description de la panne, catégories et pièces mises à jour avec succès.',
+        'message' => 'Fault description, categories, and parts updated successfully',
         'data' => $demande
     ]);
 }
@@ -517,7 +665,7 @@ public function ajouterPrixMainOeuvrePiece(Request $request, $id)
 
     return response()->json([
         'success' => true,
-        'message' => 'Prix main d\'œuvre ajouté avec succès',
+        'message' => 'Labor cost added successfully',
         'data' => $demande
     ]);
 }
@@ -535,9 +683,9 @@ public function getAllDemandeByUser($userId): JsonResponse
     }
 
     $demandes = DemandePanneInconnu::with([
-        'voiture:id,model,serie,couleur',
+        'voiture:id,model,serie,couleur,date_fabrication',
         'category:id,titre',
-        'atelier:id,nom_commercial',
+        'atelier:id,nom_commercial,ville',
     ])
     ->where('client_id', $userId)
     ->orderBy('created_at', 'desc')
@@ -601,7 +749,11 @@ public function getAllDemandeByUser($userId): JsonResponse
             'date_maintenance' => $demande->date_maintenance ? $demande->date_maintenance->format('Y-m-d') : null,
             'heure_maintenance' => $demande->heure_maintenance,
             'status' => $demande->status,
-            'atelier' => $demande->atelier ? $demande->atelier->nom : null,
+          'atelier' => $demande->atelier ? [
+    'nom_commercial' => $demande->atelier->nom_commercial,
+    'ville' => $demande->atelier->ville,
+] : null,
+
             'categorie' => $demande->category->titre ?? null,
             'created_at' => $demande->created_at->format('Y-m-d H:i:s'),
             'disponibilite_pieces' => $piecesDisponibles, // Array vide ou avec des éléments
@@ -693,11 +845,160 @@ public function saveSelections(Request $request, $demandeId)
 
     return response()->json([
         'success' => true,
-        'message' => 'Sélections enregistrées avec succès',
+        'message' => 'Selections saved successfully',
         'prix_pieces' => $prixPieces,
         'prix_main_oeuvre' => $prixMainOeuvre,
         'prix_total' => $prixTotal,
     ]);
 }
+
+
+
+
+
+
+
+
+
+
+
+public function getTechniciansCountByAtelier()
+    {
+        try {
+            $techniciansCount = User::where('role', 'technicien')
+                ->where('isActive', true)
+                ->whereNotNull('atelier_id')
+                ->select('atelier_id', DB::raw('count(*) as count'))
+                ->groupBy('atelier_id')
+                ->get()
+                ->keyBy('atelier_id');
+
+            return response()->json([
+                'success' => true,
+                'data' => $techniciansCount
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors du comptage des techniciens'
+            ], 500);
+        }
+    }
+
+    /**
+     * API pour compter le nombre de demandes par jour et par atelier
+     */
+    public function getDemandesCountByDatee(Request $request)
+    {
+        try {
+            $request->validate([
+                'start_date' => 'required|date',
+                'end_date' => 'required|date',
+                'atelier_id' => 'nullable|integer'
+            ]);
+
+            $startDate = Carbon::parse($request->start_date);
+            $endDate = Carbon::parse($request->end_date);
+            $atelierId = $request->atelier_id;
+
+            $query = DemandePanneInconnu::whereBetween('date_maintenance', [$startDate, $endDate])
+                ->whereIn('status', ['confirmed', 'en_cours', 'planifiee'])
+                ->select(DB::raw('DATE(date_maintenance) as date'), DB::raw('count(*) as count'));
+
+            if ($atelierId) {
+                $query->where('atelier_id', $atelierId);
+            }
+
+            $demandesCount = $query->groupBy(DB::raw('DATE(date_maintenance)'))
+                ->get()
+                ->keyBy('date');
+
+            return response()->json([
+                'success' => true,
+                'data' => $demandesCount
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors du comptage des demandes'
+            ], 500);
+        }
+    }
+
+    /**
+     * API pour obtenir les jours bloqués pour un atelier
+     */
+    public function getBlockedDays(Request $request)
+    {
+        try {
+            $request->validate([
+                'atelier_id' => 'required|integer',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date'
+            ]);
+
+            $atelierId = $request->atelier_id;
+            $startDate = Carbon::parse($request->start_date);
+            $endDate = Carbon::parse($request->end_date);
+
+            // Compter le nombre de techniciens dans l'atelier
+            $techniciansCount = User::where('role', 'technicien')
+                ->where('atelier_id', $atelierId)
+                ->where('isActive', true)
+                ->count();
+
+            if ($techniciansCount === 0) {
+                return response()->json([
+                    'success' => true,
+                    'blocked_days' => [],
+                    'message' => 'Aucun technicien disponible dans cet atelier'
+                ]);
+            }
+
+            // Compter les demandes par jour
+            $demandesCount = DemandePanneInconnu::where('atelier_id', $atelierId)
+                ->whereBetween('date_maintenance', [$startDate, $endDate])
+                ->whereIn('status', ['confirmed', 'en_cours', 'planifiee'])
+                ->select(DB::raw('DATE(date_maintenance) as date'), DB::raw('count(*) as count'))
+                ->groupBy(DB::raw('DATE(date_maintenance)'))
+                ->get()
+                ->keyBy('date');
+
+            // Identifier les jours bloqués
+            $blockedDays = [];
+            $currentDate = $startDate->copy();
+
+            while ($currentDate <= $endDate) {
+                $dateString = $currentDate->format('Y-m-d');
+                $demandesCountForDay = $demandesCount->get($dateString);
+
+                if ($demandesCountForDay && $demandesCountForDay->count >= $techniciansCount) {
+                    $blockedDays[] = $dateString;
+                }
+
+                $currentDate->addDay();
+            }
+
+            return response()->json([
+                'success' => true,
+                'blocked_days' => $blockedDays,
+                'technicians_count' => $techniciansCount
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des jours bloqués'
+            ], 500);
+        }
+    }
+
+
+
+
+
+
+
+
 
 }

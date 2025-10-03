@@ -38,7 +38,7 @@ public function fermerFlux($fluxId)
 
     return response()->json([
         'success' => true,
-        'message' => 'Flux fermé avec succès',
+        'message' => 'Stream closed successfully',
         'flux' => $flux
     ]);
 }

@@ -43,7 +43,7 @@ class PaiementController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Paiement effectué avec succès',
+                'message' => 'Payment completed successfully',
                 'data' => $paiement,
                 'pdf_url' => asset('storage/recus/recu_' . $paiement->id . '.pdf'),
             ]);
@@ -89,7 +89,7 @@ class PaiementController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Paiement effectué avec succès (demande connue)',
+                'message' => 'Payment completed successfully',
                 'data' => $paiement,
                 'pdf_url' => asset('storage/recus/recu_' . $paiement->id . '.pdf'),
             ]);

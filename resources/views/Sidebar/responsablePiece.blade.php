@@ -778,9 +778,9 @@
                     <i class="fas fa-chart-bar"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="#" class="menu-link" data-tooltip="Demandes">
+                <a href="{{ route('responsable.choice') }}" class="menu-link" data-tooltip="Demandes">
                     <i class="fas fa-screwdriver-wrench"></i>
-                    <span>Demande de maintenance</span>
+                    <span>Maintenance request</span>
                 </a>
                 <a href="#" class="menu-link" data-tooltip="Requêtes">
                     <i class="fas fa-tools"></i>
@@ -789,28 +789,25 @@
             </div>
 
             <div class="menu-section">
-                <div class="menu-section-title">Gestion</div>
-                <a href="#" class="menu-link" data-tooltip="Utilisateurs">
-                    <i class="fas fa-users"></i>
-                    <span>Utilisateurs</span>
+                <div class="menu-section-title">Management</div>
+                <a href="cataloguess" class="menu-link" data-tooltip="Utilisateurs">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Catalogs</span>
                 </a>
-                <a href="#" class="menu-link" data-tooltip="Rapports">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Rapports</span>
-                </a>
+
                 <a href="{{ route('profile.editResponsable') }}" class="menu-link" data-tooltip="Paramètres">
                     <i class="fas fa-cog"></i>
-                    <span>Paramètres</span>
+                    <span>Setting</span>
                 </a>
             </div>
         </div>
 
         <div class="sidebar-footer">
-            <a href="logoutA" id="logout-button">
+            <a href="{{ route('login') }}" id="logout-button">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Logout</span>
             </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            <form id="logout-form" action="{{ route('login') }}" method="POST" style="display: none;">
                 @csrf
             </form>
         </div>
@@ -820,25 +817,25 @@
     <header class="main-header">
         <div></div>
         <div class="header-right">
-           <div class="notification-icon" id="notification-icon">
-    <i class="fas fa-bell"></i>
-    <span class="notification-badge" id="notification-badge">0</span>
+            <div class="notification-icon" id="notification-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notification-badge">0</span>
 
-    <!-- Dropdown des notifications -->
-    <div class="notification-dropdown" id="notification-dropdown">
-        <div class="notification-header">
-            <h5>Notifications</h5>
-            <small id="notification-count">0 nouvelles</small>
-        </div>
-        <div class="notification-list" id="notification-list">
-            <!-- Les notifications seront chargées ici dynamiquement -->
-            <div class="notification-empty">Aucune notification</div>
-        </div>
-        <div class="notification-footer">
-            <a href="#" id="mark-all-read">Marquer tout comme lu</a>
-        </div>
-    </div>
-</div>
+                <!-- Dropdown des notifications -->
+                <div class="notification-dropdown" id="notification-dropdown">
+                    <div class="notification-header">
+                        <h5>Notifications</h5>
+                        <small id="notification-count">0 nouvelles</small>
+                    </div>
+                    <div class="notification-list" id="notification-list">
+                        <!-- Les notifications seront chargées ici dynamiquement -->
+                        <div class="notification-empty">Aucune notification</div>
+                    </div>
+                    <div class="notification-footer">
+                        <a href="#" id="mark-all-read">Marquer tout comme lu</a>
+                    </div>
+                </div>
+            </div>
             <div class="user-info" id="user-info-trigger">
                 <div class="user-avatar">
                     <i class="fas fa-user"></i>
@@ -872,7 +869,7 @@
                             <i class="fas fa-cog"></i>
                             <span>Paramètres</span>
                         </a>
-                        <a href="#" class="popup-menu-item logout" id="popup-logout-button">
+                        <a href="logout" class="popup-menu-item logout" id="popup-logout-button">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>Déconnexion</span>
                         </a>
@@ -884,265 +881,106 @@
 
     <!-- Main Content -->
     <main class="main-content">
-
+        <!-- Le contenu de chaque page sera chargé ici -->
     </main>
-
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Toggle sidebar
-            const toggleBtn = document.getElementById('toggleBtn');
-            const sidebar = document.getElementById('sidebar');
-
-            toggleBtn.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
-
-                // Store state in localStorage
-                const isCollapsed = sidebar.classList.contains('collapsed');
-                localStorage.setItem('sidebarCollapsed', isCollapsed);
-            });
-
-            // Check localStorage for saved state
-            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-            if (isCollapsed) {
-                sidebar.classList.add('collapsed');
-            }
-
-            // Active menu item
-            const menuLinks = document.querySelectorAll(".menu-link");
-            const currentURL = window.location.pathname;
-
-            menuLinks.forEach(link => {
-                if (link.getAttribute("href") === currentURL) {
-                    link.classList.add("active");
-                }
-
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    menuLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-
-            // User popup toggle
-            const userInfoTrigger = document.getElementById('user-info-trigger');
-            const userPopup = document.getElementById('user-popup');
-
-            if (userInfoTrigger && userPopup) {
-                userInfoTrigger.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    userPopup.classList.toggle('show');
-                });
-
-                // Close popup when clicking outside
-                document.addEventListener('click', function(e) {
-                    if (!userPopup.contains(e.target) && !userInfoTrigger.contains(e.target)) {
-                        userPopup.classList.remove('show');
-                    }
-                });
-
-                // Prevent popup from closing when clicking inside it
-                userPopup.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                });
-
-                // Logout button in popup
-                const popupLogoutButton = document.getElementById('popup-logout-button');
-                const logoutForm = document.getElementById('logout-form');
-
-                if (popupLogoutButton && logoutForm) {
-                    popupLogoutButton.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        logoutForm.submit();
-                    });
-                }
-            }
-
-            // Sidebar logout button
-            document.getElementById("logout-button").addEventListener("click", function(event) {
-                event.preventDefault();
-                document.getElementById("logout-form").submit();
-            });
-        });
-    </script>
-    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
- <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0"></script>
-
-    <script>
-       document.addEventListener("DOMContentLoaded", function() {
-    // Initialisation Pusher
-    const pusher = new Pusher('{{ config('broadcasting.connections.pusher.key') }}', {
-        cluster: '{{ config('broadcasting.connections.pusher.options.cluster') }}',
-        encrypted: true,
-        forceTLS: true
-    });
-
-    // Abonnement au canal
-    const channel = pusher.subscribe('notifications.{{ Auth::id() }}');
-
-    // Écoute de l'événement
-    channel.bind('notification.sent', function(data) {
-        console.log('Notification reçue:', data);
-
-        // Mettre à jour le badge
-        const badge = document.getElementById('notification-badge');
-        if (badge) {
-            const currentCount = parseInt(badge.textContent) || 0;
-            badge.textContent = currentCount + 1;
-            badge.style.display = 'flex';
-        }
-
-        // Afficher un toast
-        Toastify({
-            text: data.message,
-            duration: 5000,
-            close: true,
-            gravity: "top",
-            position: "right",
-            backgroundColor: "linear-gradient(to right, #4361ee, #3f37c9)",
-            onClick: function() {
-                if (data.data && data.data.url) {
-                    window.location.href = data.data.url;
-                }
-            }
-        }).showToast();
-
-        // Recharger les notifications si le dropdown est ouvert
+   <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const icon = document.getElementById('notification-icon');
         const dropdown = document.getElementById('notification-dropdown');
-        if (dropdown && dropdown.classList.contains('show')) {
-            loadNotifications();
+        const badge = document.getElementById('notification-badge');
+
+        // Toggle dropdown
+        icon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function() {
+            dropdown.classList.remove('show');
+        });
+
+        // Charger notifications
+        function loadNotifications() {
+            fetch('/api/notifications')
+            .then(res => res.json())
+            .then(data => {
+                const list = document.getElementById('notification-list');
+                const notifications = data.notifications || [];
+                if (!notifications.length) {
+                    list.innerHTML = '<div class="notification-empty">Aucune notification</div>';
+                } else {
+                    list.innerHTML = notifications.map(n => {
+                        const message = n.data?.message || n.message || 'Notification';
+                        const time = formatDate(n.created_at);
+                        const unreadClass = !n.read_at ? 'unread' : '';
+                        return `
+                            <div class="notification-item ${unreadClass}" data-id="${n.id}">
+                                <div class="notification-message">${message}</div>
+                                <div class="notification-time">${time}</div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                const unreadCount = data.unread_count || 0;
+                badge.textContent = unreadCount;
+                badge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+
+                // Mark as read on click
+                document.querySelectorAll('.notification-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        markAsRead(id);
+                    });
+                });
+            });
         }
-    });
 
-    // Fonction pour charger les notifications
-function loadNotifications() {
-    fetch('/api/notifications')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur HTTP: ' + response.status);
-            }
-            return response.json();
-        })
-        .then(data => {
-            // 🔹 Mettre à jour la liste
-            updateNotificationList(data);
+        function markAsRead(id) {
+            fetch(`/api/notifications/${id}/read`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json'
+                }
+            }).then(() => loadNotifications());
+        }
 
-            // 🔹 Mettre à jour le badge avec le nombre de notifications
-            const badge = document.getElementById('notification-badge');
-            if (badge) {
-                badge.textContent = data.length; // nombre de notifications reçues
-                badge.style.display = data.length > 0 ? 'inline-block' : 'none';
-            }
-        })
-        .catch(error => {
-            console.error('Erreur complète:', error);
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = Math.floor((now - date)/1000);
+            if (diff < 60) return "À l'instant";
+            if (diff < 3600) return `Il y a ${Math.floor(diff/60)} min`;
+            if (diff < 86400) return `Il y a ${Math.floor(diff/3600)} h`;
+            return date.toLocaleDateString('fr-FR');
+        }
 
-            const list = document.getElementById('notification-list');
-            if (list) {
-                list.innerHTML = '<div class="notification-empty">Erreur de chargement</div>';
-            }
-
-            // En cas d'erreur, cacher le badge
-            const badge = document.getElementById('notification-badge');
-            if (badge) {
-                badge.style.display = 'none';
-            }
+        // Pusher (Notifications Globales)
+        const pusher = new Pusher('{{ config("broadcasting.connections.pusher.key") }}', {
+            cluster: '{{ config("broadcasting.connections.pusher.options.cluster") }}',
+            forceTLS: true
         });
-}
 
-
-    // Fonction pour mettre à jour la liste
-  function updateNotificationList(notifications) {
-    const list = document.getElementById('notification-list');
-    if (!list) {
-        console.error('Element notification-list non trouvé');
-        return;
-    }
-
-    if (!Array.isArray(notifications) || notifications.length === 0) {
-        list.innerHTML = '<div class="notification-empty">Aucune notification</div>';
-        return;
-    }
-
-    list.innerHTML = notifications.map(notif => {
-        // Gestion des données sérialisées JSON
-        const message = notif.message || 'Notification sans message';
-        const type = notif.type || 'default';
-        const createdAt = notif.created_at ? formatDate(notif.created_at) : 'Date inconnue';
-        const isUnread = !notif.read_at;
-
-        return `
-            <div class="notification-item ${isUnread ? 'unread' : ''}" data-id="${notif.id}">
-                <div class="notification-icon">
-                    <i class="fas ${getNotificationIcon(type)}"></i>
-                </div>
-                <div class="notification-content">
-                    <div class="notification-message">${message}</div>
-                    <div class="notification-time">${createdAt}</div>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    // Ajoutez cette fonction helper
-    function getNotificationIcon(type) {
-        const icons = {
-            'new_demande': 'fa-tools',
-            'default': 'fa-bell'
-        };
-        return icons[type] || icons['default'];
-    }
-
-    // Gestion des clics
-    document.querySelectorAll('.notification-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const notificationId = this.getAttribute('data-id');
-            markAsRead(notificationId);
-
-            // Redirection si URL disponible
-            const notification = notifications.find(n => n.id == notificationId);
-            if (notification?.data?.url) {
-                window.location.href = notification.data.url;
-            }
+        const channel = pusher.subscribe('notifications.global'); // canal public
+        channel.bind('notification.sent', function(data) {
+            Toastify({
+                text: data.data?.message || data.message || "Nouvelle notification",
+                duration: 5000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "linear-gradient(to right, #4361ee, #3f37c9)"
+            }).showToast();
+            loadNotifications(); // recharge la liste
         });
+
+        loadNotifications(); // initial
     });
-}
-
-    // Fonction pour formater la date
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        const now = new Date();
-        const diff = Math.floor((now - date) / 1000); // différence en secondes
-
-        if (diff < 60) return 'À l\'instant';
-        if (diff < 3600) return `Il y a ${Math.floor(diff / 60)} min`;
-        if (diff < 86400) return `Il y a ${Math.floor(diff / 3600)} h`;
-        return date.toLocaleDateString('fr-FR');
-    }
-
-    // Fonction pour marquer comme lu
-    function markAsRead(notificationId) {
-        fetch(`/api/notifications/${notificationId}/read`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(() => loadNotifications())
-        .catch(error => console.error('Error:', error));
-    }
-
-    // Chargement initial
-    loadNotifications();
-});
-
-
-
-
-    </script>
-
+</script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0"></script>
 </body>
 </html>
 

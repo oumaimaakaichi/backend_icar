@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifier le Profil Expert</title>
+    <title>Edit Super Admin Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -75,7 +75,7 @@
 
         /* Header with Glassmorphism Effect */
         .profile-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            background-color: white;
             padding: 1rem 1rem 2rem;
             position: relative;
             overflow: hidden;
@@ -101,14 +101,13 @@
         .profile-title {
             font-size: 2rem;
             font-weight: 800;
-            color: white;
-
+            color: rgb(2, 2, 2);
             letter-spacing: -0.025em;
         }
 
         .profile-subtitle {
             font-size: 1rem;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(116, 108, 108, 0.8);
             font-weight: 400;
             max-width: 700px;
             margin: 0 auto;
@@ -199,7 +198,6 @@
         .form-label {
             font-weight: 600;
             color: var(--gray-700);
-
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -208,7 +206,6 @@
         .form-control {
             border: 2px solid var(--gray-200);
             border-radius: 16px;
-
             font-size: 1rem;
             font-weight: 500;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -407,8 +404,8 @@
             <!-- Modern Header -->
             <div class="profile-header">
                 <div class="profile-header-content">
-                    <h1 class="profile-title">Profil Super Admin</h1>
-                    <p class="profile-subtitle" style="margin-bottom: 40px">Mettez à jour vos informations personnelles et gérez vos paramètres de sécurité</p>
+                    <h1 class="profile-title">Super Admin Profile</h1>
+                    <p class="profile-subtitle" style="margin-bottom: 40px">Update your personal information and manage your security settings</p>
                 </div>
             </div>
 
@@ -436,27 +433,27 @@
                     <!-- Personal Information Section -->
                     <div class="section-title">
                         <i class="fas fa-user"></i>
-                        <span>Informations personnelles</span>
+                        <span>Personal Information</span>
                     </div>
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="nom" class="form-label">Nom de famille</label>
+                            <label for="nom" class="form-label">Last Name</label>
                             <input type="text" class="form-control" id="nom" name="nom" value="{{ old('nom', $user->nom) }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="prenom" class="form-label">Prénom</label>
+                            <label for="prenom" class="form-label">First Name</label>
                             <input type="text" class="form-control" id="prenom" name="prenom" value="{{ old('prenom', $user->prenom) }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="email" class="form-label">Adresse Email</label>
+                            <label for="email" class="form-label">Email Address</label>
                             <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="phone" class="form-label">Numéro de téléphone</label>
+                            <label for="phone" class="form-label">Phone Number</label>
                             <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone', $user->phone) }}" required>
                         </div>
                     </div>
@@ -464,14 +461,14 @@
                     <!-- Security Section -->
                     <div class="section-title">
                         <i class="fas fa-shield-alt"></i>
-                        <span>Paramètres de sécurité</span>
+                        <span>Security Settings</span>
                     </div>
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="password" class="form-label">Nouveau mot de passe</label>
+                            <label for="password" class="form-label">New Password</label>
                             <div class="password-container">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Laisser vide pour conserver l'ancien">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank to keep current password">
                                 <span class="password-toggle" onclick="togglePassword('password')">
                                     <i class="fas fa-eye"></i>
                                 </span>
@@ -479,9 +476,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="password_confirmation" class="form-label">Confirmer le mot de passe</label>
+                            <label for="password_confirmation" class="form-label">Confirm Password</label>
                             <div class="password-container">
-                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirmez votre nouveau mot de passe">
+                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm your new password">
                                 <span class="password-toggle" onclick="togglePassword('password_confirmation')">
                                     <i class="fas fa-eye"></i>
                                 </span>
@@ -495,11 +492,11 @@
             <div class="action-bar">
                 <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
                     <i class="fas fa-arrow-left me-2"></i>
-                    Retour
+                    Back
                 </a>
                 <button type="submit" form="profile-form" class="btn btn-primary">
                     <i class="fas fa-save me-2"></i>
-                    Enregistrer les modifications
+                    Save Changes
                 </button>
             </div>
         </div>
@@ -535,7 +532,7 @@
     document.getElementById('profile-form')?.addEventListener('submit', function() {
         const submitBtn = document.querySelector('.btn-primary');
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Enregistrement...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Saving...';
     });
 </script>
 </body>

@@ -53,7 +53,7 @@
         /* Modern Sidebar */
         .sidebar {
             width: var(--sidebar-width);
-            background: linear-gradient(145deg, var(--gray-50), var(--gray-50));
+            background: linear-gradient(145deg, white, white);
             height: 100vh;
             position: fixed;
             left: 0;
@@ -712,8 +712,8 @@
 
                 <a href="employeeAtelier" class="menu-link" data-title="Users Management" data-breadcrumb="Home › Management › Users">
                     <i class="fas fa-users"></i>
-                    <span>Users Management</span>
-                    <div class="tooltip-text">Users Management</div>
+                    <span>Client Management</span>
+                    <div class="tooltip-text">Client Management</div>
                 </a>
                   <a href="{{ route('atelier.profile.show') }}" class="menu-link" data-title="Profile Management" data-breadcrumb="Home › Management › Profile">
                   <i class="fas fa-cog"></i>

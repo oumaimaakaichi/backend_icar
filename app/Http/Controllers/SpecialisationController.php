@@ -27,7 +27,7 @@ class SpecialisationController extends Controller
         Specialisation::create($request->all());
 
         return redirect()->route('specialisation.index')
-                         ->with('success', 'Spécialisation créée avec succès');
+                         ->with('success', 'Specialization created successfully');
     }
 
     public function edit(Specialisation $specialisation)
@@ -44,7 +44,7 @@ class SpecialisationController extends Controller
         $specialisation->update($request->all());
 
         return redirect()->route('specialisation.index')
-                         ->with('success', 'Spécialisation mise à jour avec succès');
+                         ->with('success', 'Specialization updated successfully');
     }
 
     public function destroy(Specialisation $specialisation)
@@ -52,13 +52,13 @@ class SpecialisationController extends Controller
         $specialisation->delete();
 
         return redirect()->route('specialisation.index')
-                         ->with('success', 'Spécialisation supprimée avec succès');
+                         ->with('success', 'Specialization deleted successfully');
     }
 
     public function toggleVisibility(Specialisation $specialisation)
     {
         $specialisation->update(['is_visible' => !$specialisation->is_visible]);
 
-        return back()->with('success', 'Statut de visibilité mis à jour');
+        return back()->with('success', 'Visibility updated successfully');
     }
 }

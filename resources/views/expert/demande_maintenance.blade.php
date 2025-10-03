@@ -314,9 +314,25 @@
                     <td>
                         <span class="badge bg-light text-dark">{{ $demande['categorie_titre'] }}</span>
                     </td>
-                    <td>
-                        <span class="badge bg-info bg-opacity-10 text-info"><i class="fas fa-home me-1"></i> {{$demande['type_emplacement']}}</span>
-                    </td>
+                   @php
+    $icons = [
+        'maison' => ['icon' => 'home', 'label' => 'Home'],
+        'fixe' => ['icon' => 'wrench', 'label' => 'Workshop'],
+        'en_travail' => ['icon' => 'building', 'label' => 'Workplace'],
+        'quartier_général_privé' => ['icon' => 'shield-alt', 'label' => 'Private HQ'],
+    ];
+
+    $type = $icons[$demande['type_emplacement']] 
+        ?? ['icon' => 'map-marker-alt', 'label' => $demande['type_emplacement']];
+@endphp
+
+<td>
+    <span class="badge bg-info bg-opacity-10 text-info">
+        <i class="fas fa-{{ $type['icon'] }} me-1"></i> {{ $type['label'] }}
+    </span>
+</td>
+
+
                     <td>
                         @if($demande['date_maintenance'])
                             <div class="fw-semibold">{{ \Carbon\Carbon::parse($demande['date_maintenance'])->format('d/m/Y') }}</div>
@@ -341,7 +357,7 @@
                         @elseif($demande['status'] == 'completed')
                             <span class="badge-status badge-completed"><i class="fas fa-check-circle me-1"></i> Completed</span>
                         @else
-                            <span class="badge bg-secondary">{{ $demande['status'] }}</span>
+                            <span class="badge-status badge-new"><i class="fas fa-clock me-1"></i> New</span>
                         @endif
                     </td>
                     <td>

@@ -31,6 +31,7 @@ class Atelier extends Authenticatable
         'password',
         'is_active',
          'availability',
+         'nbr_max_demande_par_jour',
     ];
 
     // Hachage du mot de passe avant de le sauvegarder dans la base de données
@@ -42,6 +43,7 @@ class Atelier extends Authenticatable
     protected $casts = [
         'is_active' => 'boolean',
          'availability' => 'array',
+         'nbr_max_demande_par_jour' => 'integer',
     ];
 
     protected $guard = 'atelier';

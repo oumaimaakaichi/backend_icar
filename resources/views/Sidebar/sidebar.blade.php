@@ -718,7 +718,7 @@
         <div class="sidebar-menu">
             <div class="menu-section">
                 <div class="menu-section-title">Main</div>
-                <a href="#" class="menu-link active" data-page="Dashboard" data-breadcrumb="Home > Dashboard">
+                <a href="statistiques" class="menu-link active" data-page="Dashboard" data-breadcrumb="Home > Dashboard">
                     <i class="fas fa-home"></i>
                     <span class="menu-link-text">Dashboard</span>
                     <span class="tooltip">Dashboard</span>
@@ -775,11 +775,7 @@
 
             <div class="menu-section">
                 <div class="menu-section-title">Operations</div>
-                <a href="statistiques" class="menu-link" data-page="Statistics" data-breadcrumb="Home > Operations > Statistics">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span class="menu-link-text">Statistics</span>
-                    <span class="tooltip">Statistics</span>
-                </a>
+
                 <a href="{{ route('tickets.index') }}" class="menu-link" data-page="Assistance Ticket" data-breadcrumb="Home > Operations > Assistance">
                     <i class="fa-solid fa-headset"></i>
                     <span class="menu-link-text">Assistance Ticket</span>
@@ -895,7 +891,7 @@
                     '/catalogues': { title: 'Catalogs', breadcrumb: 'Home > Inventory > Catalogs' },
                     '/categorie': { title: 'Categories', breadcrumb: 'Home > Inventory > Categories' },
                     '/camions': { title: 'Vehicles', breadcrumb: 'Home > Inventory > Vehicles' },
-                    '/statistiques': { title: 'Statistics', breadcrumb: 'Home > Operations > Statistics' },
+                    '/statistiques': { title: 'Dashboard', breadcrumb: 'Home > Main > Dashboard' },
                     '/ticketts' : {title: 'Assistance', breadcrumb: 'Home > Operations > Assistance'}
                 };
 

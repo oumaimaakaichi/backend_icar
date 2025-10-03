@@ -53,7 +53,7 @@ class EntrepriseAutomobileController extends Controller
         EntrepriseAutomobile::create($data);
 
         return redirect()->route('entrepriseAutomobile.index')
-                         ->with('success', 'Entreprise créée avec succès');
+                         ->with('success', 'Company created successfully');
     }
     // show by id
     public function show(EntrepriseAutomobile $entrepriseAutomobile)
@@ -86,7 +86,7 @@ class EntrepriseAutomobileController extends Controller
         $entrepriseAutomobile->update($data);
 
         return redirect()->route('entrepriseAutomobile.index')
-                         ->with('success', 'Entreprise mise à jour avec succès');
+                         ->with('success', 'company updated successfully');
     }
     //delete
     public function destroy(EntrepriseAutomobile $entrepriseAutomobile)
@@ -98,7 +98,7 @@ class EntrepriseAutomobileController extends Controller
         $entrepriseAutomobile->delete();
 
         return redirect()->route('entrepriseAutomobile.index')
-                         ->with('success', 'Entreprise supprimée avec succès');
+                         ->with('success', 'company deleted successfully');
     }
     //ajouter voiture a l'entreprise
     public function addVoiture(Request $request, EntrepriseAutomobile $entreprise)
@@ -110,7 +110,7 @@ class EntrepriseAutomobileController extends Controller
         $entreprise->addVoiture($request->nom_voiture);
 
         return redirect()->route('entrepriseAutomobile.show', $entreprise->id)
-                         ->with('success', 'Voiture ajoutée avec succès');
+                         ->with('success', 'Car Created successfully');
     }
     //supprimer une voiture
     public function removeVoiture(EntrepriseAutomobile $entreprise, $index)
@@ -123,7 +123,7 @@ class EntrepriseAutomobileController extends Controller
             $entreprise->save();
 
             return redirect()->route('entrepriseAutomobile.show', $entreprise->id)
-                             ->with('success', 'Voiture supprimée avec succès');
+                             ->with('success', 'Car deleted successfully');
         }
 
         return redirect()->route('entrepriseAutomobile.show', $entreprise->id)

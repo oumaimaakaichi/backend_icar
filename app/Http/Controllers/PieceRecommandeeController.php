@@ -30,9 +30,50 @@ class PieceRecommandeeController extends Controller
         return view('reponsable_piece.piece_recommandee.voir', compact('pieceRecommandee'));
     }
 
-    public function store(Request $request)
-    {
-        try {
+public function store(Request $request)
+{
+    try {
+        // Vérifier si c'est une soumission de main d'œuvre seule
+        if ($request->has('main_oeuvre_seule') && $request->main_oeuvre_seule == 1) {
+            $validated = $request->validate([
+                'demande_id' => 'required|exists:demandes,id',
+                'prix_main_oeuvre_seule' => 'required|numeric|min:0',
+                'main_oeuvre_seule' => 'required|boolean'
+            ]);
+
+            $demande = Demande::findOrFail($validated['demande_id']);
+
+            // Créer une entrée avec uniquement la main d'œuvre
+            $recommandation = PieceRecommandee::create([
+                'demande_id' => $validated['demande_id'],
+                'pieces' => [],
+                'main_oeuvre_seule' => true,
+                'prix_main_oeuvre_seule' => $validated['prix_main_oeuvre_seule']
+            ]);
+
+            // Notification
+            NotificationPrix::create([
+                'id' => (string) Str::uuid(),
+                'type' => "Recommended labor",
+                'notifiable_type' => get_class($demande->client),
+                'notifiable_id' => $demande->client->id,
+                'data' => [
+                    'demande_id' => $validated['demande_id'],
+                    'message' => 'Only labor has been recommended for your request',
+                    'main_oeuvre_seule' => true,
+                    'prix_main_oeuvre' => $validated['prix_main_oeuvre_seule'],
+                    'pieces' => []
+                ],
+                'read_at' => null,
+            ]);
+
+            // ✅ Redirection avec succès
+            return redirect()
+                ->route('responsable_piece.demande')
+                ->with('success', 'Successfully recommended labor');
+
+        } else {
+            // Cas avec pièces
             $validated = $request->validate([
                 'demande_id' => 'required|exists:demandes,id',
                 'pieces' => 'required|array',
@@ -48,101 +89,97 @@ class PieceRecommandeeController extends Controller
 
             $demande = Demande::findOrFail($validated['demande_id']);
 
-            // Assurez-vous que le client existe
             if (!$demande->client) {
-                return response()->json(['error' => 'Client introuvable pour cette demande'], 404);
+                return back()->with('error', 'Client introuvable pour cette demande');
             }
 
             $recommandation = PieceRecommandee::create([
                 'demande_id' => $validated['demande_id'],
                 'pieces' => $validated['pieces'],
+                'main_oeuvre_seule' => false
             ]);
 
-            // Créer et envoyer la notification
-            $notification = new PieceRecommandeeNotification(
-                $validated['demande_id'],
-                $validated['pieces']
-            );
+            NotificationPrix::create([
+                'id' => (string) Str::uuid(),
+                'type' => 'Recommended parts',
+                'notifiable_type' => get_class($demande->client),
+                'notifiable_id' => $demande->client->id,
+                'data' => [
+                    'demande_id' => $validated['demande_id'],
+                    'message' => 'Parts have been recommended for your request',
+                    'pieces' => $validated['pieces'],
+                    'main_oeuvre_seule' => false
+                ],
+                'read_at' => null,
+            ]);
 
-
-NotificationPrix::create([
-    'id' => (string) Str::uuid(),
-    'type' => \App\Notifications\PieceRecommandeeNotification::class,
-    'notifiable_type' => get_class($demande->client),
-    'notifiable_id' => $demande->client->id,
-    'data' => [
-        'demande_id' => $validated['demande_id'],
-        'message' => 'Des pièces ont été recommandées pour votre demande',
-        'pieces' => $validated['pieces'],
-    ],
-    'read_at' => null,
-]);
-
-            // Log pour debug
-            \Log::info('Notification envoyée pour la demande: ' . $validated['demande_id']);
-
-            return response()->json([
-                'message' => 'Pièces recommandées avec succès',
-                'data' => $recommandation,
-                'notification_sent' => true
-            ], 201);
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'error' => 'Erreur de validation',
-                'details' => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            \Log::error('Erreur lors de l\'enregistrement : ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-
-            return response()->json([
-                'error' => 'Erreur serveur',
-                'message' => $e->getMessage()
-            ], 500);
+            // ✅ Redirection avec succès
+            return redirect()
+                ->route('reponsable_piece.demandes')
+                ->with('success', 'Parts successfully recommended');
         }
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return back()->withErrors($e->errors())->withInput();
+    } catch (\Exception $e) {
+        \Log::error('Erreur lors de l\'enregistrement : ' . $e->getMessage());
+        return back()->with('error', 'Erreur serveur : '.$e->getMessage());
+    }
+}
+
+
+  public function getByDemandeId($demandeId)
+{
+    $pieceRecommandee = PieceRecommandee::where('demande_id', $demandeId)->first();
+
+    if (!$pieceRecommandee) {
+        return response()->json(['message' => 'Aucune pièce recommandée trouvée'], 404);
     }
 
-    public function getByDemandeId($demandeId)
-    {
-        $pieceRecommandee = PieceRecommandee::where('demande_id', $demandeId)->first();
-
-        if (!$pieceRecommandee) {
-            return response()->json(['message' => 'Aucune pièce recommandée trouvée'], 404);
-        }
-
-        $piecesDetails = [];
-        foreach ($pieceRecommandee->pieces as $piece) {
-            $cataloguePiece = Catalogue::find($piece['idPiece']);
-            if ($cataloguePiece) {
-                $piecesDetails[] = [
-                    'original' => [
-                        'photo' => $cataloguePiece->photo_piece,
-                        'prix' => $piece['prixOriginal'],
-                        'date_disponibilite' => $piece['datedisponibiliteOriginale'],
-                        'disponibilite' => (bool)$piece['disponibiliteOriginal'],
-                        'prix_main_oeuvre' => $piece['prix_main_oeuvre']
-                    ],
-                    'commercial' => [
-                        'photo' => $cataloguePiece->photo_piece,
-                        'prix' => $piece['prixCommercial'],
-                        'date_disponibilite' => $piece['dateDisponibiliteComercial'],
-                        'disponibilite' => (bool)$piece['disponibilitCommercial'],
-                        'prix_main_oeuvre' => $piece['prix_main_oeuvre']
-                    ],
-                    'info' => [
-                        'nom' => $cataloguePiece->nom_piece,
-                        'num_piece' => $cataloguePiece->num_piece,
-                        'entreprise' => $cataloguePiece->entreprise,
-                        'idPiece' => $cataloguePiece->id
-                    ]
-                ];
-            }
-        }
-
+    // Cas où seule la main d'œuvre est recommandée
+    if ($pieceRecommandee->main_oeuvre_seule) {
         return response()->json([
-            'pieces' => $piecesDetails,
-            'demande_id' => $demandeId
+            'main_oeuvre_seule' => true,
+            'prix_main_oeuvre' => $pieceRecommandee->prix_main_oeuvre_seule,
+            'demande_id' => $demandeId,
+            'pieces' => [] // Tableau vide pour indiquer aucune pièce
         ]);
     }
+
+    // Cas normal avec des pièces recommandées
+    $piecesDetails = [];
+    foreach ($pieceRecommandee->pieces as $piece) {
+        $cataloguePiece = Catalogue::find($piece['idPiece']);
+        if ($cataloguePiece) {
+            $piecesDetails[] = [
+                'original' => [
+                    'photo' => $cataloguePiece->photo_piece,
+                    'prix' => $piece['prixOriginal'],
+                    'date_disponibilite' => $piece['datedisponibiliteOriginale'],
+                    'disponibilite' => (bool)$piece['disponibiliteOriginal'],
+                    'prix_main_oeuvre' => $piece['prix_main_oeuvre']
+                ],
+                'commercial' => [
+                    'photo' => $cataloguePiece->photo_piece,
+                    'prix' => $piece['prixCommercial'],
+                    'date_disponibilite' => $piece['dateDisponibiliteComercial'],
+                    'disponibilite' => (bool)$piece['disponibilitCommercial'],
+                    'prix_main_oeuvre' => $piece['prix_main_oeuvre']
+                ],
+                'info' => [
+                    'nom' => $cataloguePiece->nom_piece,
+                    'num_piece' => $cataloguePiece->num_piece,
+                    'entreprise' => $cataloguePiece->entreprise,
+                    'idPiece' => $cataloguePiece->id
+                ]
+            ];
+        }
+    }
+
+    return response()->json([
+        'main_oeuvre_seule' => false,
+        'pieces' => $piecesDetails,
+        'demande_id' => $demandeId
+    ]);
+}
 }

@@ -21,7 +21,7 @@ class TicketAssistanceController extends Controller
             'type' => $request->type,
             'message' => $request->message,
             'titre' => $request->titre,
-            'statut' => 'en attente',
+            'statut' => 'Pending',
         ]);
 
         return response()->json($ticket, 201);
@@ -73,12 +73,12 @@ class TicketAssistanceController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate(3);
 
-    return view('admin.ticketAssistance', ['tickets' => $tickets]); 
+    return view('admin.ticketAssistance', ['tickets' => $tickets]);
 }
 public function closeTicket($id)
 {
     $ticket = TicketAssistance::findOrFail($id);
-    
+
     $ticket->update([
         'statut' => 'ferme',
         'reponse' => $ticket->reponse ?? 'Ticket fermé sans réponse'

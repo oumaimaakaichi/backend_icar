@@ -121,7 +121,6 @@
             color: white;
             font-size: 36px;
             font-weight: bold;
-
             position: relative;
             overflow: hidden;
         }
@@ -291,7 +290,6 @@
             justify-content: center;
             color: white;
             font-size: 20px;
-
             position: relative;
         }
 
@@ -413,6 +411,213 @@
             border: 2px dashed rgba(102, 126, 234, 0.2);
         }
 
+        /* Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(30px) scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .popup-overlay.active .popup {
+            transform: translateY(0) scale(1);
+        }
+
+        .popup-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #3a5977, #3a5977);
+            color: white;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .popup-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .popup-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3a5977;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(58, 89, 119, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .popup-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            background: #f8fafc;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3a5977, #3a5977);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2d455c, #2d455c);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(58, 89, 119, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .file-input {
+            padding: 10px;
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            background: #f9fafb;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-input:hover {
+            border-color: #3a5977;
+            background: #f0f4f8;
+        }
+
+        .file-name {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .notification {
+            background: #f0fdf4;
+            color: #166534;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #bbf7d0;
+            display: none;
+        }
+
+        .notification.error {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+
         /* Responsive design */
         @media (max-width: 768px) {
             .container {
@@ -454,6 +659,20 @@
 
             .info-label {
                 min-width: auto;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .popup {
+                width: 95%;
+                margin: 20px;
+            }
+
+            .popup-body {
+                padding: 20px;
             }
         }
 
@@ -621,27 +840,267 @@
                     <span class="info-label">Technicians:</span>
                     <span class="info-value">{{ $atelier->nbr_techniciens ?? '0' }} Technicians</span>
                 </div>
-
-                @if($atelier->techniciens)
-                <div class="info-item">
-                    <i class="fas fa-user-cog"></i>
-                    <span class="info-label">Technicians List:</span>
-                    <span class="info-value">{{ $atelier->techniciens }}</span>
-                </div>
-                @endif
             </div>
         </div>
     </div>
 
     <!-- Edit Button -->
-    <button class="edit-button" onclick="window.location.href='{{ route('atelier.profile.edit') }}'">
+    <button class="edit-button" id="editProfileBtn">
         <i class="fas fa-edit"></i>
     </button>
 
+    <!-- Edit Profile Popup -->
+    <div class="popup-overlay" id="editProfilePopup">
+        <div class="popup">
+            <div class="popup-header">
+                <h3><i class="fas fa-edit"></i> Edit Workshop Profile</h3>
+                <button type="button" class="close-btn" id="closePopup">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="popup-body">
+                <div class="notification" id="successNotification">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Profile updated successfully!</span>
+                </div>
+                <div class="notification error" id="errorNotification">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorMessage"></span>
+                </div>
+
+                <form id="editProfileForm" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nom_commercial">Business Name *</label>
+                            <input type="text" id="nom_commercial" name="nom_commercial" class="form-control"
+                                   value="{{ $atelier->nom_commercial }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nom_directeur">Manager Name *</label>
+                            <input type="text" id="nom_directeur" name="nom_directeur" class="form-control"
+                                   value="{{ $atelier->nom_directeur }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" class="form-control"
+                                   value="{{ $atelier->email }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="num_contact">Phone Number *</label>
+                            <input type="text" id="num_contact" name="num_contact" class="form-control"
+                                   value="{{ $atelier->num_contact }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ville">City *</label>
+                            <input type="text" id="ville" name="ville" class="form-control"
+                                   value="{{ $atelier->ville }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="type_entreprise">Business Type</label>
+                            <input type="text" id="type_entreprise" name="type_entreprise" class="form-control"
+                                   value="{{ $atelier->type_entreprise ?? '' }}">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="num_registre_commerce">Registry Number</label>
+                            <input type="text" id="num_registre_commerce" name="num_registre_commerce" class="form-control"
+                                   value="{{ $atelier->num_registre_commerce ?? '' }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="num_fiscal">Tax ID</label>
+                            <input type="text" id="num_fiscal" name="num_fiscal" class="form-control"
+                                   value="{{ $atelier->num_fiscal ?? '' }}">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nom_banque">Bank Name</label>
+                            <input type="text" id="nom_banque" name="nom_banque" class="form-control"
+                                   value="{{ $atelier->nom_banque ?? '' }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="num_IBAN">IBAN Number</label>
+                            <input type="text" id="num_IBAN" name="num_IBAN" class="form-control"
+                                   value="{{ $atelier->num_IBAN ?? '' }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="site_web">Website</label>
+                        <input type="url" id="site_web" name="site_web" class="form-control"
+                               value="{{ $atelier->site_web ?? '' }}" placeholder="https://example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specialisation_centre">Specialization</label>
+                        <textarea id="specialisation_centre" name="specialisation_centre" class="form-control"
+                                  rows="3" placeholder="Describe your workshop specialization">{{ $atelier->specialisation_centre ?? '' }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nbr_techniciens">Number of Technicians</label>
+                        <input type="number" id="nbr_techniciens" name="nbr_techniciens" class="form-control"
+                               value="{{ $atelier->nbr_techniciens ?? 0 }}" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="document">Document (PDF, DOC, DOCX)</label>
+                        <input type="file" id="document" name="document" class="form-control file-input"
+                               accept=".pdf,.doc,.docx">
+                        <div class="file-name" id="documentName">
+                            {{ $atelier->document ? 'Current file: ' . $atelier->document : 'No file selected' }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="photos_centre">Workshop Photos</label>
+                        <input type="file" id="photos_centre" name="photos_centre[]" class="form-control file-input"
+                               accept="image/*" multiple>
+                        <div class="file-name" id="photosName">
+                            Select multiple images
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="popup-footer">
+                <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveProfileBtn">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Enhanced animations
         document.addEventListener('DOMContentLoaded', function() {
-            // Intersection Observer for scroll animations
+            // Popup elements
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const editProfilePopup = document.getElementById('editProfilePopup');
+            const closePopup = document.getElementById('closePopup');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const saveProfileBtn = document.getElementById('saveProfileBtn');
+            const editProfileForm = document.getElementById('editProfileForm');
+            const successNotification = document.getElementById('successNotification');
+            const errorNotification = document.getElementById('errorNotification');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // File input handlers
+            const documentInput = document.getElementById('document');
+            const photosInput = document.getElementById('photos_centre');
+            const documentName = document.getElementById('documentName');
+            const photosName = document.getElementById('photosName');
+
+            // Open popup
+            editProfileBtn.addEventListener('click', function() {
+                editProfilePopup.classList.add('active');
+                hideNotifications();
+            });
+
+            // Close popup
+            function closeEditProfilePopup() {
+                editProfilePopup.classList.remove('active');
+                hideNotifications();
+            }
+
+            closePopup.addEventListener('click', closeEditProfilePopup);
+            cancelBtn.addEventListener('click', closeEditProfilePopup);
+
+            // File input change handlers
+            documentInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    documentName.textContent = 'Selected: ' + file.name;
+                } else {
+                    documentName.textContent = 'No file selected';
+                }
+            });
+
+            photosInput.addEventListener('change', function(e) {
+                const files = e.target.files;
+                if (files.length > 0) {
+                    photosName.textContent = files.length + ' file(s) selected';
+                } else {
+                    photosName.textContent = 'Select multiple images';
+                }
+            });
+
+            // Hide notifications
+            function hideNotifications() {
+                successNotification.style.display = 'none';
+                errorNotification.style.display = 'none';
+            }
+
+            // Show notification
+            function showNotification(notification, message = '') {
+                hideNotifications();
+                if (message) {
+                    errorMessage.textContent = message;
+                }
+                notification.style.display = 'flex';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 5000);
+            }
+
+            // Save profile
+            saveProfileBtn.addEventListener('click', async function() {
+                const formData = new FormData(editProfileForm);
+
+                // Disable button and show loading
+                saveProfileBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                saveProfileBtn.disabled = true;
+
+                try {
+                    const response = await fetch("{{ route('ateliers.update', $atelier->id) }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        showNotification(successNotification);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        let errorMsg = result.message || 'Error updating profile';
+                        if (result.errors) {
+                            errorMsg = Object.values(result.errors).flat().join(', ');
+                        }
+                        showNotification(errorNotification, errorMsg);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification(errorNotification, 'Network error occurred');
+                } finally {
+                    saveProfileBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+                    saveProfileBtn.disabled = false;
+                }
+            });
+
+            // Enhanced animations
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {

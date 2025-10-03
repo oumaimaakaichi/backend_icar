@@ -32,7 +32,7 @@ class TypeTicketController extends Controller
             TypeTickets::create($request->all());
 
             return redirect()->route('ticket.index')
-                             ->with('success', 'type ticket créée avec succès');
+                             ->with('success', 'Ticket type created successfully');
         }
 
         public function edit(TypeTickets $ticket)
@@ -50,7 +50,7 @@ class TypeTicketController extends Controller
             $ticket->update($request->all());
 
             return redirect()->route('ticket.index')
-                             ->with('success', 'ticket mise à jour avec succès');
+                             ->with('success', 'Ticket type updated successfully');
         }
 
         public function destroy(TypeTickets $ticket)
@@ -58,13 +58,13 @@ class TypeTicketController extends Controller
             $ticket->delete();
 
             return redirect()->route('ticket.index')
-                             ->with('success', 'ticket supprimée avec succès');
+                             ->with('success', 'Ticket type deleted successfully');
         }
         public function toggleVisibility(TypeTickets $ticket)
     {
         $ticket->update(['is_visible' => !$ticket->is_visible]);
 
-        return back()->with('success', 'Visibilité de la type de ticket mise à jour');
+        return back()->with('success', 'Visibility changed successfully');
     }
 
 

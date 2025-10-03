@@ -579,16 +579,15 @@
                                     <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
 
-                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="action-btn btn-danger"
-                                            onclick="return confirm('Confirm deletion?')"
-                                            aria-label="Delete technician {{ $user->nom }} {{ $user->prenom }}">
-                                        <i class="fas fa-trash-alt" aria-hidden="true"></i>
-                                    </button>
-                                </form>
+                               <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline delete-user-form">
+    @csrf
+    @method('DELETE')
+    <button type="button"
+            class="action-btn btn-danger delete-user-btn"
+            data-user-name="{{ $user->nom }} {{ $user->prenom }}">
+        <i class="fas fa-trash-alt"></i>
+    </button>
+</form>
 
                                 @if ($user->isActive == 0)
                                     <button class="action-btn btn-success accept-btn"
@@ -721,6 +720,89 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-user-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = this.closest('.delete-user-form');
+            const userName = this.getAttribute('data-user-name');
+            const button = this;
+
+            Swal.fire({
+                title: 'Delete User Account',
+                html: `
+                    <div class="text-center">
+                        <div style="font-size: 4rem; color: #ef4444; margin-bottom: 1rem;">
+                            <i class="fas fa-user-times"></i>
+                        </div>
+                        <p>Are you sure you want to delete <strong>${userName}</strong>?</p>
+                        <p style="color: #ef4444; font-size: 0.9rem;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            This action cannot be undone
+                        </p>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Confirm Deletion',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#ef4444',
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Désactiver le bouton
+                    button.disabled = true;
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                    // Animation de suppression avec compteur
+                    let timerInterval;
+                    Swal.fire({
+                        title: 'Deleting User',
+                        html: 'The page will reload automatically in <b></b> milliseconds.',
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector('b');
+                            timerInterval = setInterval(() => {
+                                timer.textContent = Swal.getTimerLeft();
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                        }
+                    }).then((result) => {
+                        // Soumettre le formulaire et recharger
+                        fetch(form.action, {
+                            method: 'POST',
+                            body: new FormData(form)
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                window.location.reload();
+                            } else {
+                                Swal.fire('Error!', 'Delete failed', 'error');
+                                button.disabled = false;
+                                button.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire('Error!', 'Network error', 'error');
+                            button.disabled = false;
+                            button.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                        });
+                    });
+                }
+            });
+        });
+    });
+});
+</script>
     <script>
         // Success message functions
         function showSuccessMessage(message) {

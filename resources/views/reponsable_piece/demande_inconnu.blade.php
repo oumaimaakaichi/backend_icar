@@ -1,24 +1,25 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Demandes</title>
+    <title>Request Management</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #th;
-            --secondary-color: #3f37c9;
-            --accent-color: #4895ef;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --success-color: #4cc9f0;
-            --warning-color: #f8961e;
-            --danger-color: #f72585;
-            --gray-color: #adb5bd;
-            --border-radius: 12px;
-            --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --primary-gradient: linear-gradient(135deg, #5685ab 0%, #3e5f7e 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+            --dark-color: #2c3e50;
+            --light-bg: #f8faff;
+            --white: #ffffff;
+            --shadow-light: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --shadow-heavy: 0 15px 50px rgba(0, 0, 0, 0.15);
+            --border-radius: 20px;
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * {
@@ -29,110 +30,216 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f5f7ff;
+            background: var(--light-bg);
             color: var(--dark-color);
             min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-            transition: margin-left 0.3s;
-            width: 1500px
-
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(245, 87, 108, 0.03) 0%, transparent 50%);
+            z-index: -1;
         }
 
         .container {
-            max-width: 1400px;
-            padding: 2rem;
+            max-width: 1000px;
+
             margin: 0 auto;
-            margin-left: 120px;
-            margin-top:50px
+            margin-left: 0px;
+            margin-top: 50px;
+            position: relative;
+        }
+
+        /* Floating Elements */
+        .floating-shapes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
         }
 
         /* Header Section */
         .header {
-            background: white;
+            background: var(--white);
             border-radius: var(--border-radius);
-            padding: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
 
-            box-shadow: var(--box-shadow);
-            border-left: 5px solid var(--primary-color);
-            animation: fadeIn 0.6s ease-out;
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-gradient);
         }
 
         .header h1 {
             font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-color);
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 1rem;
+        }
+
+        .header h1 i {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2rem;
         }
 
         .header p {
-            color: var(--gray-color);
-            font-size: 1rem;
+            color: #64748b;
+            font-size: 1.1rem;
+            font-weight: 500;
         }
 
         /* Stats Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
-            background: white;
+            background: var(--white);
             border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            box-shadow: var(--shadow-light);
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-        }
-
-        .stat-card::after {
+        .stat-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 4px;
+            width: 100%;
             height: 100%;
-            background: var(--primary-color);
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: var(--transition);
         }
 
-        .stat-number {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--primary-color);
+        .stat-card:hover::before {
+            opacity: 0.03;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .stat-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-info h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 0.5rem;
         }
 
-        .stat-label {
-            color: var(--gray-color);
-            font-size: 0.9rem;
+        .stat-info p {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            position: relative;
+        }
+
+        .stat-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            opacity: 0.9;
+        }
+
+        .stat-icon i {
+            position: relative;
+            z-index: 2;
         }
 
         /* Filters Section */
         .filters-section {
-            background: white;
+            background: var(--white);
             border-radius: var(--border-radius);
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .filters-grid {
             display: grid;
             grid-template-columns: 1fr auto;
-            gap: 1.5rem;
+            gap: 2rem;
             align-items: center;
         }
 
@@ -142,167 +249,235 @@
 
         .search-input {
             width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            border: 1px solid #e0e0e0;
-            border-radius: var(--border-radius);
+            padding: 1.2rem 1.5rem 1.2rem 3.5rem;
+            border: 2px solid rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
             font-size: 1rem;
             transition: var(--transition);
             background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
         }
 
         .search-input:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: white;
         }
 
         .search-icon {
             position: absolute;
-            left: 1rem;
+            left: 1.2rem;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--gray-color);
-            font-size: 1.1rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.2rem;
         }
 
         .status-filter {
-            padding: 1rem 1.5rem;
-            border: 1px solid #e0e0e0;
-            border-radius: var(--border-radius);
+            padding: 1.2rem 2rem;
+            border: 2px solid rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
             font-size: 1rem;
-            background: white;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
             cursor: pointer;
             transition: var(--transition);
             min-width: 200px;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1em;
+            font-weight: 600;
         }
 
         .status-filter:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
 
         /* Table Section */
         .table-container {
-            background: white;
+            background: var(--white);
             border-radius: var(--border-radius);
             overflow: hidden;
-            box-shadow: var(--box-shadow);
+            box-shadow: var(--shadow-medium);
             margin-bottom: 2rem;
-            padding: 20px
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-
-        .table thead {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        }
-
-        .table th {
-            padding: 1.4rem;
-            text-align: left;
+        .table-header {
+            background-color: white;
+            color: black;
+            padding: 1.5rem 2rem;
             font-weight: 600;
-            color: #4361ee;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1.5fr 1fr 1.5fr;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .table-body {
+            padding: 1rem;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1.5fr 1fr 1.5fr;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem 1rem;
+            border-radius: 15px;
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .table-row:hover {
+            background: rgba(102, 126, 234, 0.03);
+            transform: translateX(5px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .client-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .client-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
             font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: none;
-            margin-left: 50px
         }
 
-        .table th:first-child {
-            border-top-left-radius: var(--border-radius);
+        .client-details h4 {
+            font-weight: 400;
+            font-size: 1rem;
+            color: var(--dark-color);
+            margin-bottom: 0.2rem;
         }
 
-        .table th:last-child {
-            border-top-right-radius: var(--border-radius);
+        .client-details p {
+            color: #64748b;
+            font-size: 0.5rem;
         }
 
-        .table td {
-            padding: 1.2rem ;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            vertical-align: middle;
-            transition: var(--transition);
-        }
-
-        .table tbody tr {
-            transition: var(--transition);
-        }
-
-        .table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .table tbody tr:hover {
-            background: rgba(67, 97, 238, 0.03);
-        }
-
-        /* Status Badges */
-        .status-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .phone-link {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            transition: var(--transition);
         }
 
-        .badge-pending {
-            background: rgba(248, 150, 30, 0.1);
-            color: var(--warning-color);
+        .phone-link:hover {
+            background: rgba(102, 126, 234, 0.1);
         }
 
-        .badge-completed {
-            background: rgba(76, 201, 240, 0.1);
-            color: var(--success-color);
+        .car-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .car-model {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.2rem;
+        }
+
+        .car-series {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .date-badge {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
         }
 
         /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
         .action-btn {
-            padding: 0.7rem 1.2rem;
+            padding: 0.8rem 1.5rem;
             border: none;
-            border-radius: var(--border-radius);
-            font-size: 0.85rem;
-            font-weight: 500;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.5rem;
             text-decoration: none;
         }
 
         .btn-primary {
-            background: var(--primary-color);
+            background: var(--primary-gradient);
             color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .btn-primary:hover {
-            background: var(--secondary-color);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
 
         .btn-outline {
             background: transparent;
-            border: 1px solid var(--primary-color);
-            color: var(--primary-color);
+            border: 2px solid #667eea;
+            color: #667eea;
         }
 
         .btn-outline:hover {
-            background: rgba(67, 97, 238, 0.05);
+            background: var(--primary-gradient);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-pending {
+            background: rgba(245, 87, 108, 0.15);
+            color: #f5576c;
+        }
+
+        .badge-completed {
+            background: rgba(75, 172, 254, 0.15);
+            color: #4bacfe;
         }
 
         /* Pagination */
@@ -310,19 +485,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 1.5rem;
+            padding: 2rem;
             gap: 0.5rem;
         }
 
         .page-btn {
-            padding: 0.7rem 1rem;
-            border: 1px solid #e0e0e0;
+            padding: 1rem 1.2rem;
+            border: 2px solid rgba(102, 126, 234, 0.2);
             background: white;
-            border-radius: var(--border-radius);
+            border-radius: 12px;
             cursor: pointer;
             transition: var(--transition);
-            font-weight: 500;
-            min-width: 40px;
+            font-weight: 600;
+            min-width: 50px;
             text-align: center;
             display: flex;
             align-items: center;
@@ -330,15 +505,16 @@
         }
 
         .page-btn:hover {
-            background: rgba(67, 97, 238, 0.1);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+            transform: translateY(-2px);
         }
 
         .page-btn.active {
-            background: var(--primary-color);
+            background: var(--primary-gradient);
             color: white;
-            border-color: var(--primary-color);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .page-btn:disabled {
@@ -350,41 +526,50 @@
         .no-data {
             text-align: center;
             padding: 4rem 2rem;
-            color: var(--gray-color);
+            color: #64748b;
         }
 
         .no-data i {
-            font-size: 3rem;
+            font-size: 4rem;
             margin-bottom: 1rem;
-            color: #e0e0e0;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .no-data h4 {
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 0.5rem;
             color: var(--dark-color);
+            font-size: 1.5rem;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
         }
 
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(102, 126, 234, 0.2);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Responsive Design */
         @media (max-width: 1200px) {
-            body {
+            .container {
                 margin-left: 0;
             }
         }
@@ -394,12 +579,14 @@
                 padding: 1.5rem;
             }
 
-            .header {
-                padding: 1.5rem;
+            .table-header,
+            .table-row {
+                grid-template-columns: 1fr;
+                text-align: center;
             }
 
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .client-info {
+                justify-content: center;
             }
         }
 
@@ -409,70 +596,87 @@
             }
 
             .header h1 {
-                font-size: 1.8rem;
-            }
-
-            .table-container {
-                overflow-x: auto;
-            }
-
-            .table {
-                min-width: 800px;
-            }
-
-            .action-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.8rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .container {
-                padding: 1rem;
+                font-size: 2rem;
             }
 
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-
-            .header {
-                padding: 1.2rem;
-            }
-
-            .stat-number {
-                font-size: 1.8rem;
-            }
-
-            .pagination {
-                flex-wrap: wrap;
-            }
         }
     </style>
 </head>
 <body>
-       @include('Sidebar.responsablePiece')
-    <div class="container">
+    @include('Sidebar.responsablePiece')
+<br/>
+    <!-- Floating Background Shapes -->
+    <div class="floating-shapes">
+        <div class="floating-shape" style="top: 10%; left: 10%; font-size: 2rem;">🔧</div>
+        <div class="floating-shape" style="top: 20%; right: 10%; font-size: 1.5rem; animation-delay: -2s;">⚙️</div>
+        <div class="floating-shape" style="bottom: 20%; left: 15%; font-size: 1.8rem; animation-delay: -4s;">🚗</div>
+        <div class="floating-shape" style="top: 60%; right: 20%; font-size: 2.2rem; animation-delay: -1s;">📋</div>
+    </div>
 
-
-   <div>
-
+    <div class="container" style="margin-right: 50px ; margin-top:100px">
         <div class="header">
             <h1><i class="fas fa-clipboard-list"></i> Request Management</h1>
-<p>Track and manage all automotive parts requests</p>
-   </div>
+            <p>Track and manage all automotive parts requests with advanced analytics</p>
+        </div>
 
         <div class="stats-grid" id="stats-grid">
-            <!-- Stats will be populated by JavaScript -->
+            <div class="stat-card">
+                <div class="stat-content">
+                    <div class="stat-info">
+                        <h3 id="total-requests">0</h3>
+                        <p>Total Requests</p>
+                    </div>
+                    <div class="stat-icon" style="background: var(--primary-gradient);">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-content">
+                    <div class="stat-info">
+                        <h3 id="pending-requests">0</h3>
+                        <p>Pending</p>
+                    </div>
+                    <div class="stat-icon" style="background: var(--warning-gradient);">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-content">
+                    <div class="stat-info">
+                        <h3 id="completed-requests">0</h3>
+                        <p>Completed</p>
+                    </div>
+                    <div class="stat-icon" style="background: var(--success-gradient);">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-content">
+                    <div class="stat-info">
+                        <h3 id="completion-rate">0%</h3>
+                        <p>Success Rate</p>
+                    </div>
+                    <div class="stat-icon" style="background: var(--secondary-gradient);">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="filters-section">
             <div class="filters-grid">
                 <div class="search-container">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" placeholder="Search by client, phone ..." id="searchInput">
+                    <input type="text" class="search-input" placeholder="Search by client, phone, or car model..." id="searchInput">
                 </div>
                 <select class="status-filter" id="statusFilter">
-                    <option value="all">All status</option>
+                    <option value="all">All Status</option>
                     <option value="pending">Pending</option>
                     <option value="completed">Completed</option>
                 </select>
@@ -480,30 +684,29 @@
         </div>
 
         <div class="table-container">
-            <table class="table">
-                <thead style="background-color: #4361ee">
-                    <tr>
-                        <th><i class="fas fa-user-tie"></i> Client</th>
-                        <th><i class="fas fa-phone"></i> Phone</th>
-                        <th><i class="fas fa-car"></i> car</th>
-                        <th><i class="fas fa-calendar-day"></i> Date</th>
-                        <th style="margin-left: 100px"><i class="fas fa-cogs" ></i>      Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="demandes-table" style="padding: 20px">
-                    <!-- Data will be populated by JavaScript -->
-                </tbody>
-            </table>
+            <div class="table-header">
+                <div><i class="fas fa-user"></i> Client</div>
+                <div><i class="fas fa-phone"></i> Contact</div>
+                <div><i class="fas fa-car"></i> Vehicle</div>
+                <div><i class="fas fa-calendar"></i> Date</div>
+                <div><i class="fas fa-cogs"></i> Actions</div>
+            </div>
+
+            <div class="table-body" id="table-body">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
 
             <div class="pagination" id="pagination">
                 <!-- Pagination will be populated by JavaScript -->
             </div>
         </div>
     </div>
-</div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const itemsPerPage = 8;
+            const itemsPerPage = 5;
             let currentPage = 1;
             let allData = [];
             let filteredData = [];
@@ -512,13 +715,13 @@
                 fetch("{{ url('/api/demandes-iconnu') }}")
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error('Erreur réseau');
+                            throw new Error('Network error');
                         }
                         return response.json();
                     })
                     .then(data => {
                         if (!Array.isArray(data)) {
-                            throw new Error('Format de données invalide');
+                            throw new Error('Invalid data format');
                         }
 
                         allData = data.map(item => ({
@@ -537,24 +740,23 @@
                         updateStats();
                     })
                     .catch(error => {
-                        console.error('Erreur lors du chargement des demandes:', error);
+                        console.error('Error loading requests:', error);
                         showErrorState();
                     });
             }
 
             function showErrorState() {
-                const tableBody = document.getElementById('demandes-table');
+                const tableBody = document.getElementById('table-body');
                 tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="no-data">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <h4>Erreur lors du chargement des données</h4>
-                            <p>Veuillez réessayer plus tard</p>
-                        </td>
-                    </tr>
+                    <div class="no-data">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h4>Error loading data</h4>
+                        <p>Please try again later</p>
+                        <button onclick="fetchData()" class="action-btn btn-primary" style="margin-top: 1rem;">
+                            <i class="fas fa-refresh"></i> Retry
+                        </button>
+                    </div>
                 `;
-
-
             }
 
             function updateStats() {
@@ -563,22 +765,25 @@
                 const completedRequests = allData.filter(item => item.status === 'completed').length;
                 const completionRate = totalRequests > 0 ? Math.round((completedRequests / totalRequests) * 100) : 0;
 
-
+                document.getElementById('total-requests').textContent = totalRequests;
+                document.getElementById('pending-requests').textContent = pendingRequests;
+                document.getElementById('completed-requests').textContent = completedRequests;
+                document.getElementById('completion-rate').textContent = completionRate + '%';
             }
 
             function applyFilters() {
                 const searchTerm = document.getElementById('searchInput').value.toLowerCase();
                 const statusFilter = document.getElementById('statusFilter').value;
 
-                filteredData = allData.filter(demande => {
-                    const fullName = `${demande.client_prenom} ${demande.client_nom}`.toLowerCase();
+                filteredData = allData.filter(request => {
+                    const fullName = `${request.client_prenom} ${request.client_nom}`.toLowerCase();
                     const matchesSearch = (
                         fullName.includes(searchTerm) ||
-                        (demande.client_phone?.includes(searchTerm)) ||
-                        (demande.voiture_model?.toLowerCase().includes(searchTerm))
+                        (request.client_phone?.includes(searchTerm)) ||
+                        (request.voiture_model?.toLowerCase().includes(searchTerm))
                     );
 
-                    const matchesStatus = statusFilter === 'all' || demande.status === statusFilter;
+                    const matchesStatus = statusFilter === 'all' || request.status === statusFilter;
 
                     return matchesSearch && matchesStatus;
                 });
@@ -589,7 +794,7 @@
             }
 
             function renderTable(page) {
-                const tableBody = document.getElementById('demandes-table');
+                const tableBody = document.getElementById('table-body');
                 tableBody.innerHTML = '';
 
                 const start = (page - 1) * itemsPerPage;
@@ -598,61 +803,59 @@
 
                 if (paginatedData.length === 0) {
                     tableBody.innerHTML = `
-                        <tr>
-                            <td colspan="5" class="no-data">
-                                <i class="fas fa-inbox"></i>
-                                <h4>Aucune demande trouvée</h4>
-                                <p>Essayez de modifier vos critères de recherche</p>
-                            </td>
-                        </tr>
+                        <div class="no-data">
+                            <i class="fas fa-search"></i>
+                            <h4>No requests found</h4>
+                            <p>Try adjusting your search criteria</p>
+                        </div>
                     `;
                     return;
                 }
 
-                paginatedData.forEach(demande => {
-                    const row = document.createElement('tr');
-                    const fullName = `${demande.client_prenom} ${demande.client_nom}`.trim();
-                    const formattedDate = new Date(demande.created_at).toLocaleDateString('fr-FR', {
+                paginatedData.forEach(request => {
+                    const fullName = `${request.client_prenom} ${request.client_nom}`.trim();
+                    const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+                    const formattedDate = new Date(request.created_at).toLocaleDateString('en-US', {
                         day: '2-digit',
                         month: 'short',
                         year: 'numeric'
                     });
 
-                    const actionButton = demande.status === 'pending' ? `
-                        <button class="action-btn btn-outline" onclick="addPieces(${demande.id})">
-                            <i class="fas fa-eye"></i> View spare part
-                        </button>
-                    ` : `
-                     <button class="action-btn btn-primary" onclick="addPieces(${demande.id})">
-                            <i class="fas fa-plus-circle"></i> Add spare part
-
-                        </button>
-                       
-                    `;
+                    const row = document.createElement('div');
+                    row.className = 'table-row';
 
                     row.innerHTML = `
-                        <td>
-                            <strong>${fullName || 'N/A'}</strong>
-                        </td>
-                        <td>
-                            ${demande.client_phone ? `
-                                <a href="tel:${demande.client_phone}" class="text-decoration-none">
-                                    <i class="fas fa-phone-alt mr-1"></i> ${demande.client_phone}
-                                </a>
-                            ` : 'N/A'}
-                        </td>
-                        <td>
-                            <div class="d-flex flex-column">
-                                <strong>${demande.voiture_model}</strong>
-                                ${demande.voiture_serie ? `<small class="text-muted">${demande.voiture_serie}</small>` : ''}
+                        <div class="client-info">
+                            <div class="client-avatar">${initials}</div>
+                            <div class="client-details">
+                                <h4>${fullName}</h4>
+
                             </div>
-                        </td>
-                        <td>
-                            ${formattedDate}
-                        </td>
-                        <td>
-                            ${actionButton}
-                        </td>
+                        </div>
+                        <div>
+                            ${request.client_phone ? `
+                                <a href="tel:${request.client_phone}" class="phone-link">
+                                    <i class="fas fa-phone"></i>
+                                    ${request.client_phone}
+                                </a>
+                            ` : '<span style="color: #64748b;">N/A</span>'}
+                        </div>
+                        <div class="car-info">
+                            <div class="car-model">${request.voiture_model}</div>
+                            ${request.voiture_serie ? `<div class="car-series">${request.voiture_serie}</div>` : ''}
+                        </div>
+                        <div class="date-badge">${formattedDate}</div>
+                        <div class="action-buttons">
+                            ${request.status === 'pending' ? `
+                                <button class="action-btn btn-primary" onclick="addPieces(${request.id})">
+                                    <i class="fas fa-plus"></i> Add Parts
+                                </button>
+                            ` : `
+                                <button class="action-btn btn-outline" onclick="viewPieces(${request.id})">
+                                    <i class="fas fa-eye"></i> View Parts
+                                </button>
+                            `}
+                        </div>
                     `;
 
                     tableBody.appendChild(row);
@@ -719,6 +922,7 @@
                 ellipsis.className = 'page-btn';
                 ellipsis.textContent = '...';
                 ellipsis.style.pointerEvents = 'none';
+                ellipsis.style.cursor = 'default';
                 return ellipsis;
             }
 
@@ -756,9 +960,43 @@
                 };
             }
 
-            // Initialize
+            // Initialize the application
             fetchData();
+
+            // Add some entrance animations
+            setTimeout(() => {
+                document.querySelectorAll('.stat-card').forEach((card, index) => {
+                    card.style.animation = `fadeInUp 0.6s ease-out ${index * 0.1}s both`;
+                });
+            }, 100);
         });
+
+        // CSS animations for entrance effects
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(-30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>

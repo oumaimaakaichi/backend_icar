@@ -454,14 +454,24 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('expert.demande_maintenanceInconnu') }}" class="text-decoration-none">Requests</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">#{{ $demande->id }}</li>
+                    <li class="breadcrumb-item active" aria-current="page"></li>
                 </ol>
             </nav>
         </div>
-        <span class="status-badge status-new">
-            <i class="fas fa-circle me-2" style="font-size: 8px;"></i>
-            {{ ucfirst(str_replace('_', ' ', $demande->status)) }}
-        </span>
+      <span class="status-badge
+    {{ $demande->status === 'en_attente' ? 'status-new' : ($demande->status === 'assignée' ? 'status-assigned' : '') }}">
+
+    <i class="fas fa-circle me-2" style="font-size: 8px;"></i>
+
+    @if ($demande->status === 'en_attente')
+        New
+    @elseif ($demande->status === 'Assignée')
+        Assigned
+    @else
+        {{ ucfirst(str_replace('_', ' ', $demande->status)) }}
+    @endif
+</span>
+
     </div>
 
     <div class="row">
@@ -568,11 +578,11 @@
             </div>
 
             <!-- Techniciens Assignés -->
-  @if($demande->status === 'Nouvelle_demande' && $demande->atelier_id == null)
+  @if($demande->status === 'en_attente' && $demande->atelier_id == null)
                 <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-user-plus"></i>
-                      <h6 class="m-0 font-weight-bold">Assign Technicians</h6>
+                    <div class="card-header" style="background-color:rgb(103, 143, 164)">
+
+                      <h6 class="m-0 font-weight-bold" style="color: white">Assign Technicians</h6>
 
                     </div>
                     <div class="card-body">
@@ -595,9 +605,12 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-submit w-100 mt-3">
-                                <i class="fas fa-user-plus"></i>Assign
-                            </button>
+                           <div style="text-align: center;">
+    <button type="submit" class="btn btn-submit w-50 mt-3" style="background-color: #8fa9b4; color:white; width:100px;">
+        <i class="fas fa-user-plus"></i> <b>&nbsp; Assign</b>
+    </button>
+</div>
+
                         </form>
                     </div>
                 </div>
@@ -655,10 +668,7 @@
     </div>
 @else
     <div class="glass-card p-4 mt-4">
-        <div class="alert alert-info">
-          “No parts selected for this request.”
 
-        </div>
     </div>
 @endif
 
@@ -815,6 +825,7 @@
         </div>
     </div>
 @endif
+  @if($demande && $demande->rapport)
  <div class="rapport-container" style="margin-top: 50px">
         <div class="rapport-header">
             <h2 class="rapport-title">Document Available</h2>
@@ -845,9 +856,9 @@
         </div>
     </div>
 </div>
-
+  @endif
 <!-- Floating Action Button -->
-<a href="{{ route('expert.demandes') }}" class="floating-btn bg-primary text-white">
+<a href="{{ route('expert.demande_maintenanceInconnu') }}" class="floating-btn bg-primary text-white">
     <i class="fas fa-arrow-left"></i>
 </a>
 <!-- Modal pour ajouter le prix main d'œuvre -->
@@ -1018,15 +1029,15 @@
                 const fluxId = this.getAttribute('data-flux-id');
 
                 Swal.fire({
-                    title: 'Confirmer le partage',
-                    text: "Voulez-vous vraiment autoriser le partage de ce lien avec le client?",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#4361ee',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Oui, partager',
-                    cancelButtonText: 'Annuler'
-                }).then((result) => {
+    title: 'Confirm Sharing',
+    text: "Do you really want to allow this link to be shared with the client?",
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#4361ee',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Yes, share',
+    cancelButtonText: 'Cancel'
+}).then((result) => {
                     if (result.isConfirmed) {
                         fetch(`/demande-flux-inconnu/permission/${fluxId}`, {
                             method: 'PUT',
@@ -1039,7 +1050,7 @@
                         .then(response => response.json())
                         .then(data => {
                             if(data.success) {
-                                Swal.fire('Succès', 'Le partage a été autorisé', 'success');
+                                Swal.fire('Success', 'Sharing has been authorized');
                                 // Mise à jour du bouton
                                 this.classList.replace('share-btn', 'share-btn', 'disabled');
                                 this.innerHTML = '<i class="fas fa-check-circle me-1"></i> Partage autorisé';

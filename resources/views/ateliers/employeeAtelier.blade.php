@@ -90,31 +90,31 @@
         }
 
         /* Header styling */
-        .page-header {
-            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
-            backdrop-filter: blur(15px);
+         .page-header {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.05) 100%);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 2rem;
-
-            border: 1px solid rgba(255,255,255,0.2);
-            text-align: center;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(102, 126, 234, 0.1);
         }
 
         .page-title {
-            font-size: 3.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #000000, #764ba2);
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #667eea 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-
+            margin: 0;
         }
 
         .page-subtitle {
-            color: rgba(78, 76, 76, 0.8);
+            color: #64748b;
             font-size: 1.1rem;
-            font-weight: 400;
+            margin-top: 0.5rem;
         }
+
 
         /* Control section */
         .controls-section {
@@ -201,15 +201,15 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
-        .table-modern thead th {
-            background: var(--primary-gradient);
-            color: rgb(252, 250, 250);
+        .modern-table thead th {
+            background: linear-gradient(135deg, white 0%, white 100%);
+            color: black;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.85rem;
-            padding: 0.75rem 1rem;
+            padding: 0.75rem 1.5rem;
             border: none;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .table-modern tbody td {
@@ -422,15 +422,18 @@
     <!-- Background particles -->
 
 
-    <div class="container-fluid py-4" style="margin-top: 50px ; margin-right:50px">
+    <div class="container-fluid py-4" style="margin-top: 70px ; margin-right:50px">
         <!-- Page Header -->
-        <div class="page-header animate-fade-in">
-           <h1 class="page-title">
-    <i class="bi bi-people-fill me-3"></i>
-    Client Management
-</h1>
-<p class="page-subtitle">Manage your clients efficiently</p>
+        <div class="page-header slide-in-up">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="page-title">
+                        <i class="fas fa-users-cog me-3"></i>Clients Management
+                    </h1>
+                    <p class="page-subtitle">Manage your workshop Client efficiently</p>
+                </div>
 
+            </div>
         </div>
 
         <!-- Main Content -->
@@ -497,7 +500,7 @@
                                 <tr>
                                     <td colspan="6" class="text-center py-4">
                                         <div class="alert alert-info border-0" style="background: rgba(79, 172, 254, 0.1);">
-                                            <i class="bi bi-info-circle me-2"></i>Aucun employé trouvé pour votre atelier.
+                                            <i class="bi bi-info-circle me-2"></i>No Client found for your workshop
                                         </div>
                                     </td>
                                 </tr>
@@ -732,62 +735,97 @@
         });
     </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function getCSRFToken() {
-                return document.querySelector('meta[name="csrf-token"]')?.content || '';
-            }
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-            document.querySelectorAll('.accept-btn').forEach(button => {
-                button.addEventListener('click', async function() {
-                    try {
-                        const userId = this.dataset.id;
-                        const response = await fetch(`/users/${userId}/activate`, {
-                            method: 'PATCH',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': getCSRFToken(),
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        });
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function getCSRFToken() {
+            return document.querySelector('meta[name="csrf-token"]')?.content || '';
+        }
 
-                        if (response.ok) {
-                            location.reload();
-                        } else {
-                            alert('Activation failed');
+        // Activer utilisateur
+        document.querySelectorAll('.accept-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                try {
+                    const userId = this.dataset.id;
+                    const response = await fetch(`/users/${userId}/activate`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': getCSRFToken(),
+                            'X-Requested-With': 'XMLHttpRequest'
                         }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('Error: ' + error.message);
-                    }
-                });
-            });
+                    });
 
-            document.querySelectorAll('.refuse-btn').forEach(button => {
-                button.addEventListener('click', async function() {
-                    try {
-                        const userId = this.dataset.id;
-                        const response = await fetch(`/users/${userId}/desactivate`, {
-                            method: 'PATCH',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': getCSRFToken(),
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Activated',
+                            text: 'The user has been activated successfully',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => location.reload());
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed',
+                            text: 'Activation failed',
+                            confirmButtonColor: '#d33'
                         });
-
-                        if (response.ok) {
-                            location.reload();
-                        } else {
-                            alert('Deactivation failed');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('Error: ' + error.message);
                     }
-                });
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error: ' + error.message,
+                        confirmButtonColor: '#d33'
+                    });
+                }
             });
         });
-    </script>
+
+        // Désactiver utilisateur
+        document.querySelectorAll('.refuse-btn').forEach(button => {
+            button.addEventListener('click', async function() {
+                try {
+                    const userId = this.dataset.id;
+                    const response = await fetch(`/users/${userId}/desactivate`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': getCSRFToken(),
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deactivated',
+                            text: 'The user has been deactivated successfully',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => location.reload());
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed',
+                            text: 'Deactivation failed',
+                            confirmButtonColor: '#d33'
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error: ' + error.message,
+                        confirmButtonColor: '#d33'
+                    });
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

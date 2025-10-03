@@ -32,7 +32,7 @@ class CouleurController extends Controller
         Couleur::create($request->all());
 
         return redirect()->route('couleur.index')
-                         ->with('success', 'Couleur créée avec succès');
+                         ->with('success', 'Color created successfully');
     }
 
     public function show(Couleur $couleur)
@@ -55,7 +55,7 @@ class CouleurController extends Controller
         $couleur->update($request->all());
 
         return redirect()->route('couleur.index')
-                         ->with('success', 'Couleur mise à jour avec succès');
+                         ->with('success', 'Color successfully updated');
     }
 
     public function destroy(Couleur $couleur)
@@ -63,12 +63,12 @@ class CouleurController extends Controller
         $couleur->delete();
 
         return redirect()->route('couleur.index')
-                         ->with('success', 'Couleur supprimée avec succès');
+                         ->with('success', 'Color successfully deleted');
     }
 
     public function toggleVisibility(Couleur $couleur)
     {
         $couleur->update(['is_visible' => !$couleur->is_visible]);
-        return back()->with('success', 'Visibilité modifiée avec succès');
+        return back()->with('success', 'Visibility updated successfully');
     }
 }

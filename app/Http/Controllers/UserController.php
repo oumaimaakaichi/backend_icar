@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Demande;
+use App\Models\DemandePanneInconnu;
 use App\Models\VerificationCode;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ExpertAccountCreated;
 use App\Mail\TechnicienAccountCreated;
+use App\Mail\NewClientRegistrationAdminNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Services\SmsService;
 use App\Notifications\SendVerificationCode;
@@ -571,45 +574,86 @@ public function showRequestChoice()
       }
 
 // statistique
-      public function statistiques()
-      {
-          $atelierId = Auth::id();
+     public function statistiques()
+{
+    $atelierId = Auth::id();
 
-          $stats = [
-              'techniciens' => [
-                  'total' => User::where('atelier_id', $atelierId)
-                               ->where('role', 'technicien')
-                               ->count(),
-                  'actifs' => User::where('atelier_id', $atelierId)
-                               ->where('role', 'technicien')
-                               ->where('isActive', true)
-                               ->count(),
-                  'inactifs' => User::where('atelier_id', $atelierId)
-                                 ->where('role', 'technicien')
-                                 ->where('isActive', false)
-                                 ->count()
-              ],
-              'employes' => [
-                  'total' => User::where('atelier_id', $atelierId)
-                              ->where('role', 'Client')
+    // Statistiques existantes
+    $stats = [
+        'techniciens' => [
+            'total' => User::where('atelier_id', $atelierId)
+                         ->where('role', 'technicien')
+                         ->count(),
+            'actifs' => User::where('atelier_id', $atelierId)
+                          ->where('role', 'technicien')
+                          ->where('isActive', true)
+                          ->count(),
+            'inactifs' => User::where('atelier_id', $atelierId)
+                            ->where('role', 'technicien')
+                            ->where('isActive', false)
+                            ->count()
+        ],
+        'employes' => [
+            'total' => User::where('atelier_id', $atelierId)
+                        ->where('role', 'Client')
+                        ->count(),
+            'actifs' => User::where('atelier_id', $atelierId)
+                         ->where('role', 'Client')
+                         ->where('isActive', true)
+                         ->count(),
+            'inactifs' => User::where('atelier_id', $atelierId)
+                           ->where('role', 'Client')
+                           ->where('isActive', false)
+                           ->count()
+        ],
+        'total_personnel' => User::where('atelier_id', $atelierId)
+                              ->whereIn('role', ['technicien', 'Client'])
                               ->count(),
-                  'actifs' => User::where('atelier_id', $atelierId)
-                               ->where('role', 'Client')
-                               ->where('isActive', true)
-                               ->count(),
-                  'inactifs' => User::where('atelier_id', $atelierId)
-                                 ->where('role', 'Client')
-                                 ->where('isActive', false)
-                                 ->count()
-              ],
-              'total_personnel' => User::where('atelier_id', $atelierId)
-                                    ->whereIn('role', ['technicien', 'Client'])
-                                    ->count(),
-              'recentActivities' => [] // Vous pouvez ajouter des données d'activité ici
-          ];
+'demandesIN' => [
+            'total' => DemandePanneInconnu::where('atelier_id', $atelierId)->count(),
+            'en_attente' => DemandePanneInconnu::where('atelier_id', $atelierId)
+                                 ->where('status', 'en_attente')
+                                 ->count(),
+            'assignees' => DemandePanneInconnu::where('atelier_id', $atelierId)
+                                ->where('status', 'Assignée')
+                                ->count(),
 
-          return view('ateliers.statistiqueAtelier', compact('stats'));
-      }
+        ],
+
+        // NOUVELLES STATISTIQUES DES DEMANDES
+        'demandes' => [
+            'total' => Demande::where('atelier_id', $atelierId)->count(),
+            'en_attente' => Demande::where('atelier_id', $atelierId)
+                                 ->where('status', 'Nouvelle_demande')
+                                 ->count(),
+            'assignees' => Demande::where('atelier_id', $atelierId)
+                                ->where('status', 'Assignée')
+                                ->count(),
+            'terminees' => Demande::where('atelier_id', $atelierId)
+                                ->where('status', 'Terminée')
+                                ->count(),
+            'annulees' => Demande::where('atelier_id', $atelierId)
+                               ->where('status', 'Annulée')
+                               ->count(),
+        ],
+
+        // Statistiques par mois pour l'année en cours
+        'demandes_par_mois' => Demande::where('atelier_id', $atelierId)
+            ->whereYear('created_at', date('Y'))
+            ->selectRaw('MONTH(created_at) as mois, COUNT(*) as total')
+            ->groupBy('mois')
+            ->orderBy('mois')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->mois => $item->total];
+            })
+            ->toArray(),
+
+        'recentActivities' => [] // Vous pouvez ajouter des données d'activité ici
+    ];
+
+    return view('ateliers.statistiqueAtelier', compact('stats'));
+}
 
 // Add these methods to your UserController
 public function approveUser($id)
@@ -760,7 +804,7 @@ public function sendCode(Request $request)
     Notification::route('mail', $request->email)
         ->notify(new SendVerificationCode($code));
 
-    return response()->json(['message' => 'Code envoyé par email.']);
+    return response()->json(['message' => 'Code sent by email.']);
 }
 
 public function registerClient(Request $request)
@@ -772,7 +816,7 @@ public function registerClient(Request $request)
         'phone' => 'required|string|unique:users,phone',
         'adresse' => 'required|string|max:255',
         'password' => 'required|string|min:6|confirmed',
-        'code' => 'required|string|size:4',
+        'code' => 'required|string|size:2',
     ]);
 
     // Vérifier le code (adapté pour email au lieu de phone)
@@ -784,7 +828,7 @@ public function registerClient(Request $request)
     if (!$verification) {
         return response()->json([
             'success' => false,
-            'message' => 'Code incorrect ou expiré'
+            'message' => 'Incorrect or expired code'
         ], 400);
     }
 
@@ -802,9 +846,16 @@ public function registerClient(Request $request)
     // Supprimer le code utilisé
     $verification->delete();
 
+    // Envoyer un email à l'administrateur
+    try {
+        Mail::to('oumaimaakaichi00@gmail.com')->send(new NewClientRegistrationAdminNotification($user));
+    } catch (\Exception $e) {
+        \Log::error('Failed to send admin notification email: ' . $e->getMessage());
+    }
+
     return response()->json([
         'success' => true,
-        'message' => 'Compte créé avec succès',
+        'message' => 'Account created successfully',
         'user' => $user
     ]);
 }
@@ -823,7 +874,77 @@ public function getTechniciensSansAteliers()
         'data' => $techniciens,
     ]);
 }
+public function forgotPassword(Request $request)
+{
+    try {
+        // Validate email
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email'
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email invalide ou inexistant'
+            ], 400);
+        }
 
+        // Find user by email
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Utilisateur non trouvé'
+            ], 404);
+        }
+
+        // Generate new random password
+        $newPassword = Str::random(10);
+
+        // Update user's password
+        $user->password = Hash::make($newPassword);
+        $user->save();
+
+        // Send new password via email
+        try {
+            Mail::to($user->email)->send(new \App\Mail\ForgotPasswordMail($user, $newPassword));
+        } catch (\Exception $mailException) {
+            // Log email error but continue
+            \Log::error('Failed to send forgot password email', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'error' => $mailException->getMessage()
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Erreur lors de l\'envoi de l\'email'
+            ], 500);
+        }
+
+        \Log::info('Password reset successful', [
+            'user_id' => $user->id,
+            'email' => $user->email
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Un nouveau mot de passe a été envoyé à votre adresse email'
+        ], 200);
+
+    } catch (\Exception $e) {
+        \Log::error('Exception in forgotPassword', [
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Une erreur interne s\'est produite'
+        ], 500);
     }
 
+}
+
+}

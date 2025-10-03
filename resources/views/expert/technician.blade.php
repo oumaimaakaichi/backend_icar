@@ -43,7 +43,7 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #4f6184 100%);
+            background: linear-gradient(135deg, #4f6184 0%, #4f6184 100%);
             color: white;
             padding: 30px 40px;
             position: relative;

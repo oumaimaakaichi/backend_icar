@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Demande;
 use App\Models\Notification;
+use App\Models\PieceRecommandee;
 use App\Models\NotificationTechnicien;
 use App\Models\Voiture;
 use App\Models\User;
@@ -11,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth; // ✅ Ceci est correct
 use App\Events\DemandeCreated;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\DB;
 use App\Events\NotificationSent;
 
 class DemandeController extends Controller
@@ -59,9 +60,130 @@ public function store(Request $request)
 }
 
 
+public function getAllDemandes(Request $request)
+    {
+        try {
+            $perPage = $request->get('per_page', 10);
+            $page = $request->get('page', 1);
 
+            $demandes = Demande::with(['client', 'atelier', 'voiture', 'servicePanne'])
+                ->orderBy('created_at', 'desc')
+                ->paginate($perPage, ['*'], 'page', $page);
+
+            return response()->json([
+                'success' => true,
+                'data' => $demandes->items(),
+                'pagination' => [
+                    'current_page' => $demandes->currentPage(),
+                    'per_page' => $demandes->perPage(),
+                    'total' => $demandes->total(),
+                    'last_page' => $demandes->lastPage(),
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des demandes',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Récupérer le nombre de demandes par date
+     */
+    public function getDemandesCountByDate(Request $request)
+    {
+        try {
+            $startDate = $request->get('start_date', now()->format('Y-m-d'));
+            $endDate = $request->get('end_date', now()->addYear()->format('Y-m-d'));
+
+            $demandesCount = Demande::whereNotNull('date_maintenance')
+                ->whereBetween('date_maintenance', [$startDate, $endDate])
+                ->select('date_maintenance', DB::raw('COUNT(*) as count'))
+                ->groupBy('date_maintenance')
+                ->get()
+                ->pluck('count', 'date_maintenance');
+
+            return response()->json([
+                'success' => true,
+                'data' => $demandesCount
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des comptes par date',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Récupérer les dates bloquées (5 demandes ou plus)
+     */
+    public function getBlockedDates(Request $request)
+    {
+        try {
+            $startDate = $request->get('start_date', now()->format('Y-m-d'));
+            $endDate = $request->get('end_date', now()->addYear()->format('Y-m-d'));
+            $maxDemandesPerDay = $request->get('max_demandes', 5);
+
+            $blockedDates = Demande::whereNotNull('date_maintenance')
+                ->whereBetween('date_maintenance', [$startDate, $endDate])
+                ->select('date_maintenance', DB::raw('COUNT(*) as count'))
+                ->groupBy('date_maintenance')
+                ->having('count', '>=', $maxDemandesPerDay)
+                ->pluck('date_maintenance')
+                ->map(function ($date) {
+                    return $date->format('Y-m-d');
+                });
+
+            return response()->json([
+                'success' => true,
+                'data' => $blockedDates,
+                'max_demandes_per_day' => $maxDemandesPerDay
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des dates bloquées',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 public function updatePiecesChoisies(Request $request, Demande $demande)
 {
+    $pieceRecommandee = PieceRecommandee::where('demande_id', $demande->id)->first();
+
+    if (!$pieceRecommandee) {
+        return response()->json([
+            'error' => 'Aucune recommandation de pièces trouvée pour cette demande'
+        ], 404);
+    }
+
+    // Cas où seule la main d'œuvre est recommandée
+    if ($pieceRecommandee->main_oeuvre_seule) {
+        $request->validate([
+            'prix_main_oeuvre' => 'required|numeric|min:0',
+        ]);
+
+        $demande->update([
+            'main_oeuvre_seule' => true,
+            'prix_main_oeuvre' => $request->prix_main_oeuvre,
+            'pieces_choisies' => [] // Tableau vide pour indiquer aucune pièce
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Main d\'œuvre enregistrée avec succès',
+            'data' => $demande->fresh()
+        ]);
+    }
+
+    // Cas normal avec des pièces recommandées
     $request->validate([
         'pieces' => 'required|array',
         'pieces.*.piece_id' => 'required|integer',
@@ -75,20 +197,19 @@ public function updatePiecesChoisies(Request $request, Demande $demande)
             'piece_id' => $piece['piece_id'],
             'type' => $piece['type'],
             'prix' => $piece['prix'],
-            // Ajoutez d'autres champs si nécessaire
         ];
     }, $request->pieces);
 
     // Enregistrer les pièces choisies
     $demande->update([
         'pieces_choisies' => $piecesChoisies,
-
+        'main_oeuvre_seule' => false
     ]);
 
     return response()->json([
         'success' => true,
         'message' => 'Pièces choisies enregistrées avec succès',
-        'data' => $demande->fresh() // Retourne les données mises à jour
+        'data' => $demande->fresh()
     ]);
 }
 public function showDemandesParAtelierPage()
@@ -106,7 +227,7 @@ public function showDemandesParAtelierPage()
         'servicePanne.categoryPane',
         'servicePanne',
         'pieceRecommandee'
-    ])->where('atelier_id', $atelier->id)->get();
+    ])->where('atelier_id', $atelier->id)->paginate(4);
 
     return view('ateliers.demandes-par-atelier', compact('atelier', 'demandes'));
 }
@@ -279,7 +400,7 @@ public function updateInfo(Request $request, $id)
             $notification = Notification::create([
                 'user_id' => $atelier->id, // Assurez-vous que votre modèle Atelier utilise le même ID que User
                 'type' => 'demande_assignee',
-                'message' => 'Une nouvelle demande vous a été assignée',
+                'message' => 'A new request has been assigned to you',
                 'data' => [
                     'demande_id' => $demande->id,
                     'url' => '/demandes/' . $demande->id,
@@ -324,12 +445,18 @@ public function getDetailsForConfirmation($id)
     }, 0);
 
     // ---- Total de la main d’œuvre (table PieceRecommandee -> JSON "pieces") ----
-    $totalMainOeuvre = 0;
-    if ($demande->pieceRecommandee && is_array($demande->pieceRecommandee->pieces)) {
+  // ---- Total de la main d’œuvre (table PieceRecommandee -> JSON "pieces") ----
+$totalMainOeuvre = 0;
+if ($demande->pieceRecommandee) {
+    if (is_array($demande->pieceRecommandee->pieces) && count($demande->pieceRecommandee->pieces) > 0) {
         foreach ($demande->pieceRecommandee->pieces as $piece) {
             $totalMainOeuvre += $piece['prix_main_oeuvre'] ?? 0;
         }
+    } else {
+        // Si la liste de pièces est vide, prendre le prix de la main d'oeuvre seule
+        $totalMainOeuvre = $demande->pieceRecommandee->prix_main_oeuvre_seule ?? 0;
     }
+}
 
     return response()->json([
         'service_titre'     => $demande->servicePanne->titre ?? 'Non spécifié',
@@ -428,37 +555,46 @@ public function updateLocation(Request $request, $id)
 
 public function getByDemandeWithTechnicien($client_id)
 {
-    $demandes = Demande::with(['voiture', 'servicePanne'])
+    $demandes = Demande::with(['voiture', 'servicePanne', 'atelier'])
         ->where('client_id', $client_id)
-        ->whereNotNull('techniciens')  // techniciens est un champ JSON
-        ->orderBy('created_at', 'desc')
+        ->whereNotNull('techniciens') // techniciens est un champ JSON
+        ->orderByDesc('created_at')
         ->get();
 
-    if ($demandes->isEmpty()) {
-        return response()->json(['message' => 'Aucune demande trouvée'], 404);
-    }
-
+    // Formattage
     $formatted = $demandes->map(function ($demande) {
         return [
-            'id' => $demande->id,
-            'created_at' => $demande->created_at->format('Y-m-d H:i:s'),
-             'date_maintenance' =>$demande->date_maintenance,
-              'heure_maintenance' =>$demande->heure_maintenance,
+            'id'              => $demande->id,
+            'created_at'      => $demande->created_at->format('Y-m-d H:i:s'),
+            'date_maintenance'=> $demande->date_maintenance?->format('Y-m-d') ?? null,
+            'heure_maintenance'=> $demande->heure_maintenance,
+
             'voiture' => [
-                'model' => $demande->voiture->model ?? 'Modèle non spécifié',
-                'serie' => $demande->voiture->serie ?? 'Série non spécifiée',
-                'company' => $demande->voiture->company ?? 'company non spécifiée',
-                  'date_fabrication' => $demande->voiture->date_fabrication ?? 'company non spécifiée',
+                'model'            => $demande->voiture->model ?? 'Modèle non spécifié',
+                'serie'            => $demande->voiture->serie ?? 'Série non spécifiée',
+                'company'          => $demande->voiture->company ?? 'Compagnie non spécifiée',
+                'date_fabrication' => $demande->voiture->date_fabrication ?? 'Date non spécifiée',
             ],
+
+            'atelier' => [
+                'nom_commercial' => $demande->atelier->nom_commercial ?? 'Atelier non spécifié',
+                'ville'          => $demande->atelier->ville ?? 'Ville non spécifiée',
+            ],
+
             'service_panne' => [
                 'titre' => $demande->servicePanne->titre ?? 'Service non spécifié',
             ],
-            'techniciens' => $demande->techniciens ?? [], // Array JSON des techniciens
+
+            'techniciens'     => $demande->techniciens ?? [],
+            'type_emplacement'=> $demande->type_emplacement,
         ];
     });
 
+    // Retourne toujours un 200, même si aucune demande
     return response()->json($formatted, 200);
 }
+
+
 public function showRequestChoice()
 {
     return view('expert.choice');
@@ -474,7 +610,6 @@ public function getDemandesParTechnicien($technicien_id)
         'client:id,nom,prenom,phone',
         'voiture:id,model,serie,company,date_fabrication',
         'servicePanne:id,titre',
-
         'forfait:id,nomForfait',
         'atelier:id,nom_commercial'
     ])
@@ -487,6 +622,17 @@ public function getDemandesParTechnicien($technicien_id)
     }
 
     $formattedDemandes = $demandes->map(function ($demande) {
+        // Handle empty pieces_choisies
+        $piecesChoisies = $demande->pieces_choisies ?? [];
+        if (is_string($piecesChoisies)) {
+            $piecesChoisies = json_decode($piecesChoisies, true) ?? [];
+        }
+
+        // Ensure pieces_choisies is always an array
+        if (!is_array($piecesChoisies)) {
+            $piecesChoisies = [];
+        }
+
         return [
             'id' => $demande->id,
             'date_maintenance' => $demande->date_maintenance,
@@ -506,25 +652,25 @@ public function getDemandesParTechnicien($technicien_id)
             ],
             'service' => [
                 'titre' => $demande->servicePanne->titre,
-
             ],
-            'forfait' => $demande->forfait->nomForfait,
+
             'atelier' => $demande->atelier->nom_commercial ?? null,
-            'pieces_choisies' => $demande->pieces_choisies,
+            'pieces_choisies' => $piecesChoisies, // Always an array
             'latitude' => $demande->latitude,
             'longitude' => $demande->longitude,
             'prix_total' => $demande->prix_total,
             'prix_main_oeuvre' => $demande->prix_main_oeuvre,
             'surface_maison' => $demande->surface_maison,
             'hauteur_plafond_maison' => $demande->hauteur_plafond_maison,
-             'porte_garage_maison' => $demande->porte_garage_maison,
-             'surface_bureau'  => $demande->surface_bureau,
-             'hauteur_plafond_bureau'  => $demande->hauteur_plafond_bureau,
-             'porte_garage_bureau'  => $demande->porte_garage_bureau,
-             'surface_parking_travail' => $demande->surface_parking_travail,
-             'autorisation_entree_travail' => $demande->autorisation_entree_travail,
-             'porte_travail' => $demande->porte_travail,
-             'proximite_parking_public' => $demande->proximite_parking_public
+            'porte_garage_maison' => $demande->porte_garage_maison,
+            'surface_bureau' => $demande->surface_bureau,
+            'hauteur_plafond_bureau' => $demande->hauteur_plafond_bureau,
+            'porte_garage_bureau' => $demande->porte_garage_bureau,
+            'surface_parking_travail' => $demande->surface_parking_travail,
+            'autorisation_entree_travail' => $demande->autorisation_entree_travail,
+            'porte_travail' => $demande->porte_travail,
+            'proximite_parking_public' => $demande->proximite_parking_public,
+            'main_oeuvre_seule' => $demande->main_oeuvre_seule ?? false // Add this field
         ];
     });
 
@@ -759,8 +905,8 @@ public function updateTechniciens(Request $request, Demande $demande)
             NotificationTechnicien::create([
                 'technicien_id' => $technicienId,
                 'demande_id' => $demande->id,
-                'titre' => 'Nouvelle demande assignée',
-                'message' => "Une nouvelle demande #{$demande->id} vous a été assignée. " .
+                'titre' => 'New request assigned',
+                'message' => "A new request has been assigned to you. " .
                            "Type: {$demande->type_demande}. " .
                            "Description: " . Str::limit($demande->description, 100),
                 'type' => 'assignation'
@@ -785,7 +931,7 @@ public function updateTechniciens(Request $request, Demande $demande)
 
         return response()->json([
             'success' => true,
-            'message' => 'Techniciens assignés avec succès',
+            'message' => 'Technicians assigned successfully',
             'data' => $demande->fresh(),
             'notifications_creees' => count($techniciensANotifier)
         ]);

@@ -9,20 +9,18 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #6366f1;
-            --secondary: #06b6d4;
-            --success: #10b981;
+            --primary: #596c92;
+            --primary-dark: #3730a3;
+            --secondary: #596c92;
+            --accent: #06b6d4;
+            --success: #22c55e;
             --warning: #f59e0b;
-            --info: #3b82f6;
-            --light: #f8fafc;
+            --danger: #ef4444;
             --dark: #0f172a;
+            --light: #f1f5f9;
+            --text: #1e293b;
+            --text-muted: #64748b;
             --border: #e2e8f0;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
 
         * {
@@ -33,114 +31,150 @@
 
         body {
             background: white;
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-
-            line-height: 1.6;
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            position: relative;
             overflow-x: hidden;
         }
 
         .main-container {
-            min-height: 200vh;
 
-margin-right: 100px;
             margin-top: 80px;
+            margin-right: 100px;
+            padding: 2rem;
+            position: relative;
+            width: 1400px;
+            z-index: 1;
         }
 
-        /* Header moderne */
+        /* Header avec effet glassmorphism */
         .dashboard-header {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
-            border-radius: 24px;
-margin-top: 50px;
-            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 30px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
             position: relative;
             overflow: hidden;
-            border: 1px solid var(--border);
         }
 
         .dashboard-header::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 50%, var(--success) 100%);
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
         .header-content {
             position: relative;
             z-index: 2;
-            margin: 20px
         }
 
         .dashboard-title {
             font-size: 2.5rem;
             font-weight: 900;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--success) 100%);
+            background: linear-gradient(135deg, #476378, #3f5a6e);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             margin-bottom: 1rem;
-            letter-spacing: -0.025em;
-            margin-left: 60px
+            text-shadow: none;
+            letter-spacing: -0.02em;
         }
 
         .dashboard-subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            margin: 0;
-             margin-left: 60px
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 400;
         }
 
-        .live-indicator {
+        .live-badge {
             position: absolute;
             top: 2rem;
             right: 2rem;
+            background: rgba(34, 197, 94, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            background: rgba(16, 185, 129, 0.1);
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            gap: 0.75rem;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);
         }
 
         .live-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--success);
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
             border-radius: 50%;
-            animation: pulse 2s infinite;
+            animation: pulse-dot 2s infinite;
+            box-shadow: 0 0 15px #4ade80;
         }
 
-        .live-text {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--success);
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
         }
 
-        /* Cartes statistiques modernes */
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.3);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        /* Cartes statistiques avec effet 3D */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 2rem;
+            margin-bottom: 4rem;
         }
 
         .stat-card {
-            background: white;
-            border-radius: 20px;
-            padding: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 2rem;
             position: relative;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             cursor: pointer;
         }
@@ -151,118 +185,119 @@ margin-top: 50px;
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
             transform: scaleX(0);
             transform-origin: left;
-            transition: transform 0.4s ease;
+            transition: transform 0.5s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-xl);
-            border-color: rgba(99, 102, 241, 0.2);
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
         }
 
         .stat-card:hover::before {
             transform: scaleX(1);
         }
 
-        .stat-card:nth-child(1) { --accent: var(--primary); }
-        .stat-card:nth-child(2) { --accent: var(--secondary); }
-        .stat-card:nth-child(3) { --accent: var(--success); }
-        .stat-card:nth-child(4) { --accent: var(--warning); }
-
-        .stat-card:nth-child(1)::before { background: var(--primary); }
-        .stat-card:nth-child(2)::before { background: var(--secondary); }
-        .stat-card:nth-child(3)::before { background: var(--success); }
-        .stat-card:nth-child(4)::before { background: var(--warning); }
-
         .stat-icon-wrapper {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
 
-        .stat-card:nth-child(1) .stat-icon-wrapper { background: linear-gradient(135deg, var(--primary), #8b5cf6); }
-        .stat-card:nth-child(2) .stat-icon-wrapper { background: linear-gradient(135deg, var(--secondary), #0ea5e9); }
-        .stat-card:nth-child(3) .stat-icon-wrapper { background: linear-gradient(135deg, var(--success), #059669); }
-        .stat-card:nth-child(4) .stat-icon-wrapper { background: linear-gradient(135deg, var(--warning), #d97706); }
+        .stat-card:nth-child(1) .stat-icon-wrapper {
+            background: linear-gradient(135deg, #667eea 0%, #667eea 100%);
+        }
+        .stat-card:nth-child(2) .stat-icon-wrapper {
+            background: linear-gradient(135deg, #7aa3b7 0%, #7aa3b7 100%);
+        }
+        .stat-card:nth-child(3) .stat-icon-wrapper {
+            background: linear-gradient(135deg, #4facfe 0%, #4facfe 100%);
+        }
+        .stat-card:nth-child(4) .stat-icon-wrapper {
+            background: linear-gradient(135deg, #43e97b 0%, #43e97b 100%);
+        }
+        .stat-card:nth-child(5) .stat-icon-wrapper {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .stat-card:nth-child(6) .stat-icon-wrapper {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+        .stat-card:nth-child(7) .stat-icon-wrapper {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
 
         .stat-icon {
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: white;
-            z-index: 2;
-            position: relative;
-        }
-
-        .stat-icon-wrapper::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-            transform: translateX(-100%) rotate(45deg);
-            transition: transform 0.8s;
-        }
-
-        .stat-card:hover .stat-icon-wrapper::after {
-            transform: translateX(100%) rotate(45deg);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
         }
 
         .stat-number {
             font-size: 3.5rem;
             font-weight: 900;
-            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 0.5rem;
             line-height: 1;
-            letter-spacing: -0.02em;
         }
 
         .stat-label {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-sublabel {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px dashed var(--border);
         }
 
         .stat-change {
             position: absolute;
             top: 1.5rem;
             right: 1.5rem;
-            background: rgba(16, 185, 129, 0.1);
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.3));
+            backdrop-filter: blur(10px);
             color: var(--success);
-            padding: 0.25rem 0.75rem;
+            padding: 0.5rem 1rem;
             border-radius: 50px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            font-size: 0.9rem;
+            font-weight: 700;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);
         }
 
-        /* Graphiques modernes */
+        /* Graphiques avec design moderne */
         .charts-container {
             display: grid;
             grid-template-columns: 1fr 1.5fr;
-            gap: 1rem;
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
 
         .chart-card {
-            background: white;
-            border-radius: 24px;
-            padding: 1.5rem;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
         }
@@ -273,72 +308,71 @@ margin-top: 50px;
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--success));
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent), var(--success));
         }
 
         .chart-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: rgba(99, 102, 241, 0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
         }
 
         .chart-header {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: r1em;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .chart-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin: 0;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid var(--border);
         }
 
         .chart-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            font-size: 1.25rem;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .chart-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text);
         }
 
         .chart-canvas {
             position: relative;
-            height: 300px;
+            height: 350px;
         }
 
         /* Animations */
         .animate-in {
             opacity: 0;
-            transform: translateY(30px);
-            animation: slideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            transform: translateY(50px);
+            animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         .stat-card:nth-child(1) { animation-delay: 0.1s; }
         .stat-card:nth-child(2) { animation-delay: 0.2s; }
         .stat-card:nth-child(3) { animation-delay: 0.3s; }
         .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        .stat-card:nth-child(5) { animation-delay: 0.5s; }
+        .stat-card:nth-child(6) { animation-delay: 0.6s; }
+        .stat-card:nth-child(7) { animation-delay: 0.7s; }
 
-        .chart-card:nth-child(1) { animation-delay: 0.5s; }
-        .chart-card:nth-child(2) { animation-delay: 0.6s; }
-
-        @keyframes slideIn {
+        @keyframes slideUp {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        /* Responsive design */
+        /* Responsive */
         @media (max-width: 1200px) {
             .charts-container {
                 grid-template-columns: 1fr;
@@ -356,87 +390,84 @@ margin-top: 50px;
                 font-size: 2.5rem;
             }
 
-            .dashboard-header {
-                padding: 2rem;
-            }
-
             .stats-grid {
                 grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 1rem;
+                gap: 1.5rem;
             }
-        }
-
-        @media (max-width: 768px) {
-            .stat-card {
-                padding: 2rem;
-            }
-
-            .stat-icon-wrapper {
-                width: 60px;
-                height: 60px;
-            }
-
-            .stat-icon {
-                font-size: 1.5rem;
-            }
-
-            .stat-number {
-                font-size: 2.5rem;
-            }
-
-            .chart-card {
-                padding: 1.5rem;
-            }
-
-            .live-indicator {
-                position: static;
-                margin-top: 1rem;
-                align-self: flex-start;
-            }
-        }
-
-        /* Effet de chargement */
-        .loading {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .loading::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: loading 2s infinite;
-        }
-
-        @keyframes loading {
-            0% { left: -100%; }
-            100% { left: 100%; }
         }
     </style>
 </head>
 <body>
-     @include('Sidebar.sidebar')
-    <div class="container py-5" style="margin-right: 50px">
-        <!-- En-tête du tableau de bord -->
+    @include('Sidebar.sidebar')
+
+    <div class="main-container">
+        <!-- Header -->
         <div class="dashboard-header animate-in">
             <div class="header-content">
-                <h2 class="dashboard-title">
+                <h1 class="dashboard-title">
                     <i class="fas fa-chart-line me-3"></i>
-                   Dashboard ICAR
-                </h2>
+                    ICAR Analytics
+                </h1>
                 <p class="dashboard-subtitle">
-    Comprehensive analysis and real-time monitoring of your ecosystem
-</p>
-
+Interactive dashboard and real-time analysis of your ecosystem
+                </p>
             </div>
 
         </div>
+<div class="section-header animate-in">
+            <div class="section-icon">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <h2 class="section-title">Maintenance Requests</h2>
+        </div>
 
-        <!-- Cartes statistiques -->
+        <div class="stats-grid">
+            <div class="stat-card animate-in">
+                <div class="stat-change">{{ $totalDemandes > 0 ? '+' . round(($demandesConnuesCount / $totalDemandes) * 100) . '%' : '0%' }}</div>
+                <div class="stat-icon-wrapper">
+                    <i class="fas fa-tools stat-icon"></i>
+                </div>
+                <div class="stat-number">{{ $demandesConnuesCount ?? 0 }}</div>
+                <div class="stat-label">Known Requests</div>
+                <div class="stat-sublabel">
+                    <i class="fas fa-building text-info"></i> {{ $demandesConnuesEntreprisesCount ?? 0 }} At home |
+                    <i class="fas fa-wrench text-success"></i> {{ $demandesConnuesAteliersCount ?? 0 }} Workshops
+                </div>
+            </div>
+
+            <div class="stat-card animate-in">
+                <div class="stat-change">{{ $totalDemandes > 0 ? '+' . round(($demandesInconnuesCount / $totalDemandes) * 100) . '%' : '0%' }}</div>
+                <div class="stat-icon-wrapper">
+                    <i class="fas fa-question-circle stat-icon"></i>
+                </div>
+                <div class="stat-number">{{ $demandesInconnuesCount ?? 0 }}</div>
+                <div class="stat-label">UnKnown Requests</div>
+                <div class="stat-sublabel">
+                    <i class="fas fa-building text-info"></i> {{ $demandesInconnuesEntreprisesCount ?? 0 }} At home |
+                    <i class="fas fa-wrench text-success"></i> {{ $demandesInconnuesAteliersCount ?? 0 }} Workshops
+                </div>
+            </div>
+
+            <div class="stat-card animate-in">
+                <div class="stat-change">Total</div>
+                <div class="stat-icon-wrapper">
+                    <i class="fas fa-list-check stat-icon"></i>
+                </div>
+                <div class="stat-number">{{ $totalDemandes ?? 0 }}</div>
+                <div class="stat-label">Total Requests</div>
+                <div class="stat-sublabel">
+                 All Categories Combined
+                </div>
+            </div>
+        </div>
+        <!-- Section Utilisateurs -->
+        <div class="section-header animate-in">
+            <div class="section-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h2 class="section-title">System Users</h2>
+        </div>
+
         <div class="stats-grid">
             <div class="stat-card animate-in">
                 <div class="stat-change">+12%</div>
@@ -462,11 +493,21 @@ margin-top: 50px;
                     <i class="fas fa-users stat-icon"></i>
                 </div>
                 <div class="stat-number">{{ $employesCount ?? 35 }}</div>
-                <div class="stat-label">Customers</div>
+                <div class="stat-label">Clients</div>
             </div>
 
-
+            <div class="stat-card animate-in">
+                <div class="stat-change">+15%</div>
+                <div class="stat-icon-wrapper">
+                    <i class="fas fa-building stat-icon"></i>
+                </div>
+                <div class="stat-number">{{ $entreprisesCount ?? 12 }}</div>
+                <div class="stat-label">Companies</div>
+            </div>
         </div>
+
+        <!-- Section Demandes -->
+
 
         <!-- Graphiques -->
         <div class="charts-container">
@@ -475,11 +516,10 @@ margin-top: 50px;
                     <div class="chart-icon">
                         <i class="fas fa-chart-pie"></i>
                     </div>
-                 <h3 class="chart-title">User Distribution</h3>
-
+                    <h3 class="chart-title">Distribution</h3>
                 </div>
                 <div class="chart-canvas">
-                    <canvas id="userPieChart"></canvas>
+                    <canvas id="demandesPieChart"></canvas>
                 </div>
             </div>
 
@@ -488,193 +528,170 @@ margin-top: 50px;
                     <div class="chart-icon">
                         <i class="fas fa-chart-bar"></i>
                     </div>
-                 <h3 class="chart-title">Overview</h3>
-
+                    <h3 class="chart-title">Overview</h3>
                 </div>
                 <div class="chart-canvas">
-                    <canvas id="statsBarChart"></canvas>
+                    <canvas id="overviewBarChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Configuration des couleurs modernes
         const modernColors = {
-            primary: '#6366f1',
-            secondary: '#06b6d4',
-            success: '#10b981',
+            primary: '#667eea',
+            secondary: '#ec4899',
+            accent: '#06b6d4',
+            success: '#22c55e',
             warning: '#f59e0b',
-            gradients: {
-                primary: 'rgba(99, 102, 241, 0.8)',
-                secondary: 'rgba(6, 182, 212, 0.8)',
-                success: 'rgba(16, 185, 129, 0.8)',
-                warning: 'rgba(245, 158, 11, 0.8)'
-            }
+            danger: '#ef4444'
         };
 
-        // Données pour le graphique circulaire
+        const demandesData = {
+            connues: {{ $demandesConnuesCount ?? 0 }},
+            inconnues: {{ $demandesInconnuesCount ?? 0 }}
+        };
+
+        const usersData = {
+            techniciens: {{ $techniciensCount ?? 0 }},
+            experts: {{ $expertsCount ?? 0 }},
+            clients: {{ $employesCount ?? 0 }},
+            entreprises: {{ $entreprisesCount ?? 0 }}
+        };
+
         const pieData = {
-            labels: ['Techniciens', 'Experts', 'Clients'],
+            labels: ['Know Requests', 'Unknow Requests'],
             datasets: [{
-                data: [25, 15, 35],
-                backgroundColor: [
-                    modernColors.gradients.primary,
-                    modernColors.gradients.secondary,
-                    modernColors.gradients.success
-                ],
-                borderColor: [
-                    modernColors.primary,
-                    modernColors.secondary,
-                    modernColors.success
-                ],
+                data: [demandesData.connues, demandesData.inconnues],
+                backgroundColor: ['rgba(102, 126, 234, 0.8)', 'rgba(236, 72, 153, 0.8)'],
+                borderColor: ['#667eea', '#ec4899'],
                 borderWidth: 3,
-                hoverBorderWidth: 4
+                hoverOffset: 20
             }]
         };
 
-        // Données pour le graphique en barres
         const barData = {
-            labels: ['Techniciens', 'Experts', 'Clients', 'Entreprises'],
+            labels: ['Technicians', 'Experts', 'Clients', 'Companies', 'Know request', 'UnKnow request'],
             datasets: [{
                 label: 'Effectif',
-                data: [25, 15, 35, 12],
+                data: [
+                    usersData.techniciens,
+                    usersData.experts,
+                    usersData.clients,
+                    usersData.entreprises,
+                    demandesData.connues,
+                    demandesData.inconnues
+                ],
                 backgroundColor: [
-                    modernColors.gradients.primary,
-                    modernColors.gradients.secondary,
-                    modernColors.gradients.success,
-                    modernColors.gradients.warning
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(236, 72, 153, 0.8)',
+                    'rgba(6, 182, 212, 0.8)',
+                    'rgba(34, 197, 94, 0.8)',
+                    'rgba(245, 158, 11, 0.8)',
+                    'rgba(239, 68, 68, 0.8)'
                 ],
-                borderColor: [
-                    modernColors.primary,
-                    modernColors.secondary,
-                    modernColors.success,
-                    modernColors.warning
-                ],
-                borderWidth: 2,
-                borderRadius: 12,
+                borderRadius: 15,
                 borderSkipped: false
             }]
         };
 
-        // Configuration commune des graphiques
-        const commonChartOptions = {
+        const chartOptions = {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
                 tooltip: {
                     backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                    titleColor: 'white',
-                    bodyColor: 'white',
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                    borderWidth: 1,
-                    cornerRadius: 16,
-                    padding: 12,
-                    titleFont: { size: 14, weight: '600' },
+                    padding: 15,
+                    cornerRadius: 15,
+                    titleFont: { size: 14, weight: 'bold' },
                     bodyFont: { size: 13 }
                 }
             },
             animation: {
                 duration: 2000,
-                easing: 'easeInOutCubic'
+                easing: 'easeInOutQuart'
             }
         };
 
-        // Initialisation des graphiques
         document.addEventListener('DOMContentLoaded', () => {
-            // Graphique circulaire
-            const pieCtx = document.getElementById('userPieChart').getContext('2d');
+            const pieCtx = document.getElementById('demandesPieChart').getContext('2d');
             new Chart(pieCtx, {
                 type: 'doughnut',
                 data: pieData,
                 options: {
-                    ...commonChartOptions,
-                    cutout: '70%',
+                    ...chartOptions,
+                    cutout: '65%',
                     plugins: {
-                        ...commonChartOptions.plugins,
+                        ...chartOptions.plugins,
                         legend: {
                             position: 'bottom',
                             labels: {
                                 usePointStyle: true,
                                 padding: 20,
-                                font: { size: 13, weight: '600' },
-                                color: '#64748b'
-                            }
-                        },
-                        tooltip: {
-                            ...commonChartOptions.plugins.tooltip,
-                            callbacks: {
-                                label: function(context) {
-                                    const value = context.raw;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percent = Math.round((value / total) * 100);
-                                    return `${context.label}: ${value} (${percent}%)`;
-                                }
+                                font: { size: 13, weight: 'bold' }
                             }
                         }
                     }
                 }
             });
 
-            // Graphique en barres
-            const barCtx = document.getElementById('statsBarChart').getContext('2d');
+            const barCtx = document.getElementById('overviewBarChart').getContext('2d');
             new Chart(barCtx, {
                 type: 'bar',
                 data: barData,
                 options: {
-                    ...commonChartOptions,
+                    ...chartOptions,
                     plugins: {
-                        ...commonChartOptions.plugins,
+                        ...chartOptions.plugins,
                         legend: { display: false }
                     },
                     scales: {
                         x: {
                             grid: { display: false },
-                            ticks: {
-                                font: { weight: '600', size: 12 },
-                                color: '#64748b'
-                            }
+                            ticks: { font: { weight: 'bold' } }
                         },
                         y: {
                             beginAtZero: true,
-                            grid: {
-                                color: 'rgba(226, 232, 240, 0.8)',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                stepSize: 5,
-                                font: { weight: '600', size: 12 },
-                                color: '#64748b'
-                            }
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: { font: { weight: 'bold' } }
                         }
                     }
                 }
             });
 
-            // Animation des nombres
             const animateNumbers = () => {
-                const numbers = document.querySelectorAll('.stat-number');
-                numbers.forEach(element => {
-                    const target = parseInt(element.textContent);
-                    let current = 0;
-                    const increment = target / 60;
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= target) {
-                            element.textContent = target;
-                            clearInterval(timer);
-                        } else {
-                            element.textContent = Math.floor(current);
-                        }
-                    }, 30);
+                document.querySelectorAll('.stat-number').forEach(el => {
+                    const target = parseInt(el.textContent.replace(/[^\d]/g, ''));
+                    if (target > 0) {
+                        let current = 0;
+                        const increment = target / 50;
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= target) {
+                                el.textContent = target;
+                                clearInterval(timer);
+                            } else {
+                                el.textContent = Math.floor(current);
+                            }
+                        }, 30);
+                    }
                 });
             };
 
-            // Démarrer l'animation après un délai
             setTimeout(animateNumbers, 1000);
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
         });
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

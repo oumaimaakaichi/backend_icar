@@ -355,12 +355,20 @@
                     const values = labels.map(label => statusData[label]);
                     const total = data.total;
 
-                    // Chart: Pie avec style moderne
+                    // Objet de correspondance des statuts FR → EN pour le graphique et le tableau
+                    const statusTranslations = {
+                        "Nouvelle_demande": "New request",
+                        "Assignée": "Assigned",
+                        "offre_acceptee": "Offer accepted",
+                        "Une_offre_a_été_faite": "An offer has been made"
+                    };
+
+                    // Chart: Pie avec labels traduits
                     const ctxPie = document.getElementById('statusChart').getContext('2d');
                     new Chart(ctxPie, {
                         type: 'doughnut',
                         data: {
-                            labels: labels.map(label => label.replace(/_/g, ' ')),
+                            labels: labels.map(label => statusTranslations[label] || label.replace(/_/g, ' ')),
                             datasets: [{
                                 data: values,
                                 backgroundColor: [
@@ -423,12 +431,16 @@
                     labels.forEach(label => {
                         const count = statusData[label];
                         const percent = Math.round((count / total) * 100);
+
+                        // Traduire le label si une traduction existe, sinon afficher tel quel
+                        const translatedLabel = statusTranslations[label] || label.replace(/_/g, ' ');
+
                         const row = document.createElement('tr');
                         const colorStyle = statusColors[label] || 'background: linear-gradient(135deg, #ddd, #bbb);';
                         row.innerHTML = `
                             <td>
                                 <span class="status-badge" style="${colorStyle} color: white;">
-                                    ${label.replace(/_/g, ' ')}
+                                    ${translatedLabel}
                                 </span>
                             </td>
                             <td><strong>${count}</strong></td>
@@ -455,7 +467,7 @@
                         data: {
                             labels: moisLabels,
                             datasets: [{
-                                label: 'Demandes par mois',
+                                label: 'Requests per month',
                                 data: moisValues,
                                 borderColor: 'rgba(102, 126, 234, 1)',
                                 backgroundColor: 'rgba(102, 126, 234, 0.1)',

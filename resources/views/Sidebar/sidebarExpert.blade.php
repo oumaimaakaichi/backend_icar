@@ -6,6 +6,7 @@
     <title>Expert sidebar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
         :root {
             --sidebar-width: 280px;
@@ -330,7 +331,7 @@
             letter-spacing: -0.5px;
             margin-top: 0px
         }
-  .page-titlee {
+        .page-titlee {
             font-size: 14px;
             font-weight: 700;
             color: var(--text-color);
@@ -362,6 +363,7 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            position: relative;
         }
 
         .notification-icon {
@@ -370,16 +372,19 @@
             color: var(--text-light);
             font-size: 1.2rem;
             transition: var(--transition);
+            padding: 8px;
+            border-radius: 50%;
         }
 
         .notification-icon:hover {
             color: var(--primary-color);
+            background-color: rgba(99, 102, 241, 0.05);
         }
 
         .notification-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
+            top: 2px;
+            right: 2px;
             background-color: #ef4444;
             color: white;
             border-radius: 50%;
@@ -389,6 +394,120 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Notification Dropdown Styles */
+        .notification-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            width: 380px;
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.2s ease-out;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .notification-dropdown.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .notification-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid white;
+        }
+
+        .notification-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h5 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .notification-header small {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .notification-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+
+        .notification-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notification-item:hover {
+            background-color: rgba(99, 102, 241, 0.03);
+        }
+
+        .notification-item.unread {
+            background-color: rgba(99, 102, 241, 0.05);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .notification-message {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .notification-empty {
+            padding: 30px 20px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .notification-footer {
+            padding: 12px 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .notification-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .notification-footer a:hover {
+            text-decoration: underline;
         }
 
         .user-info {
@@ -396,6 +515,13 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .user-info:hover {
+            background-color: rgba(99, 102, 241, 0.05);
         }
 
         .user-avatar {
@@ -426,7 +552,7 @@
         .user-popup {
             position: absolute;
             top: 60px;
-            right: 30px;
+            right: 0;
             background: white;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-lg);
@@ -561,25 +687,43 @@
             .main-content, .main-header {
                 margin-left: 0;
             }
+
+            .notification-dropdown {
+                width: 320px;
+                right: -50px;
+            }
+
+            .notification-dropdown::before {
+                right: 70px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .notification-dropdown {
+                width: 280px;
+                right: -80px;
+            }
+
+            .notification-dropdown::before {
+                right: 100px;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-
-
-       <div class="sidebar-header">
-    <div class="sidebar-logo">
-        @auth('web')
-            {{ strtoupper(substr(Auth::guard('web')->user()->nom, 0, 1)) }}
-            {{ strtoupper(substr(Auth::guard('web')->user()->prenom, 0, 1)) }}
-        @else
-            ES
-        @endauth
-    </div>
-    <h3 class="sidebar-title">Expert Space</h3>
-</div>
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                @auth('web')
+                    {{ strtoupper(substr(Auth::guard('web')->user()->nom, 0, 1)) }}
+                    {{ strtoupper(substr(Auth::guard('web')->user()->prenom, 0, 1)) }}
+                @else
+                    ES
+                @endauth
+            </div>
+            <h3 class="sidebar-title">Expert Space</h3>
+        </div>
 
         <div class="sidebar-menu">
             <div class="menu-section">
@@ -600,7 +744,7 @@
 
             <div class="menu-section">
                 <div class="menu-section-title">Management</div>
-                <a  href="{{ route('expert.techniciens') }}" class="menu-link" data-page="Technician" data-breadcrumb="Home > Management > Technician">
+                <a href="{{ route('expert.techniciens') }}" class="menu-link" data-page="Technician" data-breadcrumb="Home > Management > Technician">
                     <i class="fas fa-users"></i>
                     <span>Technician</span>
                 </a>
@@ -624,53 +768,62 @@
 
     <!-- Header Section -->
     <header class="main-header">
-        <button class="toggle-sidebar" id="toggle-sidebar">
-            <i class="fas fa-bars"></i>
-        </button>
-
+        <div class="header-left">
+            <button class="toggle-sidebar" id="toggle-sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
 
         <div class="header-right">
-            <div class="notification-icon">
+            <!-- Notification Icon and Dropdown -->
+            <div class="notification-icon" id="notification-icon">
                 <i class="fas fa-bell"></i>
-                <span class="notification-badge">3</span>
+                <span class="notification-badge" id="notification-badge" style="display: none;">0</span>
             </div>
 
+            <div class="notification-dropdown" id="notification-dropdown">
+                <div class="notification-header">
+                    <h5>Notifications</h5>
+                    <small id="notification-count">0 nouvelles</small>
+                </div>
+                <div class="notification-list" id="notification-list">
+                    <div class="notification-empty">Aucune notification</div>
+                </div>
+                <div class="notification-footer">
+                    <a href="#" id="mark-all-read">Marquer tout comme lu</a>
+                </div>
+            </div>
+
+            <!-- User Info -->
             <div class="user-info" id="user-info-trigger">
                 <div class="user-avatar">
                     <i class="fas fa-user" style="font-size: 20px;color:rgb(105, 104, 104)"></i>
                 </div>
-                <div class="user-name">
+            </div>
+
+            <!-- User Popup -->
+            <div class="user-popup" id="user-popup">
+                <div class="user-popup-info">
+                    <div class="popup-user-avatar">
+                        <i class="fas fa-user" style="font-size: 20px;color:gray"></i>
+                    </div>
                     @auth('web')
-                        {{ Auth::guard('web')->user()->nom }}
+                    <div class="popup-user-name">
+                        {{ Auth::guard('web')->user()->nom }} {{ Auth::guard('web')->user()->prenom }}
+                    </div>
+                    <div class="popup-user-email">
+                        {{ Auth::guard('web')->user()->email }}
+                    </div>
                     @else
-                        Guest
+                    <div class="popup-user-name">Guest</div>
                     @endauth
                 </div>
+                <ul class="user-popup-menu">
+                   <li><a href="{{ route('profile.edit') }}"><i class="fas fa-user"></i> Profile</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                   <li><a href="{{ route('login') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
             </div>
-        </div>
-
-        <!-- User Popup -->
-        <div class="user-popup" id="user-popup">
-            <div class="user-popup-info">
-                <div class="popup-user-avatar">
-                    <i class="fas fa-user" style="font-size: 20px;color:gray"></i>
-                </div>
-                @auth('web')
-                <div class="popup-user-name">
-                    {{ Auth::guard('web')->user()->nom }} {{ Auth::guard('web')->user()->prenom }}
-                </div>
-                <div class="popup-user-email">
-                    {{ Auth::guard('web')->user()->email }}
-                </div>
-                @else
-                <div class="popup-user-name">Guest</div>
-                @endauth
-            </div>
-            <ul class="user-popup-menu">
-               <li><a href="{{ route('profile.edit') }}"><i class="fas fa-user"></i> Profile</a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-               <li><a href="{{ route('login') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-            </ul>
         </div>
     </header>
 
@@ -680,26 +833,14 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Sidebar toggle functionality
             const sidebar = document.getElementById('sidebar');
-            const sidebarToggle = document.getElementById('sidebar-toggle');
             const toggleSidebarBtn = document.getElementById('toggle-sidebar');
-
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('collapsed');
-                    const icon = this.querySelector('i');
-                    if (sidebar.classList.contains('collapsed')) {
-                        icon.classList.remove('fa-chevron-left');
-                        icon.classList.add('fa-chevron-right');
-                    } else {
-                        icon.classList.remove('fa-chevron-right');
-                        icon.classList.add('fa-chevron-left');
-                    }
-                });
-            }
 
             if (toggleSidebarBtn) {
                 toggleSidebarBtn.addEventListener('click', function() {
@@ -715,122 +856,28 @@
                 });
             }
 
-            // Function to update page title and breadcrumb based on current URL
-            function updatePageInfo() {
-                const currentPath = window.location.pathname;
-                const pageTitle = document.getElementById('page-title');
-                const pageBreadcrumb = document.getElementById('page-breadcrumb');
-                const menuLinks = document.querySelectorAll('.menu-link');
+            // Notification functionality
+            const notificationIcon = document.getElementById('notification-icon');
+            const notificationDropdown = document.getElementById('notification-dropdown');
+            const notificationBadge = document.getElementById('notification-badge');
 
-                // Define route mappings
-                const routeMappings = {
-                    '/statistiques/demandes': {  breadcrumb: 'Main > Dashboard' },
-                    '/request-choice': {  breadcrumb: 'Main > Requests' },
-                    '/demande_autorisation': {  breadcrumb: 'Main > Authorization' },
-                    '/exper/technicien': {  breadcrumb: 'Management > Technician' },
-                    '/profile': {breadcrumb: 'Management > Settings' },
-
-                };
-
-                // Find matching route
-                let matchedRoute = null;
-                for (const [route, info] of Object.entries(routeMappings)) {
-                    if (currentPath.includes(route)) {
-                        matchedRoute = info;
-                        break;
-                    }
-                }
-
-                // Update page title and breadcrumb
-                if (matchedRoute) {
-                    pageTitle.textContent = matchedRoute.title;
-
-                    const breadcrumbParts = matchedRoute.breadcrumb.split(' > ');
-                    let breadcrumbHTML = '';
-
-                    breadcrumbParts.forEach((part, index) => {
-                        if (index === breadcrumbParts.length - 1) {
-                            breadcrumbHTML += `<span class="breadcrumb-item active">${part}</span>`;
-                        } else {
-                            breadcrumbHTML += `<span class="breadcrumb-item">${part}</span>`;
-                            if (index < breadcrumbParts.length - 1) {
-                                breadcrumbHTML += `<span class="breadcrumb-separator">></span>`;
-                            }
-                        }
-                    });
-
-                    pageBreadcrumb.innerHTML = breadcrumbHTML;
-
-                    // Update active menu item
-                    menuLinks.forEach(link => {
-                        link.classList.remove('active');
-                        const linkHref = link.getAttribute('href');
-
-                        if (linkHref === currentPath ||
-                            (linkHref && currentPath.includes(linkHref.replace(window.location.origin, '')))) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
-            }
-
-            // Call on page load
-            updatePageInfo();
-
-            // Active menu item
-            const menuLinks = document.querySelectorAll(".menu-link");
-            const currentURL = window.location.pathname;
-            const pageTitle = document.getElementById('page-title');
-            const pageBreadcrumb = document.getElementById('page-breadcrumb');
-
-            menuLinks.forEach(link => {
-                if (link.getAttribute("href") === currentURL ||
-                    (link.getAttribute("href") && currentURL.includes(link.getAttribute("href").replace(window.location.origin, '')))) {
-                    link.classList.add("active");
-                }
-
-                link.addEventListener('click', function(e) {
-                    // Only prevent default for links that don't navigate
-                    if (this.getAttribute('href').startsWith('#')) {
-                        e.preventDefault();
-                    }
-
-                    // Update active menu item
-                    menuLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-
-                    // Update page title and breadcrumb
-                    const pageNameAttr = this.getAttribute('data-page');
-                    const breadcrumbAttr = this.getAttribute('data-breadcrumb');
-
-                    if (pageNameAttr) {
-                        pageTitle.textContent = pageNameAttr;
-                    }
-
-                    if (breadcrumbAttr) {
-                        const breadcrumbParts = breadcrumbAttr.split(' > ');
-                        let breadcrumbHTML = '';
-
-                        breadcrumbParts.forEach((part, index) => {
-                            if (index === breadcrumbParts.length - 1) {
-                                breadcrumbHTML += `<span class="breadcrumb-item active">${part}</span>`;
-                            } else {
-                                breadcrumbHTML += `<span class="breadcrumb-item">${part}</span>`;
-                                if (index < breadcrumbParts.length - 1) {
-                                    breadcrumbHTML += `<span class="breadcrumb-separator">></span>`;
-                                }
-                            }
-                        });
-
-                        pageBreadcrumb.innerHTML = breadcrumbHTML;
-                    }
-
-                    // Close sidebar on mobile after clicking a link
-                    if (window.innerWidth < 992) {
-                        sidebar.classList.remove('show');
+            if (notificationIcon && notificationDropdown) {
+                notificationIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    notificationDropdown.classList.toggle('show');
+                    // Recharger les notifications quand on ouvre le dropdown
+                    if (notificationDropdown.classList.contains('show')) {
+                        loadNotifications();
                     }
                 });
-            });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!notificationDropdown.contains(e.target) && e.target !== notificationIcon && !notificationIcon.contains(e.target)) {
+                        notificationDropdown.classList.remove('show');
+                    }
+                });
+            }
 
             // User popup toggle
             const userInfoTrigger = document.getElementById('user-info-trigger');
@@ -840,26 +887,183 @@
                 userInfoTrigger.addEventListener('click', function(e) {
                     e.stopPropagation();
                     userPopup.classList.toggle('show');
+                    // Fermer les autres dropdowns
+                    notificationDropdown.classList.remove('show');
                 });
 
                 // Close popup when clicking outside
                 document.addEventListener('click', function(e) {
-                    if (!userPopup.contains(e.target) && e.target !== userInfoTrigger) {
+                    if (!userPopup.contains(e.target) && e.target !== userInfoTrigger && !userInfoTrigger.contains(e.target)) {
                         userPopup.classList.remove('show');
                     }
                 });
-
-                // Logout button in popup
-                const popupLogoutButton = document.getElementById('popup-logout-button');
-                const logoutForm = document.getElementById('logout-form');
-
-                if (popupLogoutButton && logoutForm) {
-                    popupLogoutButton.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        logoutForm.submit();
-                    });
-                }
             }
+
+            // Mark all as read
+            const markAllReadBtn = document.getElementById('mark-all-read');
+            if (markAllReadBtn) {
+                markAllReadBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    markAllAsRead();
+                });
+            }
+
+            // Load notifications function
+            function loadNotifications() {
+                fetch('/api/notifications')
+                .then(res => {
+                    if (!res.ok) throw new Error('Network response was not ok');
+                    return res.json();
+                })
+                .then(data => {
+                    const list = document.getElementById('notification-list');
+                    const countElement = document.getElementById('notification-count');
+                    const notifications = data.notifications || [];
+
+                    if (notifications.length === 0) {
+                        list.innerHTML = '<div class="notification-empty">Aucune notification</div>';
+                        countElement.textContent = '0 nouvelles';
+                    } else {
+                        list.innerHTML = notifications.map(n => {
+                            const message = n.data?.message || n.message || 'Nouvelle notification';
+                            const time = formatDate(n.created_at);
+                            const unreadClass = !n.read_at ? 'unread' : '';
+                            return `
+                                <div class="notification-item ${unreadClass}" data-id="${n.id}">
+                                    <div class="notification-message">${message}</div>
+                                    <div class="notification-time">${time}</div>
+                                </div>
+                            `;
+                        }).join('');
+
+                        const unreadCount = notifications.filter(n => !n.read_at).length;
+                        countElement.textContent = `${unreadCount} nouvelle${unreadCount > 1 ? 's' : ''}`;
+                    }
+
+                    // Update badge
+                    const unreadCount = data.unread_count || 0;
+                    notificationBadge.textContent = unreadCount;
+                    notificationBadge.style.display = unreadCount > 0 ? 'flex' : 'none';
+
+                    // Add click events to mark as read
+                    document.querySelectorAll('.notification-item').forEach(item => {
+                        item.addEventListener('click', function() {
+                            const id = this.dataset.id;
+                            markAsRead(id);
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading notifications:', error);
+                    const list = document.getElementById('notification-list');
+                    list.innerHTML = '<div class="notification-empty">Erreur de chargement</div>';
+                });
+            }
+
+            function markAsRead(id) {
+                fetch(`/api/notifications/${id}/read`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(res => {
+                    if (res.ok) {
+                        loadNotifications();
+                    }
+                })
+                .catch(error => console.error('Error marking as read:', error));
+            }
+
+            function markAllAsRead() {
+                fetch('/api/notifications/mark-all-read', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(res => {
+                    if (res.ok) {
+                        loadNotifications();
+                    }
+                })
+                .catch(error => console.error('Error marking all as read:', error));
+            }
+
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                const now = new Date();
+                const diff = Math.floor((now - date)/1000);
+
+                if (diff < 60) return "À l'instant";
+                if (diff < 3600) return `Il y a ${Math.floor(diff/60)} min`;
+                if (diff < 86400) return `Il y a ${Math.floor(diff/3600)} h`;
+                if (diff < 604800) return `Il y a ${Math.floor(diff/86400)} j`;
+                return date.toLocaleDateString('fr-FR');
+            }
+
+            // Pusher for real-time notifications
+            try {
+                const pusher = new Pusher('{{ config("broadcasting.connections.pusher.key") }}', {
+                    cluster: '{{ config("broadcasting.connections.pusher.options.cluster") }}',
+                    forceTLS: true
+                });
+
+                const channel = pusher.subscribe('notifications.global');
+                channel.bind('notification.sent', function(data) {
+                    // Show toast notification
+                    Toastify({
+                        text: data.data?.message || data.message || "Nouvelle notification",
+                        duration: 5000,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "linear-gradient(to right, #4361ee, #3f37c9)",
+                        onClick: function() {
+                            notificationDropdown.classList.add('show');
+                            loadNotifications();
+                        }
+                    }).showToast();
+
+                    // Reload notifications
+                    loadNotifications();
+                });
+            } catch (error) {
+                console.error('Pusher initialization error:', error);
+            }
+
+            // Initial load
+            loadNotifications();
+
+            // Auto-refresh notifications every 30 seconds
+            setInterval(loadNotifications, 30000);
+
+            // Active menu item
+            const menuLinks = document.querySelectorAll(".menu-link");
+            const currentURL = window.location.pathname;
+
+            menuLinks.forEach(link => {
+                if (link.getAttribute("href") === currentURL ||
+                    (link.getAttribute("href") && currentURL.includes(link.getAttribute("href").replace(window.location.origin, '')))) {
+                    link.classList.add("active");
+                }
+
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                    }
+
+                    menuLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+
+                    if (window.innerWidth < 992) {
+                        sidebar.classList.remove('show');
+                    }
+                });
+            });
 
             // Logout button in sidebar
             const logoutButton = document.getElementById('logout-button');
@@ -872,7 +1076,7 @@
 
             // Close sidebar when clicking outside on mobile
             document.addEventListener('click', function(e) {
-                if (window.innerWidth < 992 && !sidebar.contains(e.target) && e.target !== mobileToggle) {
+                if (window.innerWidth < 992 && !sidebar.contains(e.target)) {
                     sidebar.classList.remove('show');
                 }
             });

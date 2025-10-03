@@ -69,7 +69,7 @@
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            width: 1200px;
+            width: 1350px;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
         }
 
@@ -324,11 +324,21 @@
                         <span class="badge bg-light text-dark">{{ $demande['categorie_titre'] }}</span>
                     </td>
                     <td > {{ $demande['forfait_titre']  }}</td>
-                    <td>
+                   <td>
+    <span class="badge bg-info bg-opacity-10 text-info">
+        <i class="fas fa-{{ 
+            $demande['type_emplacement'] == 'maison' ? 'home' : 
+            ($demande['type_emplacement'] == 'fixe' ? 'wrench' : 
+            ($demande['type_emplacement'] == 'en_travail' ? 'building' : 'map-marker-alt')) 
+        }} me-1"></i>
 
-                            <span class="badge bg-info bg-opacity-10 text-info"><i class="fas fa-home me-1"></i> {{$demande['type_emplacement']}}</span>
-
-                    </td>
+        {{
+            $demande['type_emplacement'] == 'maison' ? 'Home' : 
+            ($demande['type_emplacement'] == 'fixe' ? 'Workshop' : 
+            ($demande['type_emplacement'] == 'en_travail' ? 'Workplace' : $demande['type_emplacement'])) 
+        }}
+    </span>
+</td>
                     <td>
                         @if($demande['date_maintenance'])
                             <div class="fw-semibold">{{ \Carbon\Carbon::parse($demande['date_maintenance'])->format('d/m/Y') }}</div>
@@ -348,7 +358,7 @@
                         @if($demande['status'] == 'Nouvelle_demande')
                             <span class="badge-status badge-new"><i class="fas fa-clock me-1"></i> Nouvelle</span>
                         @elseif($demande['status'] == 'Assignée')
-                            <span class="badge-status badge-assigned"><i class="fas fa-user-check me-1"></i> Assignée</span>
+                            <span class="badge-status badge-assigned"><i class="fas fa-user-check me-1"></i> Assigned</span>
                         @elseif($demande['status'] == 'Une_offre_a_été_faite')
                             <span class="badge-status badge-offer"><i class="fas fa-file-invoice me-1"></i> Offre</span>
                         @elseif($demande['status'] == 'completed')

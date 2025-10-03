@@ -640,10 +640,15 @@
                                 Status
                             </div>
                             <div class="info-value">
-                                <span class="status-badge-modern status-{{ str_replace(' ', '_', $demande->status) }}">
-                                    <i class="fas fa-circle"></i>
-                                    {{ str_replace('_', ' ', $demande->status) }}
-                                </span>
+                                @if($demande['status'] == 'en_attente')
+                            <span class="badge-status badge-new"><i class="fas fa-clock me-1"></i> New</span>
+                        @elseif($demande['status'] == 'Assignée')
+                            <span class="badge-status badge-assigned"><i class="fas fa-user-check me-1"></i> Assigned</span>
+                        @elseif($demande['status'] == 'Une_offre_a_été_faite')
+                            <span class="badge-status badge-offer"><i class="fas fa-file-invoice me-1"></i> Offer Made</span>
+                        @elseif($demande['status'] == 'completed')
+                            <span class="badge-status badge-completed"><i class="fas fa-check-circle me-1"></i> Completed</span>
+                            @endif
                             </div>
                         </div>
                         <div class="info-item">
@@ -747,47 +752,36 @@
 
         <!-- Sidebar -->
         <div class="col-lg-4">
-            <!-- Price Proposal -->
 
-
-            <!-- Package -->
 
             <!-- Assign Technicians -->
-            @if($demande->status === 'Nouvelle_demande')
-            <div class="modern-card animate-slide-up animate-delay-3">
-                <div class="card-header-modern">
-                    <h5 class="card-title">
-                        <i class="fas fa-user-plus"></i>
-                        Assign Technicians
-                    </h5>
-                </div>
-                <div class="card-body-modern">
-                    <div class="mb-3">
-                        <label for="nombre_techniciens" class="form-label-modern">Number of Technicians</label>
-                        <input type="number" min="1" max="{{ $techniciens->count() }}" class="form-control form-control-modern"
-                               id="nombre_techniciens" value="1">
-                    </div>
-                    <form id="assignTechniciensForm">
-                        <div id="techniciens_select_container">
-                            <div class="technician-select-container">
-                                <label class="form-label-modern">Technician 1</label>
-                                <select class="form-control form-control-modern" name="techniciens[]" required>
-                                    <option value="" disabled selected>Select a Technician</option>
-                                    @foreach($techniciens as $tech)
-                                        <option value="{{ $tech->id }}">{{ $tech->prenom ?? '' }} {{ $tech->nom ?? $tech->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-success-modern btn-modern w-100 mt-3">
-                            <i class="fas fa-user-plus" style="color: white"></i>
-                            <b style="color: white">Assign</b>
-                        </button>
-                    </form>
-                </div>
+          @if($demande->status === 'Nouvelle_demande')
+<div class="modern-card animate-slide-up animate-delay-3">
+    <div class="card-header-modern">
+        <h5 class="card-title">
+            <i class="fas fa-user-plus"></i>
+            Assign Technician
+        </h5>
+    </div>
+    <div class="card-body-modern">
+        <form id="assignTechniciensForm">
+            <div class="mb-3">
+                <label class="form-label">Select Technician</label>
+                <select class="form-select" name="technicien_id" required aria-label="Select Technician">
+                    <option value="" disabled selected>-- Select Technician --</option>
+                    @foreach($techniciens as $tech)
+                        <option value="{{ $tech->id }}">{{ $tech->prenom ?? '' }} {{ $tech->nom ?? $tech->name }}</option>
+                    @endforeach
+                </select>
             </div>
-            @endif
+
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-user-plus me-2"></i>Assign Technician
+            </button>
+        </form>
+    </div>
+</div>
+@endif
         </div>
     </div>
 </div>
@@ -897,55 +891,54 @@
 
         // Gestion de l'assignation des techniciens
         const assignForm = document.getElementById('assignTechniciensForm');
-        if (assignForm) {
-            assignForm.addEventListener('submit', function(e) {
-                e.preventDefault();
 
-                const selects = this.querySelectorAll('select[name="techniciens[]"]');
-                const techniciensData = Array.from(selects).map(select => {
-                    return {
-                        id_technicien: parseInt(select.value),
-                        nom: select.options[select.selectedIndex].text
-                    };
-                });
+if (assignForm) {
+    assignForm.addEventListener('submit', function(e) {
+        e.preventDefault();
 
-                fetch("{{ route('demandes.updateTechniciens', $demande->id) }}", {
-                    method: 'put',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ techniciens: techniciensData }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Succès',
-                            text: data.message,
-                            confirmButtonColor: '#4361ee',
-                        }).then(() => window.location.reload());
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Erreur',
-                            text: data.message || 'Une erreur est survenue',
-                            confirmButtonColor: '#4361ee',
-                        });
-                    }
-                })
-                .catch(error => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: 'Erreur réseau',
-                        confirmButtonColor: '#4361ee',
-                    });
+        const select = this.querySelector('select[name="technicien_id"]');
+        const techniciensData = [{
+            id_technicien: parseInt(select.value),
+            nom: select.options[select.selectedIndex].text
+        }];
+
+        fetch("{{ route('demandes.updateTechniciens', $demande->id) }}", {
+            method: 'PUT',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ techniciens: techniciensData }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: data.message,
+                    confirmButtonColor: '#4361ee',
+                }).then(() => window.location.reload());
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message || 'An error occurred',
+                    confirmButtonColor: '#4361ee',
                 });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Network Error',
+                text: 'Unable to contact the server',
+                confirmButtonColor: '#4361ee',
             });
-        }
+        });
+    });
+}
 
         // Gestion du formulaire de prix
         const prixForm = document.getElementById('prixForm');

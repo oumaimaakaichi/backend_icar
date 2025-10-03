@@ -577,17 +577,18 @@
                                                 title="View details">
                                             <i class="fas fa-eye"></i>
                                         </button>
-
-                                        <button class="action-btn btn-reply reply-ticket"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#replyModal"
-                                                data-id="{{ $ticket->id }}"
-                                                data-titre="{{ $ticket->titre }}"
-                                                data-user="{{ $ticket->user ? $ticket->user->prenom . ' ' . $ticket->user->nom : 'Utilisateur inconnu' }}"
-                                               data-message="{{ $ticket->message }}"
-                                                title="Reply to Ticket">
-                                            <i class="fas fa-reply"></i>
-                                        </button>
+@if($ticket->statut === "Pending")
+    <button class="action-btn btn-reply reply-ticket"
+            data-bs-toggle="modal"
+            data-bs-target="#replyModal"
+            data-id="{{ $ticket->id }}"
+            data-titre="{{ $ticket->titre }}"
+            data-user="{{ $ticket->user ? $ticket->user->prenom . ' ' . $ticket->user->nom : 'Utilisateur inconnu' }}"
+            data-message="{{ $ticket->message }}"
+            title="Reply to Ticket">
+        <i class="fas fa-reply"></i>
+    </button>
+@endif
 
                                         @if($ticket->statut != 'ferme')
                                         <button class="action-btn btn-close-ticket close-ticket"
@@ -696,11 +697,11 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label-modern">Message</label>
-                        <textarea class="form-control form-control-modern readonly-field" id="view-message" rows="4" readonly></textarea>
+                        <textarea class="form-control form-control-modern readonly-field" id="view-message" rows="2" readonly></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label-modern">Current Response</label>
-                        <textarea class="form-control form-control-modern readonly-field" id="view-reponse" rows="3" readonly placeholder="No response yet"></textarea>
+                        <textarea class="form-control form-control-modern readonly-field" id="view-reponse" rows="6" readonly placeholder="No response yet"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1139,7 +1140,7 @@
                 <div class="d-flex justify-content-center align-items-center h-100">
                     <div class="text-center text-muted">
                         <i class="fas fa-robot fa-2x mb-2"></i>
-                        <p>Cliquez sur "Générer une réponse" pour obtenir une suggestion</p>
+                        <p>Cliquez sur “Generate a response” to get a suggestion</p>
                     </div>
                 </div>
             `);
@@ -1188,7 +1189,7 @@
                     // Activer les boutons d'action
                     $('#use-ai-response, #regenerate-ai-response').prop('disabled', false);
 
-                    showToast('Réponse IA générée avec succès!', 'success');
+                    showToast('AI response generated successfully!', 'success');
                 },
                 error: function(xhr) {
                     aiResponseContainer.removeClass('loading').html(`
@@ -1288,7 +1289,7 @@
                         _token: $('input[name="_token"]').val()
                     },
                     success: function(response) {
-                        showToast(response.message || 'Ticket fermé avec succès!', 'success');
+                        showToast(response.message || 'Ticket closed successfully!', 'success');
                         setTimeout(() => location.reload(), 1500);
                     },
                     error: function(xhr) {
@@ -1325,7 +1326,7 @@
                     _token: $('input[name="_token"]').val()
                 },
                 success: function(response) {
-                    showToast(response.message || 'Réponse enregistrée avec succès!', 'success');
+                    showToast(response.message || 'Response saved successfully!', 'success');
                     $('#replyModal').modal('hide');
                     setTimeout(() => location.reload(), 2000);
                 },

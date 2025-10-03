@@ -58,9 +58,9 @@ class AuthController extends Controller
 
     if ($successfulGuard && $user) {
         // Check if account is active
-        if (($successfulGuard === 'atelier' && !$user->is_active) || 
+        if (($successfulGuard === 'atelier' && !$user->is_active) ||
             ($successfulGuard === 'web' && $user->role === 'expert' && !$user->isActive)) {
-            
+
             Auth::guard($successfulGuard)->logout();
             return back()->with('inactive', 'Your account is not yet activated. Please wait for administrator approval.');
         }
@@ -72,7 +72,7 @@ class AuthController extends Controller
         switch ($successfulGuard) {
             case 'web':
                 if ($user->role === 'admin') {
-                    return redirect()->route('technicien');
+                    return redirect()->route('statistiques');
                 } elseif ($user->role === 'expert' && $user->isActive) {
                     return redirect()->route('demandes.statistics');
                 } elseif ($user->role === 'Responsable_piece') {

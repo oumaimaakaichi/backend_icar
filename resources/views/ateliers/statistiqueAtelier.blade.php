@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -14,23 +16,41 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             background: #ffffff;
+            color: #0f172a;
             min-height: 100vh;
-            color: #333;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Subtle background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 15% 25%, rgba(79, 70, 229, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 85% 75%, rgba(236, 72, 153, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .dashboard-container {
-            margin-left: 0px;
-            margin-top: 50px;
-            margin-right: 40px;
-            padding: 0rem;
-            animation: slideIn 0.8s ease-out;
-            width: 1400px
+width: 1500px;
+            margin-top: 100px;
+margin-right: 40px;
+
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            animation: fadeIn 0.6s ease-out;
         }
 
-        @keyframes slideIn {
+        @keyframes fadeIn {
             from {
                 opacity: 0;
                 transform: translateY(20px);
@@ -41,159 +61,191 @@
             }
         }
 
-        .glass-card {
-            background: #ffffff;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+        /* Header Section */
+        .page-header {
+             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 30px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+
         }
 
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
         }
 
-        .header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
+        @keyframes patternSlide {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
         }
 
-        .header h1 {
-            color: #1f2937;
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-shadow: none;
-            background: linear-gradient(45deg, #3f4d87, #4e6a89);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-top: 50px
+        .page-header-content {
+            position: relative;
+            z-index: 2;
         }
 
-        .timestamp {
-            color: #6b7280;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .page-header h1 {
+            color: rgb(50, 45, 45);
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.03em;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
         }
 
+        .page-header p {
+            color: rgba(145, 140, 140, 0.9);
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+
+        /* Modern Cards */
+        .card-modern {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #4f46e5, #ec4899);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.4s ease;
+        }
+
+        .card-modern:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            border-color: #c7d2fe;
+        }
+
+        .card-modern:hover::before {
+            transform: scaleY(1);
+        }
+
+        /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.75rem;
             margin-bottom: 3rem;
         }
 
-        .stat-card {
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(0, 0, 0, 0.05), transparent);
-            transform: rotate(45deg);
-            transition: all 0.6s ease;
-            opacity: 0;
-        }
-
-        .stat-card:hover::before {
-            animation: shimmer 1.5s ease-in-out;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
-        }
-
-        .stat-header {
+        .stat-card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 1.5rem;
         }
 
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 15px;
+        .stat-icon-box {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            animation: pulse 2s infinite;
-            color: white
+            font-size: 1.75rem;
+            color: white;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .card-modern:hover .stat-icon-box {
+            transform: scale(1.1) rotate(-5deg);
         }
 
         .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1f2937;
-            text-shadow: none;
+            font-size: 2.75rem;
+            font-weight: 900;
+            color: #0f172a;
             line-height: 1;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
         }
 
         .stat-label {
-            color: #6b7280;
-            font-size: 0.9rem;
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
         }
 
-        .status-indicators {
+        .status-badges {
             display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+            gap: 0.875rem;
             flex-wrap: wrap;
         }
 
-        .status-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            font-size: 0.8rem;
-            font-weight: 600;
+        .badge-status {
+            padding: 0.625rem 1.125rem;
+            border-radius: 50px;
+            font-size: 0.8125rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             transition: all 0.3s ease;
+            border: 1px solid;
         }
 
-        .status-badge:hover {
+        .badge-status:hover {
             transform: scale(1.05);
         }
 
-        .active-badge {
-            background: rgba(16, 185, 129, 0.2);
-            color: #10B981;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
         }
 
-        .inactive-badge {
-            background: rgba(239, 68, 68, 0.2);
-            color: #EF4444;
-            border: 1px solid rgba(239, 68, 68, 0.3);
+        .badge-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            border-color: rgba(16, 185, 129, 0.2);
         }
 
+        .badge-inactive {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .badge-pending {
+            background: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .badge-assigned {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        /* Progress Section */
         .progress-section {
             margin-top: 1.5rem;
         }
@@ -202,168 +254,141 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
-            color: #4b5563;
+            margin-bottom: 0.75rem;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
-        .progress-bar {
+        .progress-bar-container {
             width: 100%;
-            height: 8px;
-            background: white;
-            border-radius: 4px;
+            height: 10px;
+            background: #f1f5f9;
+            border-radius: 5px;
             overflow: hidden;
             margin-top: 0.5rem;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 1.5s ease-out;
             position: relative;
         }
 
-        .progress-fill::after {
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill::after {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-            animation: progressShine 2s ease-out;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s ease-out;
         }
 
-        @keyframes progressShine {
+        @keyframes shimmer {
             0% { left: -100%; }
             100% { left: 100%; }
         }
 
-        .charts-section {
+        /* Charts Section */
+        .charts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 1.75rem;
             margin-bottom: 3rem;
         }
 
         .chart-card {
-            padding: 2rem;
             min-height: 450px;
         }
 
         .chart-header {
             margin-bottom: 2rem;
             text-align: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .chart-title {
-            color: #1f2937;
+            color: #0f172a;
             font-size: 1.5rem;
-            font-weight: 600;
+            font-weight: 800;
             margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
         }
 
         .chart-subtitle {
-            color: #6b7280;
+            color: #64748b;
             font-size: 0.9rem;
+            font-weight: 500;
         }
 
-        .chart-container {
+        .chart-wrapper {
             position: relative;
-            height: 300px;
-            background: white;
-            border-radius: 15px;
+            height: 320px;
             padding: 1rem;
         }
 
+        /* Activity Section */
         .activity-section {
-            padding: 2rem;
             margin-bottom: 2rem;
         }
 
-        .activity-header {
+        .section-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
-        .activity-title {
-            color: #1f2937;
-            font-size: 1.8rem;
-            font-weight: 600;
+        .section-title {
+            color: #0f172a;
+            font-size: 2rem;
+            font-weight: 800;
             margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
         }
 
-        .activity-subtitle {
-            color: #6b7280;
+        .section-subtitle {
+            color: #64748b;
             font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .activity-item {
             display: flex;
             align-items: flex-start;
-            gap: 1rem;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
+            gap: 1.25rem;
+            padding: 1.75rem;
             background: white;
-            border-radius: 15px;
-            border-left: 4px solid transparent;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
             transition: all 0.3s ease;
-            animation: slideInRight 0.6s ease-out;
+            animation: slideIn 0.5s ease-out;
         }
 
         .activity-item:hover {
-            background: #f3f4f6;
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: #f8fafc;
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
         }
 
-        .activity-item.new { border-left-color: #3B82F6; }
-        .activity-item.update { border-left-color: #10B981; }
-        .activity-item.profile { border-left-color: #8B5CF6; }
+        .activity-item.new { border-left: 4px solid #3b82f6; }
+        .activity-item.update { border-left: 4px solid #10b981; }
+        .activity-item.profile { border-left: 4px solid #8b5cf6; }
 
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-
-        .activity-content h4 {
-            color: #1f2937;
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .activity-content p {
-            color: #6b7280;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .activity-time {
-            color: #9ca3af;
-            font-size: 0.8rem;
-        }
-
-        @keyframes fadeInUp {
+        @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
+                transform: translateX(-20px);
             }
             to {
                 opacity: 1;
@@ -371,143 +396,216 @@
             }
         }
 
-        .floating-elements {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
+        .activity-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
         }
 
-        .floating-element {
-            position: absolute;
-            opacity: 0.1;
-            animation: float 6s ease-in-out infinite;
+        .activity-content h4 {
+            color: #0f172a;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.375rem;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+        .activity-content p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
         }
 
-        .view-all-btn {
+        .activity-time {
+            color: #94a3b8;
+            font-size: 0.8125rem;
+            font-weight: 500;
+        }
+
+        /* Button */
+        .btn-view-all {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.625rem;
             padding: 1rem 2rem;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
             color: white;
             text-decoration: none;
-            border-radius: 25px;
-            font-weight: 600;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9375rem;
             transition: all 0.3s ease;
-            margin-top: 1rem;
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.25);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .view-all-btn:hover {
+        .btn-view-all:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            background: linear-gradient(45deg, #764ba2, #667eea);
+            box-shadow: 0 12px 32px rgba(79, 70, 229, 0.35);
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
         }
 
-        @media (max-width: 768px) {
+        .btn-container {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1600px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
             .dashboard-container {
                 margin-left: 0;
-                margin-right: 0;
-                padding: 1rem;
+                margin-right: 20px;
+                padding: 1.5rem;
+                margin-top: 30px;
             }
-            
-            .header h1 {
+
+            .page-header {
+                padding: 2rem;
+            }
+
+            .page-header h1 {
                 font-size: 2rem;
             }
-            
+
             .stats-grid {
                 grid-template-columns: 1fr;
-                gap: 1rem;
             }
-            
-            .charts-section {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+        }
+
+        @media (max-width: 576px) {
+            .page-header h1 {
+                font-size: 1.75rem;
+            }
+
+            .stat-number {
+                font-size: 2.25rem;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Floating Background Elements -->
-    <div class="floating-elements">
-        <div class="floating-element" style="top: 10%; left: 10%; font-size: 2rem;">⚡</div>
-        <div class="floating-element" style="top: 20%; right: 10%; font-size: 1.5rem; animation-delay: -2s;">🔧</div>
-        <div class="floating-element" style="bottom: 20%; left: 15%; font-size: 1.8rem; animation-delay: -4s;">👥</div>
-        <div class="floating-element" style="top: 60%; right: 20%; font-size: 2.2rem; animation-delay: -1s;">📊</div>
-    </div>
-
     @include('Sidebar.sidebarAtelier')
 
-    <div class="dashboard-container" style="margin-top: 100px">
+    <div class="dashboard-container">
         <!-- Header -->
-        
+        <div class="page-header">
+            <div class="page-header-content">
+                <h1><i class="fas fa-chart-line me-3"></i>Workshop Dashboard</h1>
+                <p>Comprehensive overview of specializations and operations</p>
+            </div>
+        </div>
 
-        <!-- Stats Cards -->
+        <!-- Maintenance Requests Cards -->
         <div class="stats-grid">
-            <!-- Techniciens Card -->
-            <div class="glass-card stat-card">
-                <div class="stat-header">
+            <div class="card-modern">
+                <div class="stat-card-header">
                     <div>
-                        <div class="stat-label">Techniciens</div>
-                        <div class="stat-number">{{ $stats['techniciens']['total'] }}</div>
+                        <div class="stat-label">Known Failures</div>
+                        <div class="stat-number">{{ $stats['demandes']['total'] }}</div>
                     </div>
-                    <div class="stat-icon" style="background: linear-gradient(45deg, #3B82F6, #1E40AF);">
-                        <i class="fas fa-tools"></i>
+                    <div class="stat-icon-box" style="background: linear-gradient(135deg, #6c889a, #5a7a8e);">
+                        <i class="fas fa-clipboard-list"></i>
                     </div>
                 </div>
-                <div class="status-indicators">
-                    <div class="status-badge active-badge">
-                        <div style="width: 8px; height: 8px; background: #10B981; border-radius: 50%;"></div>
-                        {{ $stats['techniciens']['actifs'] }} Actifs
+                <div class="status-badges">
+                    <div class="badge-status badge-pending">
+                        <div class="status-dot" style="background: #3b82f6;"></div>
+                        {{ $stats['demandes']['en_attente'] }} Pending
                     </div>
-                    <div class="status-badge inactive-badge">
-                        <div style="width: 8px; height: 8px; background: #EF4444; border-radius: 50%;"></div>
-                        {{ $stats['techniciens']['inactifs'] }} Inactifs
+                    <div class="badge-status badge-assigned">
+                        <div class="status-dot" style="background: #10b981;"></div>
+                        {{ $stats['demandes']['assignees'] }} Assigned
                     </div>
                 </div>
             </div>
 
-            <!-- Employés Card -->
-            <div class="glass-card stat-card">
-                <div class="stat-header">
+            <div class="card-modern">
+                <div class="stat-card-header">
+                    <div>
+                        <div class="stat-label">Unknown Failures</div>
+                        <div class="stat-number">{{ $stats['demandesIN']['total'] }}</div>
+                    </div>
+                    <div class="stat-icon-box" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                </div>
+                <div class="status-badges">
+                    <div class="badge-status badge-pending">
+                        <div class="status-dot" style="background: #3b82f6;"></div>
+                        {{ $stats['demandesIN']['en_attente'] }} Pending
+                    </div>
+                    <div class="badge-status badge-assigned">
+                        <div class="status-dot" style="background: #10b981;"></div>
+                        {{ $stats['demandesIN']['assignees'] }} Assigned
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff Statistics -->
+        <div class="stats-grid">
+            <div class="card-modern">
+                <div class="stat-card-header">
+                    <div>
+                        <div class="stat-label">Technicians</div>
+                        <div class="stat-number">{{ $stats['techniciens']['total'] }}</div>
+                    </div>
+                    <div class="stat-icon-box" style="background: linear-gradient(135deg, #3b82f6, #1e40af);">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                </div>
+                <div class="status-badges">
+                    <div class="badge-status badge-active">
+                        <div class="status-dot" style="background: #10b981;"></div>
+                        {{ $stats['techniciens']['actifs'] }} Active
+                    </div>
+                    <div class="badge-status badge-inactive">
+                        <div class="status-dot" style="background: #ef4444;"></div>
+                        {{ $stats['techniciens']['inactifs'] }} Inactive
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-modern">
+                <div class="stat-card-header">
                     <div>
                         <div class="stat-label">Clients</div>
                         <div class="stat-number">{{ $stats['employes']['total'] }}</div>
                     </div>
-                    <div class="stat-icon" style="background: linear-gradient(45deg, #10B981, #059669);">
+                    <div class="stat-icon-box" style="background: linear-gradient(135deg, #10b981, #059669);">
                         <i class="fas fa-users"></i>
                     </div>
                 </div>
-                <div class="status-indicators">
-                    <div class="status-badge active-badge">
-                        <div style="width: 8px; height: 8px; background: #10B981; border-radius: 50%;"></div>
-                        {{ $stats['employes']['actifs'] }} Actifs
+                <div class="status-badges">
+                    <div class="badge-status badge-active">
+                        <div class="status-dot" style="background: #10b981;"></div>
+                        {{ $stats['employes']['actifs'] }} Active
                     </div>
-                    <div class="status-badge inactive-badge">
-                        <div style="width: 8px; height: 8px; background: #EF4444; border-radius: 50%;"></div>
-                        {{ $stats['employes']['inactifs'] }} Inactifs
+                    <div class="badge-status badge-inactive">
+                        <div class="status-dot" style="background: #ef4444;"></div>
+                        {{ $stats['employes']['inactifs'] }} Inactive
                     </div>
                 </div>
             </div>
 
-            <!-- Total Personnel Card -->
-            <div class="glass-card stat-card">
-                <div class="stat-header">
+            <div class="card-modern">
+                <div class="stat-card-header">
                     <div>
-                        <div class="stat-label">Personnel Total</div>
+                        <div class="stat-label">Total Staff</div>
                         <div class="stat-number">{{ $stats['total_personnel'] }}</div>
                     </div>
-                    <div class="stat-icon" style="background: linear-gradient(45deg, #8B5CF6, #7C3AED);">
+                    <div class="stat-icon-box" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
                         <i class="fas fa-chart-pie"></i>
                     </div>
                 </div>
@@ -518,189 +616,222 @@
                         $percentEmp = round(($stats['employes']['total'] / $total) * 100);
                     @endphp
                     <div class="progress-item">
-                        <span>Techniciens</span>
+                        <span>Technicians</span>
                         <span>{{ $percentTech }}%</span>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: {{ $percentTech }}%; background: linear-gradient(45deg, #3B82F6, #1E40AF);"></div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: {{ $percentTech }}%; background: linear-gradient(90deg, #3b82f6, #1e40af);"></div>
                     </div>
-                    <div class="progress-item">
+                    <div class="progress-item" style="margin-top: 1rem;">
                         <span>Clients</span>
                         <span>{{ $percentEmp }}%</span>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: {{ $percentEmp }}%; background: linear-gradient(45deg, #10B981, #059669);"></div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: {{ $percentEmp }}%; background: linear-gradient(90deg, #10b981, #059669);"></div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Charts Section -->
-        <div class="charts-section">
-            <!-- Pie Chart -->
-            <div class="glass-card chart-card">
+        <div class="charts-grid">
+            <div class="card-modern chart-card">
                 <div class="chart-header">
-                    <h3 class="chart-title">Répartition du Personnel</h3>
-                    <p class="chart-subtitle">Proportion entre Techniciens et Clients</p>
+                    <h3 class="chart-title">Request Progress</h3>
+                    <p class="chart-subtitle">Number of Requests per Month ({{ date('Y') }})</p>
                 </div>
-                <div class="chart-container">
+                <div class="chart-wrapper">
+                    <canvas id="demandesChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card-modern chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Staff Distribution</h3>
+                    <p class="chart-subtitle">Ratio of Technicians to Clients</p>
+                </div>
+                <div class="chart-wrapper">
                     <canvas id="personnelChart"></canvas>
                 </div>
             </div>
 
-            <!-- Bar Chart -->
-            <div class="glass-card chart-card">
-                <div class="chart-header">
-                    <h3 class="chart-title">Statut Actif/Inactif</h3>
-                    <p class="chart-subtitle">Comparaison entre les différents statuts</p>
-                </div>
-                <div class="chart-container">
-                    <canvas id="statusChart"></canvas>
-                </div>
-            </div>
+
         </div>
 
         <!-- Activity Section -->
-        <div class="glass-card activity-section">
-            <div class="activity-header">
-                <h3 class="activity-title">Activité Récente</h3>
-                <p class="activity-subtitle">Dernières modifications dans le système</p>
+        <div class="card-modern activity-section">
+            <div class="section-header">
+                <h3 class="section-title">Recent Activity</h3>
+                <p class="section-subtitle">Latest Changes in the System</p>
             </div>
-            
-            <div class="activity-item new">
-                <div class="activity-icon" style="background: rgba(59, 130, 246, 0.2); color: #3B82F6;">
-                    <i class="fas fa-plus"></i>
+
+            <div class="activity-list">
+                <div class="activity-item new">
+                    <div class="activity-icon-wrapper" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6;">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>New Technician Added</h4>
+                        <p>Jean Dupont was added to the system</p>
+                        <span class="activity-time">2 hours ago</span>
+                    </div>
                 </div>
-                <div class="activity-content">
-                    <h4>Nouveau technicien ajouté</h4>
-                    <p>Jean Dupont a été ajouté au système</p>
-                    <span class="activity-time">Il y a 2 heures</span>
+
+                <div class="activity-item update">
+                    <div class="activity-icon-wrapper" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Status Change</h4>
+                        <p>Marie Martin marked as inactive</p>
+                        <span class="activity-time">5 hours ago</span>
+                    </div>
+                </div>
+
+                <div class="activity-item profile">
+                    <div class="activity-icon-wrapper" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Profile Updated</h4>
+                        <p>Pierre Bernard updated his information</p>
+                        <span class="activity-time">1 day ago</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="activity-item update">
-                <div class="activity-icon" style="background: rgba(16, 185, 129, 0.2); color: #10B981;">
-                    <i class="fas fa-edit"></i>
-                </div>
-                <div class="activity-content">
-                    <h4>Changement de statut</h4>
-                    <p>Marie Martin marquée comme inactive</p>
-                    <span class="activity-time">Il y a 5 heures</span>
-                </div>
-            </div>
-
-            <div class="activity-item profile">
-                <div class="activity-icon" style="background: rgba(139, 92, 246, 0.2); color: #8B5CF6;">
-                    <i class="fas fa-user-edit"></i>
-                </div>
-                <div class="activity-content">
-                    <h4>Profil mis à jour</h4>
-                    <p>Pierre Bernard a modifié ses informations</p>
-                    <span class="activity-time">Il y a 1 jour</span>
-                </div>
-            </div>
-
-            <div style="text-align: center;">
-                <a href="#" class="view-all-btn">
+            <div class="btn-container">
+                <a href="#" class="btn-view-all">
                     <i class="fas fa-eye"></i>
-                    Voir toute l'activité
+                    View All Activity
                 </a>
             </div>
         </div>
     </div>
 
     <script>
-        // Personnel Pie Chart
         document.addEventListener('DOMContentLoaded', function() {
-            const personnelCtx = document.getElementById('personnelChart').getContext('2d');
-            
-            const personnelChart = new Chart(personnelCtx, {
-                type: 'doughnut',
+            // Requests Line Chart
+            const demandesCtx = document.getElementById('demandesChart').getContext('2d');
+            const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const demandesData = Array(12).fill(0);
+
+            @foreach ($stats['demandes_par_mois'] as $mois => $total)
+                demandesData[{{ $mois - 1 }}] = {{ $total }};
+            @endforeach
+
+            new Chart(demandesCtx, {
+                type: 'line',
                 data: {
-                    labels: ['Techniciens', 'Clients'],
+                    labels: monthLabels,
                     datasets: [{
-                        data: [{{ $stats['techniciens']['total'] }}, {{ $stats['employes']['total'] }}],
-                        backgroundColor: [
-                            'rgba(59, 130, 246, 0.8)',
-                            'rgba(16, 185, 129, 0.8)'
-                        ],
-                        borderColor: [
-                            '#3B82F6',
-                            '#10B981'
-                        ],
-                        borderWidth: 2,
-                        hoverOffset: 15,
-                        hoverBorderWidth: 3
+                        label: 'Requests',
+                        data: demandesData,
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        borderColor: '#f59e0b',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#f59e0b',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '65%',
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                color: '#64748b',
+                                font: { size: 12, weight: '600', family: 'Inter' }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            ticks: {
+                                color: '#64748b',
+                                font: { size: 12, family: 'Inter' },
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            padding: 12,
+                            titleFont: { size: 13, weight: 'bold', family: 'Inter' },
+                            bodyFont: { size: 12, family: 'Inter' }
+                        }
+                    },
+                    animation: { duration: 1500, easing: 'easeInOutQuart' }
+                }
+            });
+
+            // Personnel Doughnut Chart
+            const personnelCtx = document.getElementById('personnelChart').getContext('2d');
+            new Chart(personnelCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Technicians', 'Clients'],
+                    datasets: [{
+                        data: [{{ $stats['techniciens']['total'] }}, {{ $stats['employes']['total'] }}],
+                        backgroundColor: ['rgba(59, 130, 246, 0.85)', 'rgba(16, 185, 129, 0.85)'],
+                        borderColor: ['#3b82f6', '#10b981'],
+                        borderWidth: 2,
+                        hoverOffset: 12
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
                     plugins: {
                         legend: {
                             position: 'bottom',
                             labels: {
-                                padding: 25,
+                                padding: 20,
                                 usePointStyle: true,
-                                pointStyle: 'circle',
-                                color: 'black',
-                                font: {
-                                    size: 14,
-                                    weight: '600'
-                                }
+                                color: '#475569',
+                                font: { size: 13, weight: '600', family: 'Inter' }
                             }
                         },
                         tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: 'rgba(255, 255, 255, 0.3)',
-                            borderWidth: 1,
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.label || '';
-                                    let value = context.raw;
-                                    let total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    let percent = Math.round((value / total) * 100);
-                                    return `${label}: ${value} (${percent}%)`;
-                                }
-                            }
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            padding: 12,
+                            titleFont: { size: 13, weight: 'bold', family: 'Inter' },
+                            bodyFont: { size: 12, family: 'Inter' }
                         }
                     },
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true,
-                        duration: 2000
-                    }
+                    animation: { animateScale: true, animateRotate: true, duration: 1500 }
                 }
             });
 
             // Status Bar Chart
             const statusCtx = document.getElementById('statusChart').getContext('2d');
-            
-            const statusChart = new Chart(statusCtx, {
+            new Chart(statusCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Techniciens', 'Clients'],
+                    labels: ['Technicians', 'Clients'],
                     datasets: [
                         {
-                            label: 'Actifs',
+                            label: 'Active',
                             data: [{{ $stats['techniciens']['actifs'] }}, {{ $stats['employes']['actifs'] }}],
-                            backgroundColor: 'rgba(16, 185, 129, 0.8)',
-                            borderColor: '#10B981',
-                            borderWidth: 2,
-                            borderRadius: 8,
-                            borderSkipped: false,
+                            backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                            borderRadius: 10,
+                            borderSkipped: false
                         },
                         {
-                            label: 'Inactifs',
+                            label: 'Inactive',
                             data: [{{ $stats['techniciens']['inactifs'] }}, {{ $stats['employes']['inactifs'] }}],
-                            backgroundColor: 'rgba(239, 68, 68, 0.8)',
-                            borderColor: '#EF4444',
-                            borderWidth: 2,
-                            borderRadius: 8,
-                            borderSkipped: false,
+                            backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                            borderRadius: 10,
+                            borderSkipped: false
                         }
                     ]
                 },
@@ -710,30 +841,19 @@
                     scales: {
                         x: {
                             stacked: true,
-                            grid: {
-                                display: false,
-                                drawBorder: false
-                            },
+                            grid: { display: false },
                             ticks: {
-                                color: 'black',
-                                font: {
-                                    size: 14,
-                                    weight: '600'
-                                }
+                                color: '#64748b',
+                                font: { size: 13, weight: '600', family: 'Inter' }
                             }
                         },
                         y: {
                             stacked: true,
                             beginAtZero: true,
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)',
-                                drawBorder: false
-                            },
+                            grid: { color: '#f1f5f9' },
                             ticks: {
-                                color: 'black',
-                                font: {
-                                    size: 12
-                                }
+                                color: '#64748b',
+                                font: { size: 12, family: 'Inter' }
                             }
                         }
                     },
@@ -741,22 +861,17 @@
                         legend: {
                             position: 'bottom',
                             labels: {
-                                padding: 25,
+                                padding: 20,
                                 usePointStyle: true,
-                                pointStyle: 'circle',
-                                color: 'black',
-                                font: {
-                                    size: 14,
-                                    weight: '600'
-                                }
+                                color: '#475569',
+                                font: { size: 13, weight: '600', family: 'Inter' }
                             }
                         },
                         tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            borderColor: 'rgba(255, 255, 255, 0.3)',
-                            borderWidth: 1,
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            padding: 12,
+                            titleFont: { size: 13, weight: 'bold', family: 'Inter' },
+                            bodyFont: { size: 12, family: 'Inter' },
                             mode: 'index',
                             intersect: false
                         }
@@ -765,20 +880,21 @@
                         delay: function(context) {
                             return context.dataIndex * 150;
                         },
-                        duration: 2000
+                        duration: 1500
                     }
                 }
             });
 
-            // Add loading animations
+            // Animate progress bars
             setTimeout(() => {
-                document.querySelectorAll('.progress-fill').forEach(fill => {
+                document.querySelectorAll('.progress-bar-fill').forEach(fill => {
+                    const width = fill.style.width;
                     fill.style.width = '0%';
                     setTimeout(() => {
-                        fill.style.width = fill.getAttribute('data-width') || fill.style.width;
+                        fill.style.width = width;
                     }, 100);
                 });
-            }, 500);
+            }, 300);
         });
     </script>
 </body>

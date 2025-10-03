@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\DemandeFluxInconnuPanne;
-use App\Models\FluxDirect;
+use App\Models\FluxDirectInconnuPanne;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\FluxPartageAvecClient;
 class DemandeFluxInconnuPanneController extends Controller
 {
     // Créer une demande de flux
@@ -72,7 +73,7 @@ class DemandeFluxInconnuPanneController extends Controller
 
     return response()->json([
         'success' => true,
-        'message' => 'Permission mise à jour avec succès'
+        'message' => 'Permission updated successfully'
     ]);
 }
 
@@ -97,25 +98,55 @@ public function getDemandeByIdFlux($idFlux)
 // api pour partager lien meet avec le client
 // Autoriser le partage avec le client
 public function autoriserPartage($id)
-{
-    $demandeFlux = DemandeFluxInconnuPanne::where('id_flux', $id)->first();
+    {
+        $demandeFlux = DemandeFluxInconnuPanne::where('id_flux', $id)->first();
 
-    if (!$demandeFlux) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Demande de flux non trouvée'
-        ], 404);
+        if (!$demandeFlux) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Demande de flux non trouvée'
+            ], 404);
+        }
+
+        // Récupérer les informations du flux et du client
+        $fluxDirect = FluxDirectInconnuPanne::with(['demande.client'])->find($id);
+
+        if (!$fluxDirect || !$fluxDirect->demande || !$fluxDirect->demande->client) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Informations du client non trouvées'
+            ], 404);
+        }
+
+        $client = $fluxDirect->demande->client;
+        $lienMeet = $fluxDirect->lien_meet;
+
+        // Mettre à jour le partage
+        $demandeFlux->update([
+            'partage_with_client' => true
+        ]);
+
+        // Envoyer l'email au client
+        try {
+            Mail::to($client->email)->send(new FluxPartageAvecClient(
+                $client->name ?? $client->prenom . ' ' . $client->nom,
+                $lienMeet,
+                $fluxDirect->demande->id
+            ));
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'sharing with the client authorized and email sent',
+                'data' => $demandeFlux
+            ]);
+
+        } catch (\Exception $e) {
+            // Même en cas d'erreur d'envoi d'email, le partage est autorisé
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Partage autorisé mais erreur lors de l\'envoi de l\'email: ' . $e->getMessage(),
+                'data' => $demandeFlux
+            ], 200);
+        }
     }
-
-    $demandeFlux->update([
-        'partage_with_client' => true
-    ]);
-
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Partage avec le client autorisé',
-        'data' => $demandeFlux
-    ]);
-}
-
 }

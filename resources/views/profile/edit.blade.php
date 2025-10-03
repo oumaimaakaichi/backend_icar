@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         :root {
-            --primary-color: #1d91b1;
+            --primary-color: #3f5a6e;
             --secondary-color: #1d91b1;
             --accent-color: #1d91b1;
             --light-color: #f8f9fa;
@@ -19,7 +19,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, white 0%, white 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--text-color);
             min-height: 100vh;
@@ -44,8 +44,8 @@
         }
 
         .profile-header {
-            background-color:#1d91b1;
-            color: white;
+            background-color:#ffffff;
+            color: rgb(0, 0, 0);
             padding: 2rem;
             text-align: center;
             position: relative;
@@ -64,7 +64,7 @@
             border-radius: 50%;
             border: 5px solid white;
             object-fit: cover;
-            background: linear-gradient(45deg, #6bb9f1, #6bb9f1);
+            background: linear-gradient(45deg, #3f5a6e, #3f5a6e);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -274,7 +274,7 @@
 
                     <div class="mb-4">
                         <label for="qualifications" class="form-label">Qualifications</label>
-                        <textarea class="form-control" id="qualifications" name="qualifications" rows="4">{{ old('qualifications', $user->extra_data['qualifications'] ?? '') }}</textarea>
+                        <textarea class="form-control" id="qualifications" name="qualifications" rows="1">{{ old('qualifications', $user->extra_data['qualifications'] ?? '') }}</textarea>
                     </div>
 
                     <h3 class="section-title mt-5">Security</h3>

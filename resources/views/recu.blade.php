@@ -2,25 +2,28 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Reçu de Paiement</title>
+    <title>Payment Receipt</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.5;
+            color: #2d3748;
             max-width: 800px;
             margin: 0 auto;
-            padding: 30px;
-            background-color: #f9f9f9;
+            padding: 20px;
+            background-color: #f7fafc;
         }
 
         .receipt-container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            padding: 40px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 50px;
             position: relative;
             overflow: hidden;
+            border: 1px solid #e2e8f0;
         }
 
         .receipt-container::before {
@@ -29,190 +32,382 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 10px;
-            background: linear-gradient(90deg, #4a6bff, #00c6ff);
+            height: 6px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px dashed #ddd;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px dashed #e2e8f0;
+            position: relative;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
         }
 
         .logo {
-            width: 120px;
-            margin-bottom: 15px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 5px;
+            font-size: 32px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #718096;
+            font-weight: 500;
         }
 
         .receipt-number {
-            font-size: 16px;
-            color: #7f8c8d;
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 0 0 0 8px;
+            font-size: 14px;
+            font-weight: 600;
         }
 
-        .details {
-            margin: 30px 0;
+        .details-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
+            margin: 40px 0;
         }
 
-        .detail-card {
-            background-color: #f8fafc;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        .detail-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            border: 1px solid #edf2f7;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title i {
+            font-size: 16px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f7fafc;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
         }
 
         .detail-label {
-            font-weight: 600;
-            color: #4a6bff;
-            margin-bottom: 5px;
             font-size: 14px;
+            color: #718096;
+            font-weight: 500;
         }
 
         .detail-value {
-            font-size: 16px;
+            font-size: 15px;
+            color: #2d3748;
+            font-weight: 600;
         }
 
-        table {
+        .payment-table {
             width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 40px 0;
+            background: white;
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
         }
 
-        th {
-            background: linear-gradient(90deg, #4a6bff, #00c6ff);
+        .payment-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 12px 15px;
+            padding: 18px 20px;
             text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
+        .payment-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 15px;
         }
 
-        tr:last-child td {
+        .payment-table tr:last-child td {
             border-bottom: none;
         }
 
         .total-row {
-            font-weight: bold;
-            background-color: #f8fafc;
+            background: #f8fafc;
+            font-weight: 700;
+        }
+
+        .total-row td {
+            font-size: 16px;
+            color: #2d3748;
+        }
+
+        .amount {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
         }
 
         .footer {
-            margin-top: 40px;
+            margin-top: 50px;
             text-align: center;
-            padding-top: 20px;
-            border-top: 1px dashed #ddd;
-            color: #7f8c8d;
+            padding-top: 30px;
+            border-top: 2px dashed #e2e8f0;
+            color: #718096;
             font-size: 14px;
         }
 
         .thank-you {
-            font-size: 18px;
-            color: #4a6bff;
-            margin-bottom: 10px;
-            font-weight: 600;
+            font-size: 20px;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
         }
 
         .watermark {
             position: absolute;
-            opacity: 0.05;
-            font-size: 120px;
-            font-weight: bold;
-            color: #4a6bff;
-            transform: rotate(-30deg);
+            opacity: 0.03;
+            font-size: 140px;
+            font-weight: 900;
+            color: #667eea;
+            transform: rotate(-45deg);
             z-index: 0;
-            top: 30%;
-            left: 10%;
+            top: 35%;
+            left: 5%;
             pointer-events: none;
+            font-family: 'Courier New', monospace;
         }
 
         .stamp {
             position: absolute;
             right: 40px;
             bottom: 40px;
-            opacity: 0.8;
-            width: 120px;
+            opacity: 0.9;
+            width: 100px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #48bb78;
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .signature-area {
+            margin-top: 40px;
+            text-align: right;
+        }
+
+        .signature-line {
+            width: 200px;
+            border-bottom: 1px solid #cbd5e0;
+            margin: 40px 0 10px auto;
+            padding-bottom: 5px;
+        }
+
+        .signature-label {
+            font-size: 12px;
+            color: #718096;
+            text-align: center;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            
+            .receipt-container {
+                box-shadow: none;
+                border: none;
+                padding: 30px;
+            }
+            
+            .watermark {
+                opacity: 0.1;
+            }
         }
     </style>
 </head>
 <body>
     <div class="receipt-container">
-        <div class="watermark">PAIEMENT</div>
+        <div class="watermark">PAID</div>
 
         <div class="header">
-            <!-- Remplacez par le chemin de votre logo -->
-            <img src="https://via.placeholder.com/120x60?text=LOGO" alt="Logo" class="logo">
-            <div class="title">REÇU DE PAIEMENT</div>
-            <div class="receipt-number">N° {{ $paiement->id }}</div>
+            <div class="receipt-number">Receipt #{{ $paiement->id }}</div>
+            
+            <div class="logo-container">
+                <div class="logo">MS</div>
+            </div>
+            
+            <div class="title">PAYMENT RECEIPT</div>
+            <div class="subtitle">Official Payment Confirmation</div>
         </div>
 
-        <div class="details">
-            <div class="detail-card">
-                <div class="detail-label">Date</div>
-                <div class="detail-value">{{ $paiement->date_paiement->format('d/m/Y H:i') }}</div>
+        <div class="details-grid">
+            <div class="detail-section">
+                <div class="section-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    Payment Information
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Date & Time</span>
+                    <span class="detail-value">{{ $paiement->date_paiement->format('M d, Y H:i') }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Payment Method</span>
+                    <span class="detail-value">{{ ucfirst($paiement->methode) }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Status</span>
+                    <span class="status-badge">Paid</span>
+                </div>
             </div>
 
-            <div class="detail-card">
-                <div class="detail-label">Méthode de paiement</div>
-                <div class="detail-value">{{ ucfirst($paiement->methode) }}</div>
-            </div>
-
-            <div class="detail-card">
-                <div class="detail-label">Client</div>
-                <div class="detail-value">{{ $client->prenom }} {{ $client->nom }}</div>
-            </div>
-
-            <div class="detail-card">
-                <div class="detail-label">Véhicule</div>
-                <div class="detail-value">{{ $voiture->company }} {{ $voiture->model }} ({{ $voiture->serie }})</div>
+            <div class="detail-section">
+                <div class="section-title">
+                    <i class="fas fa-user"></i>
+                    Client Information
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Client Name</span>
+                    <span class="detail-value">{{ $client->prenom }} {{ $client->nom }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Vehicle</span>
+                    <span class="detail-value">{{ $voiture->company }} {{ $voiture->model }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Serial Number</span>
+                    <span class="detail-value">{{ $voiture->serie }}</span>
+                </div>
             </div>
         </div>
 
-        <table>
+        <table class="payment-table">
             <thead>
                 <tr>
                     <th>Description</th>
-                    <th>Montant</th>
+                    <th style="text-align: right;">Amount</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Réparation véhicule</td>
-                    <td>{{ number_format($paiement->montant, 2, ',', ' ') }} DT</td>
+                    <td>Vehicle Repair Service</td>
+                    <td class="amount">{{ number_format($paiement->montant, 2, '.', ',') }} €</td>
+                </tr>
+                <tr>
+                    <td>Labor & Parts</td>
+                    <td class="amount">Included</td>
                 </tr>
                 <tr class="total-row">
-                    <td><strong>Total</strong></td>
-                    <td><strong>{{ number_format($paiement->montant, 2, ',', ' ') }} DT</strong></td>
+                    <td><strong>Total Amount</strong></td>
+                    <td class="amount"><strong>{{ number_format($paiement->montant, 2, '.', ',') }} €</strong></td>
                 </tr>
             </tbody>
         </table>
 
-        <div class="footer">
-            <div class="thank-you">Merci pour votre confiance !</div>
-            <p>Service après-vente: contact@votreatelier.com | Tél: +216 00 000 000</p>
-            <p>Ce reçu est valable comme justificatif de paiement</p>
+        <div class="signature-area">
+            <div class="signature-line"></div>
+            <div class="signature-label">Authorized Signature</div>
         </div>
 
-        <!-- Remplacez par le chemin de votre tampon -->
-        <img src="https://www.bing.com/images/search?view=detailV2&ccid=6f84tZhJ&id=0DA260ACC7C852C0E4D32AA7D54901B3EA18F1BF&thid=OIP.6f84tZhJAKFWOO_8wsARFwAAAA&mediaurl=https%3A%2F%2Fth.bing.com%2Fth%2Fid%2FR.e9ff38b5984900a15638effcc2c01117%3Frik%3Dv%252fEY6rMBSdWnKg%26riu%3Dhttp%253a%252f%252fwww.photos.tampons.ws%252ftampon%252fr40-dateur.jpg%26ehk%3DgBs9J6EVfGq%252fa4PbGyyHg1jpHE0IdV%252bzJJm5A9QMLMk%253d%26risl%3D%26pid%3DImgRaw%26r%3D0&exph=300&expw=300&q=Tampon+d%27entreprise+PNG&form=IRPRST&ck=DD7572ED513A0748718DFE5E29212112&selectedindex=30&itb=0&cw=1375&ch=707&ajaxhist=0&ajaxserp=0&cit=ccid_hIh9O%2FV3*cp_16A9A14FBA7230799111D6D540D22989*mid_4E8ED94CA25C411165A6AC950D880FA655221687*thid_OIP.hIh9O!_V3m9ejy99VA7lwjgAAAA&vt=2" alt="Stamp" class="stamp">
-   <br/>
-   <br/>
+        <div class="footer">
+            <div class="thank-you">Thank You for Your Business!</div>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>contact@yourgarage.com</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+216 12 345 678</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Tunis, Tunisia</span>
+                </div>
+            </div>
+            
+            <p>This receipt serves as official proof of payment. Please retain for your records.</p>
+            <p style="font-size: 12px; color: #a0aec0; margin-top: 10px;">
+                Generated on {{ now()->format('M d, Y H:i') }} | Transaction ID: {{ strtoupper(uniqid()) }}
+            </p>
+        </div>
+
+        <!-- Stamp image -->
+        <img src="https://via.placeholder.com/100x100/667eea/ffffff?text=PAID" alt="Paid Stamp" class="stamp">
     </div>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 </body>
 </html>

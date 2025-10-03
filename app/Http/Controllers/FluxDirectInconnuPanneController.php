@@ -42,7 +42,7 @@ public function fermerFlux($fluxId)
 
     return response()->json([
         'success' => true,
-        'message' => 'Flux fermé avec succès',
+        'message' => 'tream closed successfully',
         'flux' => $flux
     ]);
 }

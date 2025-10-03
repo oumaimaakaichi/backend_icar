@@ -266,10 +266,7 @@
                             <td>{{ number_format($prixPiece, 2) }}</td>
                         </tr>
                     @endforeach
-                    <tr class="total-row">
-                        <td colspan="2" style="text-align: right;">Total:</td>
-                        <td>{{ number_format(array_sum(array_column($rapport->demande->pieces_choisies, 'prix')), 2) }} €</td>
-                    </tr>
+
                 </tbody>
             </table>
         </div>
